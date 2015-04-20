@@ -1,0 +1,58 @@
+{% load staticfiles %}
+{% load mptt_tags %}
+{% load string_multiply %}
+{% load my_filters %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
+</head>
+
+<body>
+<script>
+	$(document).ready(function()
+		{
+			$("#papersTable").tablesorter();
+		}
+	);
+</script>
+
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<h1>Phenotypes</h1>
+<div class="subnavigation">
+    <span class="active">As a list</span> &nbsp;&nbsp; <span class="inactive"><a href="/phenotypes/stats/">Graphically</a></span>
+</div>
+<div class="note">
+Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.edu" title="Please, send whatever you have. A Pubmed ID, a title, a couple of authors.">abarysh@princeton.edu</a>.
+</div>
+
+<table id="papersTable" class="tablesorter" width="100%" border="1">
+    <thead>
+    <tr>
+		<th width="34%"><span>Name</span></th>
+        <th width="33%"><span>Conditions</span></th>
+		<th width="33%"><span>Papers</span></th>
+	</tr>
+	</thead>
+    <tbody>
+    {% recursetree nodes %}
+        {% if node.has_annotated_descendants %}
+            <tr>
+                <td>{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
+                <td>{{ node.condition_types|slice:":-2"|safe }}</td>
+                <td>{{ node.papers|slice:":-2"|safe }}</td>
+                {% if not node.is_leaf_node %}
+                    {{ children }}
+                {% endif %}
+            </tr>
+        {% endif %}
+    {% endrecursetree %}
+    </tbody>
+</table>
+
+
+
+</body>
+</html>
+

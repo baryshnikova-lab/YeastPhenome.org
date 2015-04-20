@@ -1,0 +1,50 @@
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
+</head>
+
+<body>
+<script>
+	$(document).ready(function() 
+		{ 
+			$("#papersTable").tablesorter(); 
+		} 
+	); 
+</script>
+  
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<h1>Contributors</h1>
+
+ A special thanks goes to the authors of these <strong>{{ papers_list.count }} publications</strong> who have provided unpublished versions of their datasets, including raw quantitative data and/or lists of tested genes.
+    <p>
+{% if papers_list %}
+    <table id="papersTable" class="tablesorter" width="100%" border="1">
+    <thead>
+    <tr>
+		<th><span>Contact person</span></th>
+		<th><span>Publication</span></th>
+		<th><span>Unpublished data</span></th>
+		<th><span>List of tested genes</span></th>
+	</tr>
+	</thead>
+	<tbody>
+    {% for paper in papers_list %}
+        <tr>
+        <td>{{ paper.sources_to_acknowledge }}</td>
+        <td>{{ paper.link_detail|safe }}</td>
+        <td>{{ paper.got_data|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
+		<td>{{ paper.got_tested|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    <p>No papers are available.</p>
+{% endif %}
+</body>
+</html>
+

@@ -1,0 +1,59 @@
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
+</head>
+
+<body>
+<script>
+	$(document).ready(function() 
+		{ 
+			$("#papersTable").tablesorter(); 
+		} 
+	); 
+</script>
+  
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<h1>Conditions</h1>
+<div class="subnavigation">
+    <span class="active">As a list</span> &nbsp;&nbsp; <span class="inactive"><a href="/conditions/stats/">Graphically</a></span>
+</div>
+<div class="note">
+Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.edu" title="Please, send whatever you have. A Pubmed ID, a title, a couple of authors.">abarysh@princeton.edu</a>.
+</div>
+{% if conditiontype_list %}
+    <table id="papersTable" class="tablesorter" width="100%" border="1">
+    <thead>
+    <tr>
+		<th width="20%"><span>Short name</span></th>
+        <th width="20%"><span>Full name</span></th>
+        <th width="20%"><span>Doses</span></th>
+        <th width="20%"><span>Phenotypes</span></th>
+        <th width="20%"><span>Papers</span></th>
+	</tr>
+	</thead>
+	<tbody>
+    {% for conditiontype in conditiontype_list %}
+        <tr>
+        <td>{{ conditiontype.link_detail|safe }}</td>
+        <td>
+            {% if not conditiontype.name = conditiontype.short_name %}
+            {{ conditiontype.name }}
+            {% endif %}
+        </td>
+        <td>{{ conditiontype.conditions|slice:":-2" }}</td>
+        <td>{{ conditiontype.phenotypes|slice:":-2"|safe }}</td>
+        <td>{{ conditiontype.papers|slice:":-2"|safe }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    <p>No papers are available.</p>
+{% endif %}
+</body>
+</html>
+

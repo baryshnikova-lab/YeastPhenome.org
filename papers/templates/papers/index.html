@@ -1,0 +1,72 @@
+{% load staticfiles %}
+{% load sub_navigation %}
+{% load my_filters %}
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
+</head>
+
+<body>
+<script>
+	$(document).ready(function() 
+		{ 
+			$("#papersTable").tablesorter(); 
+		} 
+	); 
+</script>
+  
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<h1>Papers</h1>
+<div class="sub_navigation">
+    <div class="sub_navigation_block">
+        <span class="{% active sub_navigation 'All' %}"><a href="/papers/">All</a> <span class="small">{{ num_all }}</span></span>
+    </div>
+    <div class="sub_navigation_block">
+        <span class="{% active sub_navigation 'Haploid' %}"><a href="/papers/haploid/">Haploid</a>&nbsp;<span class="small">{{ num_haploid }}</span></span>
+        <span class="{% active sub_navigation 'Diploid homozygous' %}"><a href="/papers/diploid/homozygous/">Homozygous diploid</a>&nbsp;<span class="small">{{ num_diploid_homozygous }}</span></span>
+        <span class="{% active sub_navigation 'Diploid heterozygous' %}"><a href="/papers/diploid/heterozygous/">Heterozygous diploid</a> <span class="small">{{ num_diploid_heterozygous }}</span></span>
+    </div>
+    <div class="sub_navigation_block">
+        <span class="{% active sub_navigation 'Quantitative' %}"><a href="/papers/quantitative/">Quantitative data</a> <span class="small">{{ num_quantitative }}</span></span>
+        <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
+    </div>
+</div>
+<div class="note">
+Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.edu" title="Please, send whatever you have.">abarysh@princeton.edu</a>.
+</div>
+{% if papers_list %}
+    <table id="papersTable" class="tablesorter" width="100%" border="1">
+    <thead>
+    <tr>
+		<th width="10%"><span>PMID</span></th>
+		<th width="20%"><span>FirstAuthor~LastAuthor, Year</span></th>
+		<th width="14%"><span>Phenotypes</span></th>
+		<th width="14%"><span>Conditions</span></th>
+		<th width="14%"><span>Type of data</span></th>
+		<th width="14%"><span>Data status</span></th>
+		<th width="14%"><span>List of tested genes</span></th>
+	</tr>
+	</thead>
+	<tbody>
+    {% for paper in papers_list %}
+        <tr>
+        <td><a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a></td>
+        <td>{{ paper.link_detail|safe }}</td>
+        <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
+        <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+		<td>{{ paper.data_available|join:", " }}</td>
+		<td>{{ paper.latest_data_status|capfirst }}</td>
+		<td>{{ paper.latest_tested_status|capfirst }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+{% else %}
+    <p>No papers are available.</p>
+{% endif %}
+</body>
+</html>
+

@@ -1,0 +1,128 @@
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+</head>
+
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> /</div>
+
+<h1>Conditions</h1>
+<div class="subnavigation">
+    <span class="inactive"><a href="/conditions">As a list</a></span> &nbsp;&nbsp; <span class="active">Graphically</span>
+</div>
+
+<div align="center">
+
+<script>
+
+    var data = {{ stats|safe }};
+
+    var diameter = 960,
+            format = d3.format("d"),
+            color = d3.scale.category10(),
+            font_size = 15;
+
+    var bubble = d3.layout.pack()
+            .sort([])
+            .size([diameter, diameter])
+            .padding(5);
+
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width", diameter*2)
+            .attr("height", diameter)
+            .attr("class", "bubble");
+
+    var node = svg.selectAll(".node")
+            .data(bubble.nodes(classes(data))
+            .filter(function(d) { return !d.children; }))
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+    node.append("title")
+            .text(function(d) {
+                return d.short_name + ": " + format(d.value);
+            });
+
+    node.append("circle")
+            .attr("r", function(d) {
+                return d.r;
+            })
+            .style("fill", function(d) {
+                return color(d.type);
+            })
+            .on("click", openLink());
+
+    node.append("text")
+            .style("text-anchor", "middle")
+            .text(function(d) {
+                return d.short_name.substring(0, d.r / 3);
+            })
+            .style("font-size", font_size + "px");
+
+    node.on("mouseover", function(d) {
+        d3.select(this).select('text')
+                .transition()
+                .duration(300)
+                .text(function (d) {
+                    return d.name;
+                })
+                .style("font-size", font_size*2 + "px");
+        d3.select(this).select('circle')
+                .attr("r", function(d) {
+                    return d.r;
+                })
+                .style("fill", function(d) {
+                    return color(d.type);
+                })
+                .transition()
+                .duration(300)
+                .attr("r", function(d) { return d.r*2 });
+    });
+
+    node.on("mouseout", function(d) {
+        d3.select(this).select('text')
+                .transition()
+                .duration(300)
+                .text(function (d) {
+                    return d.short_name.substring(0, d.r / 3);
+                })
+                .style("font-size", font_size + "px");
+        d3.select(this).select('circle')
+                .transition()
+                .duration(300)
+                .attr("r", function(d) { return d.r });
+    });
+
+
+
+    function openLink() {
+	    return function(d) {
+			var url = "http://www.google.com";
+			window.open(url)
+		}
+	}
+
+// Returns a flattened hierarchy containing all leaf nodes under the root.
+function classes(data) {
+  var classes = [];
+    data.forEach(function(d) {
+        classes.push({type: d.type, name: d.name, short_name: d.short_name, value: d.size});
+    });
+  return {children: classes};
+}
+
+d3.select(self.frameElement).style("height", diameter + "px");
+
+</script>
+
+</div>
+
+</body>
+</html>
+

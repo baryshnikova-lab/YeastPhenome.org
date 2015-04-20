@@ -1,0 +1,72 @@
+{% load staticfiles %}
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
+<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
+</head>
+
+<body>
+<script>
+	$(document).ready(function() 
+		{ 
+			$("#papersTable").tablesorter(); 
+		} 
+	); 
+</script>
+  
+<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / <a href="/papers/">Papers</a> /</div>
+<h1>{{ object }}</h1>
+
+<p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a>
+<p><b>Notes.</b> {{ object.notes }}
+<p>
+<table id="papersTable" class="tablesorter" width="100%" border="1">
+ <thead>
+    <tr>
+		<th><span>Phenotype</span></th>
+		<th><span>Condition set</span></th>
+		<th><span>Collection</span></th>
+		<th><span>Tested genes</span></th>
+		<th><span>Tested genes published</span></th>
+        <th><span>Tested genes available</span></th>
+		<th><span>Data measured</span></th>
+		<th><span>Data published</span></th>
+		<th><span>Data available</span></th>
+        <th><span>Has data</span></th>
+	</tr>
+</thead>
+
+<tbody>
+	
+	{% for dataset in object.dataset_set.all %}
+	<tr>
+		<td>{{ dataset.phenotype.observable2.link_detail|safe }}</td>
+		<td>{{ dataset.conditionset }}</td>
+		<td>{{ dataset.collection }}</td>
+		<td>{{ dataset.tested_num }}</td>
+		<td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
+        <td>
+            {% if not dataset.tested_source %}
+            No
+            {% else %}
+            {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
+            {% endif %}
+        </td>
+		<td>{{ dataset.data_measured|capfirst }}</td>
+		<td>{{ dataset.data_published|capfirst }}</td>
+		<td>{{ dataset.data_available|capfirst }}
+            <br>{{ dataset.data_source|safe }}
+            <br>{{ paper.latest_data_status|capfirst }}
+        </td>
+        <td>{{ dataset.has_data }}</td>
+		
+	</tr>
+	{% endfor %}
+
+</tbody>
+
+</table>
+</body>
+</html>
+
