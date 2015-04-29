@@ -6,7 +6,7 @@ from django.utils.safestring import SafeUnicode
 from phenotypes.models import Observable2
 from conditions.models import ConditionType, Condition, ConditionSet
 from django.contrib.auth.models import User
-
+import os
 
 class Status(models.Model):
     STATUS_CHOICES = (
@@ -86,6 +86,15 @@ class Paper(models.Model):
     @property
     def latest_tested_status(self):
         return self.statustested_set.latest
+
+    def download_directory(self):
+        return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
+
+    def download_path(self):
+        dir='/home/sven/Phenotypes/' + self.download_directory()
+        if(os.path.isdir(dir)):
+            return dir;
+        return '';
 
     def __unicode__(self):
         return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
