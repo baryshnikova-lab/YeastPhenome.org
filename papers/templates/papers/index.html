@@ -48,7 +48,7 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
 		<th width="14%"><span>Type of data</span></th>
 		<th width="14%"><span>Data status</span></th>
 		<th width="14%"><span>List of tested genes</span></th>
-		{# <th width="14%"><span>Download Data</span></th> #}
+		<th width="14%"><span>Download Data</span></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -61,7 +61,7 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
 	<td>{{ paper.data_available|join:", " }}</td>
 	<td>{{ paper.latest_data_status|capfirst }}</td>
 	<td>{{ paper.latest_tested_status|capfirst }}</td>
-	{# <td>{{ paper.download_path }}</td> #}
+	<td>{{ paper.raw_files|join:", " }}</td>
         </tr>
     {% endfor %}
     </tbody>

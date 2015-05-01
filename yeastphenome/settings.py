@@ -88,7 +88,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/Users/Anastasia/Sites/YeastPhenome.org/static/'
+#STATIC_ROOT = '/Users/Anastasia/Sites/YeastPhenome.org/static/'
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR, "static"),
+
+    # this location is currently also set in papers/index.html
+    '/data/YeastPhenome.org/Datasets/Phenotypes'
+)
 
 GOOGLE_ANALYTICS_MODEL = True
 SITE_ID = 1

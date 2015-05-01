@@ -6,7 +6,11 @@ from django.utils.safestring import SafeUnicode
 from phenotypes.models import Observable2
 from conditions.models import ConditionType, Condition, ConditionSet
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
+
 import os
+import io
+import re
 
 class Status(models.Model):
     STATUS_CHOICES = (
@@ -37,6 +41,10 @@ class Paper(models.Model):
     private_notes = models.TextField(blank=True)
     modified_on = models.DateField(auto_now=True)
     user = models.ForeignKey(User, blank=True, null=True)
+
+    DATASET_DIR="/data/YeastPhenome.org/Datasets/Phenotypes"
+    METADATA=['../code_130304_load_data.m','../code_141120_load_data_part2.m']
+    METADATA_KEY="read\("
 
     data_statuses = models.ManyToManyField(Status, through='Statusdata', related_name='data_statuses')
     tested_statuses = models.ManyToManyField(Status, through='Statustested', related_name='tested_statuses')
@@ -87,14 +95,56 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
-    def download_directory(self):
-        return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
+    def first_author_family_name(self):
+        return self.first_author.split(' ')[0]
+    def last_author_family_name(self):
+        return self.last_author.split(' ')[0]
 
-    def download_path(self):
-        dir='/home/sven/Phenotypes/' + self.download_directory()
-        if(os.path.isdir(dir)):
-            return dir;
-        return '';
+    def metadata_label(self):
+        return '%s %s~%s, %s' % ('%%',self.first_author_family_name(),self.last_author_family_name(),self.pub_date)
+
+    def raw_anchor(self,path):
+        bn=os.path.basename(path)
+        return mark_safe('<a href="/static/%s/%s">%s</a>' % (self.static_dir_name(),bn,bn))
+
+    def raw_files(self):
+        found=[]
+        mdl=self.metadata_label()
+        stage=0
+
+        for metadata in self.METADATA:
+            path=os.path.join(self.DATASET_DIR,metadata);
+            #print "opening %s" % (path)
+            md=io.open(path,encoding="ISO 8859-1") # Bumped into a latin1 degree sign
+
+            for line in md:
+                if 0==stage:
+                    if mdl == line.rstrip():
+                        #found.append(metadata)
+                        stage=1
+                elif 1==stage:
+                    if '%'==line[0]:
+                        next
+                    elif re.search('^(%%|save)',line):
+                        md.close()
+                        return found
+                    elif re.search(self.METADATA_KEY,line):
+                        have=re.findall("'(.+?)'",line)
+                        if(0==len(have)):
+                            found.append('skipping for now')
+                            md.close()
+                            return found
+                        else:
+                            found.append(self.raw_anchor(have[0]))
+
+            md.close()
+            if 0<len(found):
+                return found
+
+        return found;
+
+    def static_dir_name(self):
+        return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
 
     def __unicode__(self):
         return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
