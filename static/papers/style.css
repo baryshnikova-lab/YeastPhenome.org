@@ -134,5 +134,15 @@ SPAN.small {
     font-size: 0.8em;
 }
 
+.nothing{
+    opacity:0.25;
+    font-style:italic;
+}
 
-
+hgroup h1:first-child{
+    margin-bottom:0;
+}
+hgroup h1:last-child{
+    margin-top:0;
+    font-size:1em;
+}

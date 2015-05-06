@@ -17,9 +17,11 @@
 </script>
   
 <div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / <a href="/papers/">Papers</a> /</div>
-<h1>{{ object }}</h1>
 
-<p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a>
+<hgroup>
+<h1>{{ object }}</h1>
+<h1>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></h1>
+</hgroup>
 
 <dl>
 
@@ -28,7 +30,7 @@
 {% if object.notes %}
 <dd>{{ object.notes }}</dd>
 {% else %}
-<dd style="opacity:0.25"><i>&#8210; no notes &#8210;</i></dd>
+<dd class="nothing">&#8210; no notes &#8210;</dd>
 {% endif %}
 
 <dt>Downloads</dt>
@@ -38,7 +40,7 @@
 <dd>{{ file }}</dd>
 {% endfor %}
 {% else %}
-<dd><i style="opacity:0.25">&#8210; no files &#8210;</i></dd>
+<dd class="nothing">&#8210; no files &#8210;</dd>
 {% endif %}
 
 </dl>
