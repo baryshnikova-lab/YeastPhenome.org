@@ -1,6 +1,7 @@
 {% load staticfiles %}
 <html>
 <head>
+<title>YeastPhenome.org - Papers/Detail - {{ object }}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
@@ -19,8 +20,29 @@
 <h1>{{ object }}</h1>
 
 <p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a>
-<p><b>Notes.</b> {{ object.notes }}
-<p>
+
+<dl>
+
+<dt>Notes</dt>
+
+{% if object.notes %}
+<dd>{{ object.notes }}</dd>
+{% else %}
+<dd style="opacity:0.25"><i>&#8210; no notes &#8210;</i></dd>
+{% endif %}
+
+<dt>Downloads</dt>
+
+{% if paper.has_data %}
+{% for file in paper.raw_files %}
+<dd>{{ file }}</dd>
+{% endfor %}
+{% else %}
+<dd><i style="opacity:0.25">&#8210; no files &#8210;</i></dd>
+{% endif %}
+
+</dl>
+
 <table id="papersTable" class="tablesorter" width="100%" border="1">
  <thead>
     <tr>

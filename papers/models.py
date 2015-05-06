@@ -81,11 +81,14 @@ class Paper(models.Model):
     def data_available(self):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
-    # def has_data(self):
-    #     for dataset in self.dataset_set.all():
-    #         if dataset.has_data():
-    #             return True
-    # has_data.boolean = True
+    # While a little slow, should be fast enough for the detail page
+    # when only called once.
+    def has_data(self):
+        for dataset in self.dataset_set.all():
+            if dataset.has_data():
+                return True
+        return False
+        #has_data.boolean = True
 
     @property
     def latest_data_status(self):
@@ -126,14 +129,12 @@ class Paper(models.Model):
                     if '%'==line[0]:
                         next
                     elif re.search('^(%%|save)',line):
-                        md.close()
-                        return found
+                        break
                     elif re.search(self.METADATA_KEY,line):
                         have=re.findall("'(.+?)'",line)
                         if(0==len(have)):
                             found.append('skipping for now')
-                            md.close()
-                            return found
+                            break
                         else:
                             found.append(self.raw_anchor(have[0]))
 
@@ -141,6 +142,8 @@ class Paper(models.Model):
             if 0<len(found):
                 return found
 
+#        if self.has_data() and 0==len(found):
+#            print "%d missing data (%s)" % (self.pmid,mdl)
         return found;
 
     def static_dir_name(self):
