@@ -8,6 +8,7 @@ from conditions.models import ConditionType, Condition, ConditionSet
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
+from pprint import pprint
 import os
 import io
 import re
@@ -81,14 +82,8 @@ class Paper(models.Model):
     def data_available(self):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
-    # While a little slow, should be fast enough for the detail page
-    # when only called once.
     def has_data(self):
-        for dataset in self.dataset_set.all():
-            if dataset.has_data():
-                return True
-        return False
-        #has_data.boolean = True
+	return 'loaded'==str(self.latest_data_status()) or 'loaded'==str(self.latest_tested_status())
 
     @property
     def latest_data_status(self):
@@ -98,13 +93,22 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
+#### Make compiled re
+  
+    def _futz_author(self,txt):
+        a=txt.split(' ')
+        a.pop()
+        return '[-\s]'.join(a);
     def first_author_family_name(self):
-        return self.first_author.split(' ')[0]
+        return self._futz_author(self.first_author)
     def last_author_family_name(self):
-        return self.last_author.split(' ')[0]
+        return self._futz_author(self.last_author)
 
     def metadata_label(self):
-        return '%s %s~%s, %s' % ('%%',self.first_author_family_name(),self.last_author_family_name(),self.pub_date)
+        return '%s %s~%s,\s*%s' % ('%%',self.first_author_family_name(),self.last_author_family_name(),self.pub_date)
+
+#####
+
 
     def raw_anchor(self,path):
         bn=os.path.basename(path)
@@ -113,6 +117,7 @@ class Paper(models.Model):
     def raw_files(self):
         found=[]
         mdl=self.metadata_label()
+        #print mdl
         stage=0
 
         for metadata in self.METADATA:
@@ -122,8 +127,9 @@ class Paper(models.Model):
 
             for line in md:
                 if 0==stage:
-                    if mdl == line.rstrip():
-                        #found.append(metadata)
+                    #if mdl == line.rstrip():
+
+                    if re.search(mdl,line,re.IGNORECASE):
                         stage=1
                 elif 1==stage:
                     if '%'==line[0]:
@@ -140,11 +146,11 @@ class Paper(models.Model):
 
             md.close()
             if 0<len(found):
-                return found
+                return set(found)
 
 #        if self.has_data() and 0==len(found):
 #            print "%d missing data (%s)" % (self.pmid,mdl)
-        return found;
+        return set(found)
 
     def static_dir_name(self):
         return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])

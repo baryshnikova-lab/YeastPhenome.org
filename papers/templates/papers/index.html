@@ -54,7 +54,11 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
 	<tbody>
     {% for paper in papers_list %}
         <tr>
-        <td><a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a></td>
+        <td>
+{% if 0 != paper.pmid %}
+<a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
+{% endif %}
+</td>
         <td>{{ paper.link_detail|safe }}</td>
         <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
         <td>{{ paper.conditions|join_and_more:7|safe }}</td>
