@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
@@ -88,12 +87,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = '/Users/Anastasia/Sites/YeastPhenome.org/static/'
+
+# See ../READEME.md for a description
+DATASET_DIR="/data/YeastPhenome.org/Datasets/Phenotypes"
+METADATA_FILES=[
+    os.path.join(DATASET_DIR,'../code_130304_load_data.m'),
+    os.path.join(DATASET_DIR,'../code_141120_load_data_part2.m')
+]
+
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR, "static"),
-
-    # this location is currently also set in papers/index.html
-    '/data/YeastPhenome.org/Datasets/Phenotypes'
+    DATASET_DIR
 )
 
 GOOGLE_ANALYTICS_MODEL = True

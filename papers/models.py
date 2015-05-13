@@ -7,6 +7,7 @@ from phenotypes.models import Observable2
 from conditions.models import ConditionType, Condition, ConditionSet
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
+from django.conf import settings
 
 from pprint import pprint
 import os
@@ -42,10 +43,6 @@ class Paper(models.Model):
     private_notes = models.TextField(blank=True)
     modified_on = models.DateField(auto_now=True)
     user = models.ForeignKey(User, blank=True, null=True)
-
-    DATASET_DIR="/data/YeastPhenome.org/Datasets/Phenotypes"
-    METADATA=['../code_130304_load_data.m','../code_141120_load_data_part2.m']
-    METADATA_KEY="read\("
 
     data_statuses = models.ManyToManyField(Status, through='Statusdata', related_name='data_statuses')
     tested_statuses = models.ManyToManyField(Status, through='Statustested', related_name='tested_statuses')
@@ -120,15 +117,15 @@ class Paper(models.Model):
         #print mdl
         stage=0
 
-        for metadata in self.METADATA:
-            path=os.path.join(self.DATASET_DIR,metadata);
-            #print "opening %s" % (path)
-            md=io.open(path,encoding="ISO 8859-1") # Bumped into a latin1 degree sign
+        for metadata_file in settings.METADATA_FILES:
+            #print "opening %s" % (metadata_file)
+
+            # Bumped into a latin1 degree sign
+            md=io.open(metadata_file,encoding="ISO 8859-1")
 
             for line in md:
                 if 0==stage:
                     #if mdl == line.rstrip():
-
                     if re.search(mdl,line,re.IGNORECASE):
                         stage=1
                 elif 1==stage:
@@ -136,7 +133,7 @@ class Paper(models.Model):
                         next
                     elif re.search('^(%%|save)',line):
                         break
-                    elif re.search(self.METADATA_KEY,line):
+                    elif re.search('read\(',line):
                         have=re.findall("'(.+?)'",line)
                         if(0==len(have)):
                             found.append('skipping for now')
