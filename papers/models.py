@@ -90,9 +90,17 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
-    def raw_anchor(self,path):
+    def raw_file_html(self,path):
         bn=os.path.basename(path)
-        return mark_safe('<a href="/static/%s/%s">%s</a>' % (self.static_dir_name(),bn,bn))
+        dn=os.path.basename(os.path.dirname(path))
+        fs=os.path.join(settings.DATASET_DIR,dn,bn)
+        if os.path.isfile(fs):
+            return mark_safe('<a href="/static/%s/%s">%s</a>' % (dn,bn,bn))
+        else:
+            return '%s (data file missing)' % (bn)
+
+        pprint(fs)
+        return bn
 
     def raw_files(self):
         found=[]
@@ -120,7 +128,7 @@ class Paper(models.Model):
                             found.append('skipping for now')
                             break
                         else:
-                            found.append(self.raw_anchor(have[0]))
+                            found.append(self.raw_file_html(have[0]))
 
             md.close()
             if 0<len(found):
