@@ -90,43 +90,24 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
-#### Make compiled re
-  
-    def _futz_author(self,txt):
-        a=txt.split(' ')
-        a.pop()
-        return '[-\s]'.join(a);
-    def first_author_family_name(self):
-        return self._futz_author(self.first_author)
-    def last_author_family_name(self):
-        return self._futz_author(self.last_author)
-
-    def metadata_label(self):
-        return '%s %s~%s,\s*%s' % ('%%',self.first_author_family_name(),self.last_author_family_name(),self.pub_date)
-
-#####
-
-
     def raw_anchor(self,path):
         bn=os.path.basename(path)
         return mark_safe('<a href="/static/%s/%s">%s</a>' % (self.static_dir_name(),bn,bn))
 
     def raw_files(self):
         found=[]
-        mdl=self.metadata_label()
-        #print mdl
         stage=0
 
         for metadata_file in settings.METADATA_FILES:
-            #print "opening %s" % (metadata_file)
+            if settings.DEBUG:
+                print "opening %s" % (metadata_file)
 
             # Bumped into a latin1 degree sign
             md=io.open(metadata_file,encoding="ISO 8859-1")
 
             for line in md:
                 if 0==stage:
-                    #if mdl == line.rstrip():
-                    if re.search(mdl,line,re.IGNORECASE):
+                    if re.search('\.pmid\s*=\s*%d\s*;' % self.pmid,line):
                         stage=1
                 elif 1==stage:
                     if '%'==line[0]:
