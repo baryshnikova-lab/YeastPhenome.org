@@ -20,7 +20,9 @@
 
 <hgroup>
 <h1>{{ object }}</h1>
-<h1>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></h1>
+{% if 0 != object.pmid %}
+<h1 class="pmid">PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></h1>
+{% endif %}
 </hgroup>
 
 <dl>

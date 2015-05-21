@@ -56,7 +56,7 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
         <tr>
         <td>
 {% if 0 != paper.pmid %}
-<a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
+<a class="external pmid" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
 {% endif %}
 </td>
         <td>{{ paper.link_detail|safe }}</td>

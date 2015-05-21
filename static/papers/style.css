@@ -142,7 +142,7 @@ SPAN.small {
 hgroup h1:first-child{
     margin-bottom:0;
 }
-hgroup h1:last-child{
+hgroup h1.pmid{
     margin-top:0;
     font-size:1em;
 }
