@@ -107,6 +107,14 @@ class Paper(models.Model):
         stage=0
 
         for metadata_file in settings.METADATA_FILES:
+            if 1==stage:
+                # If we are here we found a reference to the PMID in a
+                # file but didn't find any files to load.
+                if settings.DEBUG:
+                    print "Found PMID:%d but no files" % (self.pmid)
+                found.append('Failed to locate files')
+                break
+
             if settings.DEBUG:
                 print "opening %s" % (metadata_file)
 
@@ -122,7 +130,7 @@ class Paper(models.Model):
                         next
                     elif re.search('^(%%|save)',line):
                         break
-                    elif re.search('read\(',line):
+                    elif re.search('(read|fopen)\(',line):
                         have=re.findall("'(.+?)'",line)
                         if(0==len(have)):
                             found.append('skipping for now')
