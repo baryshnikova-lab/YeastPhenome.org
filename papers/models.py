@@ -121,22 +121,28 @@ class Paper(models.Model):
             # Bumped into a latin1 degree sign
             md=io.open(metadata_file,encoding="ISO 8859-1")
 
+            # list of regular expression used to match file name on a
+            # line.  Group(1) of the result should have a flie name.
+            matches=[
+                re.compile("(?:xlsread|textread)\('(.+?)'"),
+                re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
+            ]
+            
             for line in md:
                 if 0==stage:
                     if re.search('\.pmid\s*=\s*%d\s*;' % self.pmid,line):
                         stage=1
                 elif 1==stage:
-                    if '%'==line[0]:
+                    if '%' == line[0]:
                         next
                     elif re.search('^(%%|save)',line):
                         break
-                    elif re.search('(read|fopen)\(',line):
-                        have=re.findall("'(.+?)'",line)
-                        if(0==len(have)):
-                            found.append('skipping for now')
-                            break
-                        else:
-                            found.append(self.raw_file_html(have[0]))
+                    else:
+                         for match in matches:
+                            m=match.search(line)
+                            if m:
+                                found.append(self.raw_file_html(m.group(1)))
+                        
 
             md.close()
             if 0<len(found):
