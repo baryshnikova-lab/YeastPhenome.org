@@ -89,11 +89,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # See ../READEME.md for a description
-DATASET_DIR="/data/YeastPhenome.org/Datasets/Phenotypes"
-METADATA_FILES=[
-    os.path.join(DATASET_DIR,'../code_130304_load_data.m'),
-    os.path.join(DATASET_DIR,'../code_141120_load_data_part2.m')
-]
+METADATA_DIR='/data/Yeastphenome.org-Loading-data'
+DATASET_DIR=os.path.join(METADATA_DIR,'data')
 
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR, "static"),

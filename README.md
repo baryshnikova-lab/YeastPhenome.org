@@ -7,10 +7,10 @@
 there are two added items that isn't a Django standard.  Both are only
 refered to in the `paper/models.py` file.
 
-### `METADATA_FILES`
+### `METADATA_DIR`
 
-Files that match a paper to its dataset.
+Reads in all *.m files in this directory to associate papers to data.
 
 ### `DATASET_DIR`
 
-Path where to where files pointed to by `METADATA_FILES` are.
+Where to look for the data refered to in `METADATA_DIR` is located.

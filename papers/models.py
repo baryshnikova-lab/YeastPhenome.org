@@ -106,47 +106,58 @@ class Paper(models.Model):
         found=[]
         stage=0
 
-        for metadata_file in settings.METADATA_FILES:
-            if 1==stage:
-                # If we are here we found a reference to the PMID in a
-                # file but didn't find any files to load.
+        # list of regular expression used to match file name on a
+        # line.  Group(1) of the result should have a file name.
+        matches=[ # don't play with them
+            re.compile("(?:xlsread|textread)\('(.+?)'"),
+            re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
+        ]
+
+        for basename in os.listdir(settings.METADATA_DIR):
+
+            # Skip files that don't end with the '.m' extention
+            root,ext = os.path.splitext(basename)
+            if '.m' != ext:
                 if settings.DEBUG:
-                    print "Found PMID:%d but no files" % (self.pmid)
-                found.append('Failed to locate files')
-                break
+                    print "Skipping %s" % (basename)
+            else:
+                # We should now have a valid metadata file
+                metadata_file=os.path.join(settings.METADATA_DIR,basename)
 
-            if settings.DEBUG:
-                print "opening %s" % (metadata_file)
+                if 1==stage:
+                    # If we are here we found a reference to the PMID in a
+                    # file but didn't find any files to load.
+                    if settings.DEBUG:
+                        print "Found PMID:%d but no files" % (self.pmid)
+                    found.append('Failed to locate files')
+                    break
 
-            # Bumped into a latin1 degree sign
-            md=io.open(metadata_file,encoding="ISO 8859-1")
+                if settings.DEBUG:
+                    print "opening %s" % (metadata_file)
 
-            # list of regular expression used to match file name on a
-            # line.  Group(1) of the result should have a flie name.
-            matches=[
-                re.compile("(?:xlsread|textread)\('(.+?)'"),
-                re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
-            ]
+                # Bumped into a latin1 degree sign
+                md=io.open(metadata_file,encoding="ISO 8859-1")
             
-            for line in md:
-                if 0==stage:
-                    if re.search('\.pmid\s*=\s*%d\s*;' % self.pmid,line):
-                        stage=1
-                elif 1==stage:
-                    if '%' == line[0]:
-                        next
-                    elif re.search('^(%%|save)',line):
-                        break
-                    else:
-                         for match in matches:
-                            m=match.search(line)
-                            if m:
-                                found.append(self.raw_file_html(m.group(1)))
+                for line in md:
+                    if 0==stage:
+                        if re.search('\.pmid\s*=\s*%d\s*;' % self.pmid,line):
+                            stage=1
+                    elif 1==stage:
+                        if '%' == line[0]:
+                            next
+                        elif re.search('^(%%|save)',line):
+                            break
+                        else:
+                            for match in matches:
+                                m=match.search(line)
+                                if m:
+                                    print m.group(1)
+                                    found.append(self.raw_file_html(m.group(1)))
                         
 
-            md.close()
-            if 0<len(found):
-                return set(found)
+                md.close()
+                if 0<len(found):
+                    return set(found)
 
 #        if self.has_data() and 0==len(found):
 #            print "%d missing data (%s)" % (self.pmid,mdl)
