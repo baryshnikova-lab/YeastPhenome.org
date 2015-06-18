@@ -125,11 +125,13 @@ class Paper(models.Model):
                 metadata_file=os.path.join(settings.METADATA_DIR,basename)
 
                 if 1==stage:
-                    # If we are here we found a reference to the PMID in a
-                    # file but didn't find any files to load.
+                    # If we are here we found a reference to the PMID
+                    # in a file but didn't find any files to load
+                    # before the end of the file.  Something is
+                    # probably wrong with a *.m file.
                     if settings.DEBUG:
-                        print "Found PMID:%d but no files" % (self.pmid)
-                    found.append('Failed to locate files')
+                        print "Found PMID:%d but no files!" % (self.pmid)
+                    found.append('Failed to locate files!')
                     break
 
                 if settings.DEBUG:
@@ -159,8 +161,13 @@ class Paper(models.Model):
                 if 0<len(found):
                     return set(found)
 
-#        if self.has_data() and 0==len(found):
-#            print "%d missing data (%s)" % (self.pmid,mdl)
+
+        if 0==len(found):
+            # Here, we found the PMID and found no files by
+            # the and of the PMID section in a *.m file.
+            if settings.DEBUG:
+                print "Found PMID:%d but no files." % (self.pmid)
+            return ['Failed to locate files.']            
         return set(found)
 
     def static_dir_name(self):
