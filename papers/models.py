@@ -90,6 +90,11 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
+    def isfile(self,path):
+        bn=os.path.basename(path)
+        dn=os.path.basename(os.path.dirname(path))
+        return os.path.isfile(os.path.join(settings.DATASET_DIR,dn,bn))
+
     def raw_file_html(self,path):
         bn=os.path.basename(path)
         dn=os.path.basename(os.path.dirname(path))
@@ -150,11 +155,20 @@ class Paper(models.Model):
                         elif re.search('^(%%|save)',line):
                             break
                         else:
-                            for match in matches:
-                                m=match.search(line)
-                                if m:
-                                    print m.group(1)
-                                    found.append(self.raw_file_html(m.group(1)))
+                            f=re.search("folder\s*=\s*'(.*?)'\s*;",line)
+                            if f:
+                                # If the row_data.zip file exists that
+                                # should contain everything we want
+                                check=os.path.join(f.group(1),'raw_data.zip')
+                                print check
+                                if self.isfile(check):
+                                    return [self.raw_file_html(check)]
+                            else:
+                                for match in matches:
+                                    m=match.search(line)
+                                    if m:
+                                        print m.group(1)
+                                        found.append(self.raw_file_html(m.group(1)))
                         
 
                 md.close()
