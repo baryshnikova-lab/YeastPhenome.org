@@ -118,7 +118,12 @@ class Paper(models.Model):
             re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
         ]
 
-        for basename in os.listdir(settings.METADATA_DIR):
+        try:
+            basenames=os.listdir(settings.METADATA_DIR)
+        except:
+            return ["METADATA_DIR not found or not specified."]
+
+        for basename in basenames:
 
             # Skip files that don't end with the '.m' extention
             root,ext = os.path.splitext(basename)
