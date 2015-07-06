@@ -114,7 +114,7 @@ class Paper(models.Model):
         # list of regular expression used to match file name on a
         # line.  Group(1) of the result should have a file name.
         matches=[ # don't play with them
-            re.compile("(?:xlsread|textread)\('(.+?)'"),
+            re.compile("(?:xlsread|textread|fopen|read_matrix_file|dlmread)\('(.+?)'"),
             re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
         ]
 
