@@ -30,7 +30,7 @@ DIV.note {
 		width: 45%;
 	}
 	
-	#right {
+	#right,.right {
 		background-color: #f0f0f0;
 		float: right;
 		margin-bottom: 20px;
@@ -39,21 +39,19 @@ DIV.note {
 	}
 
 DIV.sub_navigation {
-
     margin: 10px 0px 10px 0px;
     clear: both;
 }
 
 DIV.sub_navigation SPAN.active {
-
-    background-color: #EBEBCF;
+    background-color:#EBEBCF;
     padding: .5em;
 
 }
 
 DIV.sub_navigation SPAN.inactive {
-    background-color: #FFFFFF;
-    padding: .5em;
+    background-color:transparent;
+    padding:.5em;
 }
 
 DIV.sub_navigation DIV.sub_navigation_block {

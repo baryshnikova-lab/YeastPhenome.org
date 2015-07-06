@@ -18,17 +18,23 @@ We are collecting phenotypic data derived from <strong>systematic screens</stron
 <p>As of today, we are at the data gathering stage. The plan is to collect, organize and share in a <strong>standardized format</strong> all of the phenotypic data obtained by the yeast community. Updates on progress will be released via this website. 
 </div>
 
-<div id="right">
-    Current status for data collection:
-    <ul>
+
+<div class="right">
+
+  <p><form action="/papers/" method="GET">PMID: <input type="number" name="pmid"/></form></p>
+
+</div><div id="right">
+
+  <p>Current status for data collection:</p>
+  <ul>
     <li>{{ paper_num_total }} <a href="/papers/">papers published</a>, {{ paper_num_with_data }} have data
     <li>{{ phenotype_num_total }} <a href="/phenotypes/">phenotypes screened</a>, {{ phenotype_num_with_data }} have data
     <li>{{ condition_num }} <a href="/conditions/">conditions</a>
-    </ul>
+  </ul>
 
-    <p>Most studied phenotype: {{ most_studied_phenotype.link_detail|safe }} ({{ most_studied_phenotype.num_datapoints }} datapoints).
-    <br>Most studied experimental condition: {{ most_studied_conditionset.name }} ({{ most_studied_conditionset.num_datapoints }} datapoints).</p>
-Updated on: {{ updated }}.<br>
+  <p>Most studied phenotype: {{ most_studied_phenotype.link_detail|safe }} ({{ most_studied_phenotype.num_datapoints }} datapoints).<br/>Most studied experimental condition: {{ most_studied_conditionset.name }} ({{ most_studied_conditionset.num_datapoints }} datapoints).</p>
+  <p>Updated on: {{ updated }}.</p>
+
 </div>
 
 <hr noshade size="2" color="#f0f0f0" style="clear: both; margin-top: 30px;">
