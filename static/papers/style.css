@@ -30,7 +30,7 @@ DIV.note {
 		width: 45%;
 	}
 	
-	#right {
+	#right,.right {
 		background-color: #f0f0f0;
 		float: right;
 		margin-bottom: 20px;

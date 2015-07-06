@@ -23,16 +23,16 @@
 <h1>Papers</h1>
 <div class="sub_navigation">
     <div class="sub_navigation_block">
-        <span class="{% active sub_navigation 'All' %}"><a href="/papers/">All</a> <span class="small">{{ num_all }}</span></span>
+        <span class="{% active sub_navigation 'All' %}"><a href="/papers/{{ got }}">All</a> <span class="small">{{ num_all }}</span></span>
     </div>
     <div class="sub_navigation_block">
-        <span class="{% active sub_navigation 'Haploid' %}"><a href="/papers/haploid/">Haploid</a>&nbsp;<span class="small">{{ num_haploid }}</span></span>
-        <span class="{% active sub_navigation 'Diploid homozygous' %}"><a href="/papers/diploid/homozygous/">Homozygous diploid</a>&nbsp;<span class="small">{{ num_diploid_homozygous }}</span></span>
-        <span class="{% active sub_navigation 'Diploid heterozygous' %}"><a href="/papers/diploid/heterozygous/">Heterozygous diploid</a> <span class="small">{{ num_diploid_heterozygous }}</span></span>
+        <span class="{% active sub_navigation 'Haploid' %}"><a href="/papers/haploid/{{ got }}">Haploid</a>&nbsp;<span class="small">{{ num_haploid }}</span></span>
+        <span class="{% active sub_navigation 'Diploid homozygous' %}"><a href="/papers/diploid/homozygous/{{ got }}">Homozygous diploid</a>&nbsp;<span class="small">{{ num_diploid_homozygous }}</span></span>
+        <span class="{% active sub_navigation 'Diploid heterozygous' %}"><a href="/papers/diploid/heterozygous/{{ got }}">Heterozygous diploid</a> <span class="small">{{ num_diploid_heterozygous }}</span></span>
     </div>
     <div class="sub_navigation_block">
-        <span class="{% active sub_navigation 'Quantitative' %}"><a href="/papers/quantitative/">Quantitative data</a> <span class="small">{{ num_quantitative }}</span></span>
-        <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
+        <span class="{% active sub_navigation 'Quantitative' %}"><a href="/papers/quantitative/{{ got }}">Quantitative data</a> <span class="small">{{ num_quantitative }}</span></span>
+        <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/{{ got }}">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
     </div>
 </div>
 <div class="note">
