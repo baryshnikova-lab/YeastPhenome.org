@@ -18,23 +18,23 @@
   
 <div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
 <h1>Conditions</h1>
-<div class="subnavigation">
-    <span class="active">As a list</span> &nbsp;&nbsp; <span class="inactive"><a href="/conditions/stats/">Graphically</a></span>
-</div>
-<div class="note">
-Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.edu" title="Please, send whatever you have. A Pubmed ID, a title, a couple of authors.">abarysh@princeton.edu</a>.
-</div>
 {% if conditiontype_list %}
-    <table id="papersTable" class="tablesorter" width="100%" border="1">
-    <thead>
+<table id="papersTable" class="tablesorter" width="100%" border="1">
+  <caption>
+    <nav>
+      <span class="active">As a list</span>
+      <span class="inactive" title="Not Implemented"><a href="/conditions/stats/">Graphically</a></span>
+    </nav>
+  </caption>
+  <thead>
     <tr>
-		<th width="20%"><span>Short name</span></th>
-        <th width="20%"><span>Full name</span></th>
-        <th width="20%"><span>Doses</span></th>
-        <th width="20%"><span>Phenotypes</span></th>
-        <th width="20%"><span>Papers</span></th>
-	</tr>
-	</thead>
+      <th width="20%"><span>Short name</span></th>
+      <th width="20%"><span>Full name</span></th>
+      <th width="20%"><span>Doses</span></th>
+      <th width="20%"><span>Phenotypes</span></th>
+      <th width="20%"><span>Papers</span></th>
+    </tr>
+  </thead>
 	<tbody>
     {% for conditiontype in conditiontype_list %}
         <tr>
@@ -54,6 +54,6 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
 {% else %}
     <p>No papers are available.</p>
 {% endif %}
+{% include "footer.html" %}
 </body>
 </html>
-

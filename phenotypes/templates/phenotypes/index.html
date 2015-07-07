@@ -20,21 +20,20 @@
 
 <div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
 <h1>Phenotypes</h1>
-<div class="subnavigation">
-    <span class="active">As a list</span> &nbsp;&nbsp; <span class="inactive"><a href="/phenotypes/stats/">Graphically</a></span>
-</div>
-<div class="note">
-Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.edu" title="Please, send whatever you have. A Pubmed ID, a title, a couple of authors.">abarysh@princeton.edu</a>.
-</div>
-
 <table id="papersTable" class="tablesorter" width="100%" border="1">
-    <thead>
+  <caption>
+    <nav>
+      <span class="active">As a list</span>
+      <span class="inactive" title="Not Implemented"><a href="/phenotypes/stats/">Graphically</a></span>
+    </nav>
+  </caption>
+  <thead>
     <tr>
-		<th width="34%"><span>Name</span></th>
-        <th width="33%"><span>Conditions</span></th>
-		<th width="33%"><span>Papers</span></th>
-	</tr>
-	</thead>
+      <th width="34%"><span>Name</span></th>
+      <th width="33%"><span>Conditions</span></th>
+      <th width="33%"><span>Papers</span></th>
+    </tr>
+  </thead>
     <tbody>
     {% recursetree nodes %}
         {% if node.has_annotated_descendants %}
@@ -50,9 +49,6 @@ Wrong or missing information? Let me know at <a href="mailto:abarysh@princeton.e
     {% endrecursetree %}
     </tbody>
 </table>
-
-
-
+{% include "footer.html" %}
 </body>
 </html>
-

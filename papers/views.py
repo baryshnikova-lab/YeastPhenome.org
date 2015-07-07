@@ -43,6 +43,8 @@ class PaperIndexView(generic.ListView):
         context = super(PaperIndexView, self).get_context_data(**kwargs)
         qs=Paper.objects.filter(PaperAllIndexView.get_filter(self.request))
 
+        context['debug']=self.request.GET.get('debug')
+
         # If we have a query string we need to pass that to the tab
         context['got'] = '?%s' % (self.request.GET.urlencode())
         if '?' == context['got']:
