@@ -21,7 +21,16 @@ We are collecting phenotypic data derived from <strong>systematic screens</stron
 
 <div class="right">
 
-  <p><form action="/papers/" method="GET">PMID: <input type="number" name="pmid"/></form></p>
+  <form action="/papers/" method="GET">
+    <dl>
+      <dt>PMID</dt>
+      <dd><input type="number" name="pmid"/></dd>
+
+      <dt>First/Last Author</dt>
+      <dd><input type="text" name="author"/></dd>
+    </dl>
+    <p><button type="submit">Submit</button></p>
+  </form>
 
 </div><div id="right">
 

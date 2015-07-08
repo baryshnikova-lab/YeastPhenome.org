@@ -1,5 +1,6 @@
 from django.views import generic
 from django.views.generic.base import TemplateView
+from django.http.request import QueryDict
 from django.db.models import Q,Count
 from papers.models import Paper
 
@@ -11,42 +12,94 @@ class PaperIndexView(generic.ListView):
     template_name = 'papers/index.html'
     context_object_name = 'papers_list'
     the_filter = Q()
+    GOT=False
 
     @classmethod
-    def filtered_count(cls,qs,request):
+    def filtered_count(cls,qs,got):
         # Filter queryset through the_filter of this object and return
         # how many we have
-        return qs.filter(cls.get_filter(request)).distinct().count()
+        return qs.filter(cls.get_filter(got)).distinct().count()
 
     @classmethod
-    def get_filter(cls,request):
-        # Get the_filter anded with any requests made.  Currently only pmid.
-        pmids=request.GET.getlist('pmid')
+    def _get_get(cls,got,key,query=lambda k,v: [Q(**{'%s__contains'%(k):v})]):
+        items = got.getlist(key)
+        q=[]
 
-        # If a pmid was asked for
-        if 0 != len(pmids):
-            q=[]
-            for pmid in pmids:
-                pmid=pmid.strip()
-                if pmid.isdigit():
-                    # Only look for pmids that are all digits
-                    q.append( Q(pmid__contains=pmid) )
-            if 0 != len (q):
-                return reduce(operator.and_,[reduce(operator.or_,q),cls.the_filter])
+        if 0 != len(items):
+            for item in items:
+                item=item.strip()
+                q.extend(query(key,item))
+        if 0 != len(q):
+            return reduce(operator.or_,q)
+        return Q()
+
+    @classmethod
+    def get_filter(cls,got):
+        q=[cls.the_filter]
+
+        q.append(cls._get_get(got,'pmid'))
+        q.append(cls._get_get(got,'author',
+                              query=lambda k,v:[Q(first_author__contains=v),Q(last_author__contains=v)]
+                          ))
+
+        if 0 != len(q):
+            return reduce(operator.and_,q)
         return cls.the_filter
 
     def get_queryset(self):
         # Returns the abjects fistered with get_filter.
-        return Paper.objects.filter(self.get_filter(self.request)).distinct()
+        return Paper.objects.filter(self.get_filter(self.scrub_GET())).distinct()
+
+    def scrub_GET(self):
+        if self.GOT:
+            return self.GOT
+
+        OUT=QueryDict(mutable=True)
+
+        # their can only be one 'debug' items and it must equal an
+        # integer.
+        if 'debug' in self.request.GET:
+            raw=self.request.GET['debug'].strip()
+            if raw.isdigit():
+                # it's now scrubbed
+                OUT['debug']=raw
+
+
+        # their can be multiple pmid entries, all integers
+        if 'pmid' in self.request.GET:
+            scrubbed_pmids=[]
+            raw_pmids=self.request.GET.getlist('pmid')
+            for pmid in raw_pmids:
+                pmid=pmid.strip()
+                if pmid.isdigit():
+                    scrubbed_pmids.append(pmid)
+                if 0 != len(scrubbed_pmids):
+                    OUT.setlist('pmid',set(scrubbed_pmids))
+
+        # their can be more then one author.  Probably should only
+        # accetp word characters and whitespace but for naw anything
+        # goes.
+        if 'author' in self.request.GET:
+            scrubbed_authors=[]
+            raw_authors=self.request.GET.getlist('author')
+            for author in raw_authors:
+                author=author.strip()
+                if 0 != len(author):
+                    scrubbed_authors.append(author)
+            if 0 != len(scrubbed_authors):
+                OUT.setlist('author',set(scrubbed_authors))
+
+        #print OUT
+        self.GOT=OUT
+        return OUT
 
     def get_context_data(self, **kwargs):
         context = super(PaperIndexView, self).get_context_data(**kwargs)
-        qs=Paper.objects.filter(PaperAllIndexView.get_filter(self.request))
+        got=self.scrub_GET()
+        qs=Paper.objects.filter(PaperAllIndexView.get_filter(got))
 
-        context['debug']=self.request.GET.get('debug')
-
-        # If we have a query string we need to pass that to the tab
-        context['got'] = '?%s' % (self.request.GET.urlencode())
+        context['debug']=got.get('debug')
+        context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:
             context['got'] = ''
 
@@ -54,11 +107,11 @@ class PaperIndexView(generic.ListView):
 
         # Sure, the filter is still specified in two places, but at
         # least now the two places are right next to each other
-        context['num_haploid'] = PaperHaploidIndexView.filtered_count(qs,self.request)
-        context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(qs,self.request)
-        context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(qs,self.request)
-        context['num_quantitative'] = PaperQuantitativeIndexView.filtered_count(qs,self.request)
-        context['num_discrete'] = PaperDiscreteIndexView.filtered_count(qs,self.request)
+        context['num_haploid'] = PaperHaploidIndexView.filtered_count(qs,got)
+        context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(qs,got)
+        context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(qs,got)
+        context['num_quantitative'] = PaperQuantitativeIndexView.filtered_count(qs,got)
+        context['num_discrete'] = PaperDiscreteIndexView.filtered_count(qs,got)
 
         return context
 
