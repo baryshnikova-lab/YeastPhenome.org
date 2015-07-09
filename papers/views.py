@@ -1,10 +1,18 @@
+from django.db.models import Q,Count
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.http.request import QueryDict
-from django.db.models import Q,Count
-from papers.models import Paper
 
+from papers.models import Paper
 import operator
+
+# These only needed for zipo
+from django.http import HttpResponse,Http404
+from django.shortcuts import get_object_or_404
+import os
+from cStringIO import StringIO
+from zipfile import ZipFile
+
 
 
 class PaperIndexView(generic.ListView):
@@ -187,3 +195,22 @@ class ContributorsListView(generic.ListView):
     def get_queryset(self):
         return Paper.objects.filter(
             Q(dataset__data_source__acknowledge=True) | Q(dataset__tested_source__acknowledge=True)).distinct()
+
+
+def zipo(request,paper_id):
+    p = get_object_or_404(Paper,pk=paper_id)
+    if not(p.has_data()):
+        raise Http404("Paper has no data.");
+
+    zip_buff=StringIO()
+    zip_file=ZipFile(zip_buff,'w')
+
+    dp=p.download_path()
+    for root,_,basenames in os.walk(dp):
+        for name in basenames:
+            path=os.path.join(root,name)
+            an=path.replace(dp,'')
+            zip_file.write(path,arcname=an)
+    zip_file.close()
+
+    return HttpResponse(zip_buff.getvalue(),content_type="application/zip")

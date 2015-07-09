@@ -7,10 +7,7 @@
 there are two added items that isn't a Django standard.  Both are only
 refered to in the `paper/models.py` file.
 
-### `METADATA_DIR`
+### `DATA_DIR`
 
-Reads in all *.m files in this directory to associate papers to data.
-
-### `DATASET_DIR`
-
-Where to look for the data refered to in `METADATA_DIR` is located.
+Link to directory containing directoris of PubMed it's to be offered
+as zip files.

@@ -10,4 +10,7 @@ urlpatterns = patterns('',
     url(r'^quantitative/$', views.PaperQuantitativeIndexView.as_view(), name='quantitative'),
     url(r'^discrete/$', views.PaperDiscreteIndexView.as_view(), name='discrete'),
     url(r'^(?P<pk>\d+)/$', views.PaperDetailView.as_view(), name='detail'),
+
+    # To get a zip file of data
+    url(r'^(?P<paper_id>\d+).zip$', views.zipo, name='zipo'),
 )

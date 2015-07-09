@@ -89,12 +89,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # See ../READEME.md for a description
-METADATA_DIR='/data/Yeastphenome.org-Loading-data'
-DATASET_DIR=os.path.join(METADATA_DIR,'data')
+DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
 
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR, "static"),
-    DATASET_DIR
 )
 
 GOOGLE_ANALYTICS_MODEL = True

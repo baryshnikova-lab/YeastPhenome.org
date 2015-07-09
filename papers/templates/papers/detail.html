@@ -38,9 +38,7 @@
 <dt>Downloads</dt>
 
 {% if paper.has_data %}
-{% for file in paper.raw_files %}
-<dd>{{ file }}</dd>
-{% endfor %}
+<dd><a href="/papers/{{ paper.pk }}.zip">Zip</dd>
 {% else %}
 <dd class="nothing">&#8210; no files &#8210;</dd>
 {% endif %}

@@ -1,18 +1,14 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.utils.safestring import SafeUnicode
+#from django.utils.safestring import SafeUnicode
 
 from phenotypes.models import Observable2
 from conditions.models import ConditionType, Condition, ConditionSet
 from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
 from django.conf import settings
 
-from pprint import pprint
 import os
-import io
-import re
 
 class Status(models.Model):
     STATUS_CHOICES = (
@@ -90,104 +86,9 @@ class Paper(models.Model):
     def latest_tested_status(self):
         return self.statustested_set.latest
 
-    def isfile(self,path):
-        bn=os.path.basename(path)
-        dn=os.path.basename(os.path.dirname(path))
-        return os.path.isfile(os.path.join(settings.DATASET_DIR,dn,bn))
-
-    def raw_file_html(self,path):
-        bn=os.path.basename(path)
-        dn=os.path.basename(os.path.dirname(path))
-        fs=os.path.join(settings.DATASET_DIR,dn,bn)
-        if os.path.isfile(fs):
-            return mark_safe('<a href="/static/%s/%s">%s</a>' % (dn,bn,bn))
-        else:
-            return '%s (data file missing)' % (bn)
-
-        pprint(fs)
-        return bn
-
-    def raw_files(self):
-        found=[]
-        stage=0
-
-        # list of regular expression used to match file name on a
-        # line.  Group(1) of the result should have a file name.
-        matches=[ # don't play with them
-            re.compile("(?:xlsread|textread|fopen|read_matrix_file|dlmread)\('(.+?)'"),
-            re.compile("datafile\s*=\s*'(.*?)'"), # only used in PMID 23552365
-        ]
-
-        try:
-            basenames=os.listdir(settings.METADATA_DIR)
-        except:
-            return ["METADATA_DIR not found or not specified."]
-
-        for basename in basenames:
-
-            # Skip files that don't end with the '.m' extention
-            root,ext = os.path.splitext(basename)
-            if '.m' != ext:
-                if settings.DEBUG:
-                    print "Skipping %s" % (basename)
-            else:
-                # We should now have a valid metadata file
-                metadata_file=os.path.join(settings.METADATA_DIR,basename)
-
-                if 1==stage:
-                    # If we are here we found a reference to the PMID
-                    # in a file but didn't find any files to load
-                    # before the end of the file.  Something is
-                    # probably wrong with a *.m file.
-                    if settings.DEBUG:
-                        print "Found PMID:%d but no files!" % (self.pmid)
-                    found.append('Failed to locate files!')
-                    break
-
-                if settings.DEBUG:
-                    print "opening %s" % (metadata_file)
-
-                # Bumped into a latin1 degree sign
-                md=io.open(metadata_file,encoding="ISO 8859-1")
-            
-                for line in md:
-                    if 0==stage:
-                        if re.search('\.pmid\s*=\s*%d\s*;' % self.pmid,line):
-                            stage=1
-                    elif 1==stage:
-                        if '%' == line[0]:
-                            next
-                        elif re.search('^(%%|save)',line):
-                            break
-                        else:
-                            f=re.search("folder\s*=\s*'(.*?)'\s*;",line)
-                            if f:
-                                # If the row_data.zip file exists that
-                                # should contain everything we want
-                                check=os.path.join(f.group(1),'raw_data.zip')
-                                print check
-                                if self.isfile(check):
-                                    return [self.raw_file_html(check)]
-                            else:
-                                for match in matches:
-                                    m=match.search(line)
-                                    if m:
-                                        print m.group(1)
-                                        found.append(self.raw_file_html(m.group(1)))
-                        
-
-                md.close()
-                if 0<len(found):
-                    return set(found)
-
-
-        if 0==len(found):
-            # Here, we found the PMID and found no files by
-            # the and of the PMID section in a *.m file.
-            if settings.DEBUG:
-                print "Found PMID:%d but no files." % (self.pmid)
-            return ['Failed to locate files.']            
-        return set(found)
+    def download_path(self):
+        "Returns a path of where datafiles should be, regardless if it has data files or not."
+        return os.path.join(settings.DATA_DIR,str(self.pmid))
 
     def static_dir_name(self):
         return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
