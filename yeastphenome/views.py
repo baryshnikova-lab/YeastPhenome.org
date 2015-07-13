@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, Sum
 
 from papers.models import Paper, ConditionType, Condition, ConditionSet, Observable2, Data
+from papers.views import PaperIndexView
 
 def index(request):
     paper_num_total = Paper.objects.all().count()
@@ -20,5 +21,9 @@ def index(request):
                'condition_num': condition_num,
                'most_studied_conditionset': most_studied_conditionset,
                'most_studied_phenotype': most_studied_phenotype,
-               'updated': max(latest_paper, latest_condition), }
+               'updated': max(latest_paper, latest_condition),
+
+               # To repopulate the search box
+               'got':' '.join(PaperIndexView.scrub_GET(request.GET).getlist('s')),
+               }
     return render(request, 'yeastphenome/index.html', context)

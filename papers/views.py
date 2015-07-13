@@ -30,51 +30,63 @@ class PaperIndexView(generic.ListView):
 
     @classmethod
     def get_filter(cls,got):
-        q=[cls.the_filter]
+        q=[]
 
         if 's' in got:
-            s=got['s']
-            if s.isdigit():
-                q.append(Q(pmid__contains=s))
-            else:
-                q.append(Q(first_author__contains=s) | Q(last_author__contains=s))
+            # we assume already scrubbed
+            esses=got.getlist('s')
+            for s in esses:
+                if s.isdigit():
+                    q.append(Q(pmid__contains=s))
+                else:
+                    q.extend([Q(first_author__contains=s),Q(last_author__contains=s)])
 
-        if 0 != len(q):
-            return reduce(operator.and_,q)
-        return cls.the_filter
+        # Now we want to OR everything in q, then and it with
+        # qs.the_filter, but we don't want to do more then we need.
+
+        if 1 == len(q):
+            return reduce(operator.and_,[cls.the_filter,q[0]])
+        elif 1 < len(q):
+            return reduce(operator.and_,[cls.the_filter,reduce(operator.or_,q)])
+        return cls.the_filter # if 0==len(q)
 
     def get_queryset(self):
         # Returns the abjects fistered with get_filter.
-        return Paper.objects.filter(self.get_filter(self.scrub_GET())).distinct()
+        return Paper.objects.filter(self.get_filter(self._scrub_GET())).distinct()
 
-    def scrub_GET(self):
-        if self.GOT:
-            return self.GOT
+    def _scrub_GET(self):
+        # Use for interal staring of query
+        if not(self.GOT):
+            self.GOT=self.scrub_GET(self.request.GET)
+        return self.GOT
 
+    @classmethod
+    def scrub_GET(self,GET):
+        # classmethod so it can be called from yeastphenome.views.py
         OUT=QueryDict(mutable=True)
 
         # their can only be one 'debug' items and it must equal an
         # integer.
-        if 'verbose' in self.request.GET:
-            raw=self.request.GET['verbose'].strip()
+        if 'verbose' in GET:
+            raw=GET['verbose'].strip()
             if raw.isdigit():
                 # it's now scrubbed
                 OUT['verbose']=raw
 
-        # We will only allow one 's' option, for now.
-        if 's' in self.request.GET:
-            raw=self.request.GET['s'].strip()
-            OUT['s']=raw
+        # multilpe 's' get split by white space as well
+        if 's' in GET:
+            esses = GET.getlist('s')
+            s=[]
+            for ess in esses:
+                s.extend(ess.strip().split())
+            OUT.setlist('s',s)
 
         # anything else is hacking.
-
-        #print OUT
-        self.GOT=OUT
         return OUT
 
     def get_context_data(self, **kwargs):
         context = super(PaperIndexView, self).get_context_data(**kwargs)
-        got=self.scrub_GET()
+        got=self._scrub_GET()
         qs=Paper.objects.filter(PaperAllIndexView.get_filter(got))
 
         context['verbose']=got.get('verbose')
