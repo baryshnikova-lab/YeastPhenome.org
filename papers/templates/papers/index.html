@@ -39,7 +39,7 @@
       <th width="20%"><span>FirstAuthor~LastAuthor, Year</span></th>
       <th width="14%"><span>Phenotypes</span></th>
       <th width="14%"><span>Conditions</span></th>
-{% if debug >= 1 %}
+{% if verbose >= 1 %}
       <th width="14%"><span>Type of data</span></th>
       <th width="14%"><span>Data status</span></th>
       <th width="14%"><span>List of tested genes</span></th>
@@ -57,7 +57,7 @@
         <td>{{ paper.link_detail|safe }}</td>
         <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
         <td>{{ paper.conditions|join_and_more:7|safe }}</td>
-{% if debug >= 1 %}
+{% if verbose >= 1 %}
 	<td>{{ paper.data_available|join:", " }}</td>
 	<td>{{ paper.latest_data_status|capfirst }}</td>
 	<td>{{ paper.latest_tested_status|capfirst }}</td>

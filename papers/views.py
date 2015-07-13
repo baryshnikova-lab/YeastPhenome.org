@@ -29,26 +29,15 @@ class PaperIndexView(generic.ListView):
         return qs.filter(cls.get_filter(got)).distinct().count()
 
     @classmethod
-    def _get_get(cls,got,key,query=lambda k,v: [Q(**{'%s__contains'%(k):v})]):
-        items = got.getlist(key)
-        q=[]
-
-        if 0 != len(items):
-            for item in items:
-                item=item.strip()
-                q.extend(query(key,item))
-        if 0 != len(q):
-            return reduce(operator.or_,q)
-        return Q()
-
-    @classmethod
     def get_filter(cls,got):
         q=[cls.the_filter]
 
-        q.append(cls._get_get(got,'pmid'))
-        q.append(cls._get_get(got,'author',
-                              query=lambda k,v:[Q(first_author__contains=v),Q(last_author__contains=v)]
-                          ))
+        if 's' in got:
+            s=got['s']
+            if s.isdigit():
+                q.append(Q(pmid__contains=s))
+            else:
+                q.append(Q(first_author__contains=s) | Q(last_author__contains=s))
 
         if 0 != len(q):
             return reduce(operator.and_,q)
@@ -66,36 +55,18 @@ class PaperIndexView(generic.ListView):
 
         # their can only be one 'debug' items and it must equal an
         # integer.
-        if 'debug' in self.request.GET:
-            raw=self.request.GET['debug'].strip()
+        if 'verbose' in self.request.GET:
+            raw=self.request.GET['verbose'].strip()
             if raw.isdigit():
                 # it's now scrubbed
-                OUT['debug']=raw
+                OUT['verbose']=raw
 
+        # We will only allow one 's' option, for now.
+        if 's' in self.request.GET:
+            raw=self.request.GET['s'].strip()
+            OUT['s']=raw
 
-        # their can be multiple pmid entries, all integers
-        if 'pmid' in self.request.GET:
-            scrubbed_pmids=[]
-            raw_pmids=self.request.GET.getlist('pmid')
-            for pmid in raw_pmids:
-                pmid=pmid.strip()
-                if pmid.isdigit():
-                    scrubbed_pmids.append(pmid)
-                if 0 != len(scrubbed_pmids):
-                    OUT.setlist('pmid',set(scrubbed_pmids))
-
-        # their can be more then one author.  Probably should only
-        # accetp word characters and whitespace but for naw anything
-        # goes.
-        if 'author' in self.request.GET:
-            scrubbed_authors=[]
-            raw_authors=self.request.GET.getlist('author')
-            for author in raw_authors:
-                author=author.strip()
-                if 0 != len(author):
-                    scrubbed_authors.append(author)
-            if 0 != len(scrubbed_authors):
-                OUT.setlist('author',set(scrubbed_authors))
+        # anything else is hacking.
 
         #print OUT
         self.GOT=OUT
@@ -106,7 +77,7 @@ class PaperIndexView(generic.ListView):
         got=self.scrub_GET()
         qs=Paper.objects.filter(PaperAllIndexView.get_filter(got))
 
-        context['debug']=got.get('debug')
+        context['verbose']=got.get('verbose')
         context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:
             context['got'] = ''
