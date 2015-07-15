@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -35,7 +36,7 @@ class Observable2(MPTTModel):
 
     def paper_list(self):
         # Returns a list of papers associated with this Observable
-        return models.get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
+        return get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
 
     def papers(self):
         # Return HTML list of papers
