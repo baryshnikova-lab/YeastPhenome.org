@@ -50,9 +50,14 @@ class Paper(models.Model):
     def collections(self):
         return list(map(str, self.dataset_set.values_list('collection', flat=True).distinct()))
 
+    def phenotype_list(self):
+        # return a list of Observable2 objects that this paper is in
+        return Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
+
     @property
     def phenotypes(self):
-        result = Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
+        # Retuns HTML of papers
+        result = self.phenotype_list()
         phenotype_list = ''
         for p in result:
             phenotype_list += '%s, ' % (p.link_detail())

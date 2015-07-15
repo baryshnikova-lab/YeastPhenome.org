@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
 
+
 class Observable2(MPTTModel):
     name = models.CharField(max_length=200)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
@@ -32,8 +33,13 @@ class Observable2(MPTTModel):
             a += '%d.' % r.id
         return a
 
+    def paper_list(self):
+        # Returns a list of papers associated with this Observable
+        return models.get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
+
     def papers(self):
-        result = models.get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
+        # Return HTML list of papers
+        result = self.paper_list()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())

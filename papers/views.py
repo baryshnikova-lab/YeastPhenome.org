@@ -6,6 +6,8 @@ from django.http.request import QueryDict
 from papers.models import Paper
 import operator
 
+from phenotypes.models import Observable2
+
 # These only needed for zipo
 from django.http import HttpResponse,Http404
 from django.shortcuts import get_object_or_404
@@ -25,8 +27,33 @@ class PaperIndexView(generic.ListView):
     @classmethod
     def filtered_count(cls,qs,got):
         # Filter queryset through the_filter of this object and return
-        # how many we have
-        return qs.filter(cls.get_filter(got)).distinct().count()
+        # how many we have.
+        return len(cls.filtered_list(qs,got))
+
+    @classmethod
+    def filtered_list(cls,qs,got):
+        # Returns a list of papers that match the query.  We assume
+        # got is already scrubbed.
+        out=set(list(qs.filter(cls.get_filter(got)).distinct()))
+
+        # we have already filtered by PMID, so lets get rid of the numbers
+        words=[]
+        for item in got.getlist('s'):
+            if not(item.isdigit()):
+                words.append(item)
+
+        if 0 == len(words):
+            return out
+
+        q=[]
+        for word in words:
+            q.append(Q(name__contains=word))
+
+        os=Observable2.objects.filter(reduce(operator.or_,q))
+        for o in os:
+            out=out.union(o.paper_list())
+
+        return out
 
     @classmethod
     def get_filter(cls,got):
@@ -51,7 +78,7 @@ class PaperIndexView(generic.ListView):
         return cls.the_filter # if 0==len(q)
 
     def get_queryset(self):
-        # Returns the abjects fistered with get_filter.
+        # Returns the objects fistered with get_filter.
         return Paper.objects.filter(self.get_filter(self._scrub_GET())).distinct()
 
     def _scrub_GET(self):
@@ -87,14 +114,20 @@ class PaperIndexView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(PaperIndexView, self).get_context_data(**kwargs)
         got=self._scrub_GET()
-        qs=Paper.objects.filter(PaperAllIndexView.get_filter(got))
+
+        # filter out by pmid and author
+        qs=context['papers_list']
+
+        # Get the rest of the papers
+        papers=self.filtered_list(qs,got)
+        context['papers_list']=papers
 
         context['verbose']=got.get('verbose')
         context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:
             context['got'] = ''
 
-        context['num_all'] = qs.count()
+        context['num_all'] = len(papers)
 
         # Sure, the filter is still specified in two places, but at
         # least now the two places are right next to each other
