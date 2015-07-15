@@ -51,7 +51,7 @@ class PaperIndexView(generic.ListView):
 
         os=Observable2.objects.filter(reduce(operator.or_,q))
         for o in os:
-            out=out.union(o.paper_list())
+            out=out.union(o.paper_list().filter(cls.the_filter))
 
         return out
 
