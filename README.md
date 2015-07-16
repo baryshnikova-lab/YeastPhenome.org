@@ -11,3 +11,7 @@ refered to in the `paper/models.py` file.
 
 Link to directory containing directoris of PubMed it's to be offered
 as zip files.
+
+### `DOWNLOAD_PREFIX`
+
+The prefix to use when downloading a zip file.

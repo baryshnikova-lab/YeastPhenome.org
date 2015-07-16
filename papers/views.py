@@ -9,15 +9,18 @@ import operator
 from phenotypes.models import Observable2
 
 # These only needed for zipo
+import os
 from django.http import HttpResponse,Http404
 from django.shortcuts import get_object_or_404
-import os
+from django.conf import settings
 from cStringIO import StringIO
 from zipfile import ZipFile
 
 
 
 class PaperIndexView(generic.ListView):
+    """A virtual class."""
+
     model = Paper
     template_name = 'papers/index.html'
     context_object_name = 'papers_list'
@@ -26,37 +29,44 @@ class PaperIndexView(generic.ListView):
 
     @classmethod
     def filtered_count(cls,qs,got):
-        # Filter queryset through the_filter of this object and return
-        # how many we have.
+        """Filter queryset through the_filter of this object and return how many we have."""
+
         return len(cls.filtered_list(qs,got))
 
     @classmethod
     def filtered_list(cls,qs,got):
-        # Returns a list of papers that match the query.  We assume
-        # got is already scrubbed.
+        """Returns a list of papers that match the query.  We assume got
+        argument is already scrubbed."""
+
         out=set(list(qs.filter(cls.get_filter(got)).distinct()))
 
-        # we have already filtered by PMID, so lets get rid of the numbers
+        # we have already filtered by PMID, so lets get rid of the numbers.
         words=[]
         for item in got.getlist('s'):
             if not(item.isdigit()):
                 words.append(item)
 
+        # If there is nothing else to search for we can bail now.
         if 0 == len(words):
             return out
 
+        # or all the words together
         q=[]
         for word in words:
             q.append(Q(name__contains=word))
-
         os=Observable2.objects.filter(reduce(operator.or_,q))
+
         for o in os:
+            # filter out papers not of out type
             out=out.union(o.paper_list().filter(cls.the_filter))
 
         return out
 
     @classmethod
     def get_filter(cls,got):
+        """Returns a filter for the query specified in the, already scrubbed,
+        got variable."""
+
         q=[]
 
         if 's' in got:
@@ -78,18 +88,18 @@ class PaperIndexView(generic.ListView):
         return cls.the_filter # if 0==len(q)
 
     def get_queryset(self):
-        # Returns the objects fistered with get_filter.
+        """Returns the Paper.objects filtered with get_filter and self.request.GET."""
         return Paper.objects.filter(self.get_filter(self._scrub_GET())).distinct()
 
     def _scrub_GET(self):
-        # Use for interal staring of query
+        """Returns a scrubbed self.request.GET"""
         if not(self.GOT):
             self.GOT=self.scrub_GET(self.request.GET)
         return self.GOT
 
     @classmethod
     def scrub_GET(self,GET):
-        # classmethod so it can be called from yeastphenome.views.py
+        "Scrubbs a QueryDict object."
         OUT=QueryDict(mutable=True)
 
         # their can only be one 'debug' items and it must equal an
@@ -112,6 +122,8 @@ class PaperIndexView(generic.ListView):
         return OUT
 
     def get_context_data(self, **kwargs):
+        """Message the default context data to something we can use."""
+
         context = super(PaperIndexView, self).get_context_data(**kwargs)
         got=self._scrub_GET()
 
@@ -214,6 +226,8 @@ class ContributorsListView(generic.ListView):
 
 
 def zipo(request,paper_id):
+    """Constructs a zip file in memory for users to download."""
+
     p = get_object_or_404(Paper,pk=paper_id)
     if not(p.has_data()):
         raise Http404("Paper has no data.");
@@ -229,4 +243,6 @@ def zipo(request,paper_id):
             zip_file.write(path,arcname=an)
     zip_file.close()
 
-    return HttpResponse(zip_buff.getvalue(),content_type="application/zip")
+    out=HttpResponse(zip_buff.getvalue(),content_type="application/zip")
+    out['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX,p.pmid)
+    return out

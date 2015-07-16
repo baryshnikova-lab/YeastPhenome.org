@@ -82,14 +82,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# See ../READEME.md for a description
-DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
 
 STATICFILES_DIRS=(
     os.path.join(BASE_DIR, "static"),
@@ -99,3 +95,9 @@ GOOGLE_ANALYTICS_MODEL = True
 SITE_ID = 1
 
 MPTT_ADMIN_LEVEL_INDENT = 40
+
+# Project spcific configurations, see ../READEME.md for a description
+DOWNLOAD_PREFIX='YeastPhenome'
+DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
+
+
