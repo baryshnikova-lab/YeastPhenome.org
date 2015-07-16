@@ -28,17 +28,22 @@ class PaperIndexView(generic.ListView):
     GOT=False
 
     @classmethod
-    def filtered_count(cls,qs,got):
+    def filtered_count(cls,got):
         """Filter queryset through the_filter of this object and return how many we have."""
-
-        return len(cls.filtered_list(qs,got))
+        return len(cls.filtered_list(got))
 
     @classmethod
-    def filtered_list(cls,qs,got):
+    def filtered_list(cls,got,qs=False):
         """Returns a list of papers that match the query.  We assume got
         argument is already scrubbed."""
 
-        out=set(list(qs.filter(cls.get_filter(got)).distinct()))
+        out=None
+        if qs:
+            # Sometimes we already have the first bit of the query, we
+            # don't need to redo it.
+            out=set(list(qs.filter(cls.get_filter(got)).distinct()))
+        else:
+            out=set(list(Paper.objects.filter(cls.get_filter(got)).distinct()))
 
         # we have already filtered by PMID, so lets get rid of the numbers.
         words=[]
@@ -131,7 +136,7 @@ class PaperIndexView(generic.ListView):
         qs=context['papers_list']
 
         # Get the rest of the papers
-        papers=self.filtered_list(qs,got)
+        papers=self.filtered_list(got,qs=qs)
         context['papers_list']=papers
 
         context['verbose']=got.get('verbose')
@@ -139,15 +144,15 @@ class PaperIndexView(generic.ListView):
         if '?' == context['got']:
             context['got'] = ''
 
-        context['num_all'] = len(papers)
+        context['num_all'] = PaperAllIndexView.filtered_count(got)
 
         # Sure, the filter is still specified in two places, but at
         # least now the two places are right next to each other
-        context['num_haploid'] = PaperHaploidIndexView.filtered_count(qs,got)
-        context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(qs,got)
-        context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(qs,got)
-        context['num_quantitative'] = PaperQuantitativeIndexView.filtered_count(qs,got)
-        context['num_discrete'] = PaperDiscreteIndexView.filtered_count(qs,got)
+        context['num_haploid'] = PaperHaploidIndexView.filtered_count(got)
+        context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(got)
+        context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(got)
+        context['num_quantitative'] = PaperQuantitativeIndexView.filtered_count(got)
+        context['num_discrete'] = PaperDiscreteIndexView.filtered_count(got)
 
         return context
 
