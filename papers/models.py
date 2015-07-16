@@ -81,6 +81,8 @@ class Paper(models.Model):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
     def has_data(self):
+        """Return True if data has been loaded from data files."""
+
 	return 'loaded'==str(self.latest_data_status()) or 'loaded'==str(self.latest_tested_status())
 
     @property
@@ -92,8 +94,14 @@ class Paper(models.Model):
         return self.statustested_set.latest
 
     def download_path(self):
-        "Returns a path of where datafiles should be, regardless if it has data files or not."
+        """Returns a path of where datafiles should be, regardless if it has data files or not."""
         return os.path.join(settings.DATA_DIR,str(self.pmid))
+
+    @property
+    def download_path_exists(self):
+        """Reugardless if the paper should have data, returns True or Fals if
+        there is a datadirectory for this paper."""
+        return os.path.isdir(self.download_path())
 
     def static_dir_name(self):
         return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
@@ -110,7 +118,9 @@ class Paper(models.Model):
     link_detail.allow_tags = True
 
     def sources_to_acknowledge(self):
-        result = Source.objects.filter(Q(acknowledge = True) & (Q(data_source__paper = self) | Q(tested_source__paper = self))).values_list('person', flat=True).distinct()
+        result = Source.objects.filter(Q(acknowledge = True) & (Q(data_source__paper = self) | Q(tested_source__paper = self))).values_lis
+
+        t('person', flat=True).distinct()
         result_list = ''
         for r in result:
             result_list += u'%s ' % (r)
