@@ -20,7 +20,6 @@ from zipfile import ZipFile
 
 class PaperIndexView(generic.ListView):
     """A virtual class."""
-
     model = Paper
     template_name = 'papers/index.html'
     context_object_name = 'papers_list'
@@ -144,10 +143,8 @@ class PaperIndexView(generic.ListView):
         if '?' == context['got']:
             context['got'] = ''
 
+        # Let get totals for each
         context['num_all'] = PaperAllIndexView.filtered_count(got)
-
-        # Sure, the filter is still specified in two places, but at
-        # least now the two places are right next to each other
         context['num_haploid'] = PaperHaploidIndexView.filtered_count(got)
         context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(got)
         context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(got)
@@ -167,8 +164,8 @@ class PaperAllIndexView(PaperIndexView):
 
 
 class PaperHaploidIndexView(PaperIndexView):
-    queryset = Paper.objects.filter(dataset__collection__ploidy=1).distinct().order_by('pub_date')
     the_filter = Q(dataset__collection__ploidy=1)
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
     def get_context_data(self, **kwargs):
         context = super(PaperHaploidIndexView, self).get_context_data(**kwargs)
@@ -177,8 +174,8 @@ class PaperHaploidIndexView(PaperIndexView):
 
 
 class PaperDiploidHomozygousIndexView(PaperIndexView):
-    queryset = Paper.objects.filter(dataset__collection__shortname='hom').distinct().order_by('pub_date')
     the_filter = Q(dataset__collection__shortname='hom')
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
     def get_context_data(self, **kwargs):
         context = super(PaperDiploidHomozygousIndexView, self).get_context_data(**kwargs)
@@ -187,8 +184,8 @@ class PaperDiploidHomozygousIndexView(PaperIndexView):
 
 
 class PaperDiploidHeterozygousIndexView(PaperIndexView):
-    queryset = Paper.objects.filter(dataset__collection__shortname='het').distinct().order_by('pub_date')
     the_filter = Q(dataset__collection__shortname='het')
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
     def get_context_data(self, **kwargs):
         context = super(PaperDiploidHeterozygousIndexView, self).get_context_data(**kwargs)
@@ -197,8 +194,8 @@ class PaperDiploidHeterozygousIndexView(PaperIndexView):
 
 
 class PaperQuantitativeIndexView(PaperIndexView):
-    queryset = Paper.objects.filter(dataset__data_available='quantitative').distinct().order_by('pub_date')
     the_filter = Q(dataset__data_available='quantitative')
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
     def get_context_data(self, **kwargs):
         context = super(PaperQuantitativeIndexView, self).get_context_data(**kwargs)
@@ -206,8 +203,8 @@ class PaperQuantitativeIndexView(PaperIndexView):
         return context
 
 class PaperDiscreteIndexView(PaperIndexView):
-    queryset = Paper.objects.filter(dataset__data_available='discrete').distinct().order_by('pub_date')
     the_filter = Q(dataset__data_available='discrete')
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
     def get_context_data(self, **kwargs):
         context = super(PaperDiscreteIndexView, self).get_context_data(**kwargs)
