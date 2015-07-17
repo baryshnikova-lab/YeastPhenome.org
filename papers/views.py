@@ -23,8 +23,12 @@ class PaperIndexView(generic.ListView):
     model = Paper
     template_name = 'papers/index.html'
     context_object_name = 'papers_list'
-    the_filter = Q()
-    GOT=False
+
+    the_filter = Q() # this should be overloaded
+    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
+
+    GOT = False
+    template_ref = None # for tweaking with the template
 
     @classmethod
     def filtered_count(cls,got):
@@ -125,6 +129,18 @@ class PaperIndexView(generic.ListView):
         # anything else is hacking.
         return OUT
 
+    @classmethod
+    def context_update(cls,self_,qs,got):
+        out={}
+        key='num_%s' % (cls.template_ref)
+
+        if type(self_) == cls:
+            out[key]=len(qs)
+            out['sub_navigation']=cls.template_ref.replace('_',' ').capitalize()
+        else:
+            out[key]=cls.filtered_count(got)
+        return out
+
     def get_context_data(self, **kwargs):
         """Message the default context data to something we can use."""
 
@@ -143,74 +159,40 @@ class PaperIndexView(generic.ListView):
         if '?' == context['got']:
             context['got'] = ''
 
-        # Let get totals for each
-        context['num_all'] = PaperAllIndexView.filtered_count(got)
-        context['num_haploid'] = PaperHaploidIndexView.filtered_count(got)
-        context['num_diploid_homozygous'] = PaperDiploidHomozygousIndexView.filtered_count(got)
-        context['num_diploid_heterozygous'] = PaperDiploidHeterozygousIndexView.filtered_count(got)
-        context['num_quantitative'] = PaperQuantitativeIndexView.filtered_count(got)
-        context['num_discrete'] = PaperDiscreteIndexView.filtered_count(got)
+        # Let get totals for each paper type
+        context.update(PaperAllIndexView.context_update(self,qs,got))
+        context.update(PaperHaploidIndexView.context_update(self,qs,got))
+        context.update(PaperDiploidHomozygousIndexView.context_update(self,qs,got))
+        context.update(PaperDiploidHeterozygousIndexView.context_update(self,qs,got))
+        context.update(PaperQuantitativeIndexView.context_update(self,qs,got))
+        context.update(PaperDiscreteIndexView.context_update(self,qs,got))
 
         return context
 
 
 class PaperAllIndexView(PaperIndexView):
     queryset = Paper.objects.order_by('pmid')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperAllIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'All'
-        return context
-
+    template_ref = 'all'
 
 class PaperHaploidIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__ploidy=1)
-    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperHaploidIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'Haploid'
-        return context
-
+    template_ref = 'haploid'
 
 class PaperDiploidHomozygousIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__shortname='hom')
-    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperDiploidHomozygousIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'Diploid homozygous'
-        return context
-
+    template_ref = 'diploid_homozygous'
 
 class PaperDiploidHeterozygousIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__shortname='het')
-    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperDiploidHeterozygousIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'Diploid heterozygous'
-        return context
-
+    template_ref='diploid_heterozygous'
 
 class PaperQuantitativeIndexView(PaperIndexView):
     the_filter = Q(dataset__data_available='quantitative')
-    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperQuantitativeIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'Quantitative'
-        return context
+    template_ref='quantitative'
 
 class PaperDiscreteIndexView(PaperIndexView):
     the_filter = Q(dataset__data_available='discrete')
-    queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super(PaperDiscreteIndexView, self).get_context_data(**kwargs)
-        context['sub_navigation'] = 'Discrete'
-        return context
-
+    template_ref='discrete'
 
 class PaperDetailView(generic.DetailView):
     model = Paper
