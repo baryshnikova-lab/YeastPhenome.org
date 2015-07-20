@@ -7,6 +7,11 @@
 there are two added items that isn't a Django standard.  Both are only
 refered to in the `paper/models.py` file.
 
+### `TITLE`
+
+The title of the web site, to make it easy to distinguisg the
+developement site from testing and production.
+
 ### `DATA_DIR`
 
 Link to directory containing directoris of PubMed it's to be offered
