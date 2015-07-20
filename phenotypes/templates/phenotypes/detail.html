@@ -3,6 +3,8 @@
 {% load string_multiply %}
 <html>
 <head>
+
+<title>{{ TITLE }} / Phenotypes / {{ object|capfirst }}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
@@ -17,7 +19,7 @@
 	); 
 </script>
   
-<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / <a href="/phenotypes/">Phenotypes</a> /</div>
+<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / <a href="/phenotypes/">Phenotypes</a> /</div>
 <h1>{{ object|capfirst }}</h1>
 
 <p>

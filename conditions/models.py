@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
+from django.db.models.loading import get_model
 
 from phenotypes.models import Phenotype
 
@@ -42,14 +43,14 @@ class ConditionType(models.Model):
         return list
 
     def papers(self):
-        result = models.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+        result = get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())
         return l
 
     def datasets(self):
-        return models.get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self).distinct()
+        return get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self).distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.id,)), self)
@@ -94,7 +95,7 @@ class ConditionSet(models.Model):
 
 
     def papers(self):
-        result = models.get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
+        result = get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
         papers_list = ''
         for p in result:
             papers_list += '%s, ' % (p.link_detail())
@@ -102,7 +103,7 @@ class ConditionSet(models.Model):
     papers.allow_tags = True
 
     def datasets(self):
-        return models.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+        return get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
     def conditionset_link(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)

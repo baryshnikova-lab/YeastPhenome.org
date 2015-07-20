@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <html>
 <head>
-<title>YeastPhenome.org - Papers/Detail - {{ object }}</title>
+<title>{{ TITLE }} / Papers / {{ object }}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
@@ -16,7 +16,7 @@
 	); 
 </script>
   
-<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / <a href="/papers/">Papers</a> /</div>
+<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / <a href="/papers/">Papers</a> /</div>
 
 <hgroup>
 <h1>{{ object }}</h1>

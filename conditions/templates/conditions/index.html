@@ -1,6 +1,8 @@
 {% load staticfiles %}
 <html>
 <head>
+
+<title>{{ TITLE }} / Conditions</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
@@ -16,7 +18,7 @@
 	); 
 </script>
   
-<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / </div>
 <h1>Conditions</h1>
 {% if conditiontype_list %}
 <table id="papersTable" class="tablesorter" width="100%" border="1">

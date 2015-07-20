@@ -4,6 +4,8 @@
 {% load my_filters %}
 <html>
 <head>
+
+<title>{{ TITLE }} / Phenotypes</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
@@ -18,7 +20,7 @@
 	);
 </script>
 
-<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
+<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / </div>
 <h1>Phenotypes</h1>
 <table id="papersTable" class="tablesorter" width="100%" border="1">
   <caption>

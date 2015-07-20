@@ -27,7 +27,7 @@ class PaperIndexView(generic.ListView):
     the_filter = Q() # this should be overloaded
     queryset = Paper.objects.filter(the_filter).distinct().order_by('pub_date')
 
-    GOT = False
+    GOT = False # for caching multiple requests
     template_ref = None # for tweaking with the template
 
     @classmethod

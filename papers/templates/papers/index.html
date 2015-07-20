@@ -3,7 +3,7 @@
 {% load my_filters %}
 <html>
 <head>
-<title>YeastPhenome.org - Papers</title>
+<title>{{ TITLE }} / Papers</title>
 <link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
 <script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
@@ -18,7 +18,7 @@
 	); 
 </script>
   
-<div id="breadcrumbs"><a href="/{{ got }}">YeastPhenome.org</a> / </div>
+<div id="breadcrumbs"><a href="/{{ got }}">{{ TITLE }}</a> / </div>
 <h1>Papers</h1>
 
 {% if papers_list %}

@@ -23,10 +23,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
-
 ALLOWED_HOSTS = ['*',]
-
 
 # Application definition
 
@@ -96,8 +93,22 @@ SITE_ID = 1
 
 MPTT_ADMIN_LEVEL_INDENT = 40
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'yeastphenome.context_processors.globals',
+            ]
+        }
+    }
+]
+
 # Project spcific configurations, see ../READEME.md for a description
 DOWNLOAD_PREFIX='YeastPhenome'
 DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
-
+TITLE='YeastPhenome.org - just installed'
 
