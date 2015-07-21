@@ -63,9 +63,13 @@ class Paper(models.Model):
             phenotype_list += '%s, ' % (p.link_detail())
         return phenotype_list
 
+    def condition_list(self):
+        """Returns a QuerySet of conditions associated with this paper."""
+        return ConditionType.objects.filter(condition__conditionset__dataset__paper=self)
+
     @property
     def conditions(self):
-        return list(map(str, ConditionType.objects.filter(condition__conditionset__dataset__paper=self).values_list(
+        return list(map(str, self.condition_list().values_list(
             'short_name', flat=True).distinct()))
 
     @property

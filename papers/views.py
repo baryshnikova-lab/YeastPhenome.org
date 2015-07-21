@@ -7,6 +7,7 @@ from papers.models import Paper
 import operator
 
 from phenotypes.models import Observable2
+from conditions.models import ConditionType
 
 # These only needed for zipo
 import os
@@ -46,6 +47,7 @@ class PaperIndexView(generic.ListView):
             # don't need to redo it.
             out=set(list(qs.filter(cls.get_filter(got)).distinct()))
         else:
+            # sometimes we don't
             out=set(list(Paper.objects.filter(cls.get_filter(got)).distinct()))
 
         # we have already filtered by PMID, so lets get rid of the numbers.
@@ -58,15 +60,28 @@ class PaperIndexView(generic.ListView):
         if 0 == len(words):
             return out
 
-        # or all the words together
+        # logical or all the words together
         q=[]
         for word in words:
             q.append(Q(name__contains=word))
-        os=Observable2.objects.filter(reduce(operator.or_,q))
+        # we want to search the name column in both Observable2 and
+        # ConditionsType
 
+        # now we get phenotypes
+        os=Observable2.objects.filter(reduce(operator.or_,q))
         for o in os:
             # filter out papers not of out type
             out=out.union(o.paper_list().filter(cls.the_filter))
+
+        # in the conditionType search we also want to check the
+        # "short_name" column.
+        for word in words:
+            q.append(Q(short_name__contains=word))
+
+        # here we get conditions
+        cs=ConditionType.objects.filter(reduce(operator.or_,q))
+        for c in cs:
+            out=out.union(c.paper_list().filter(cls.the_filter))
 
         return out
 

@@ -42,8 +42,12 @@ class ConditionType(models.Model):
             list += '%s, ' % (p.link_detail())
         return list
 
+    def paper_list(self):
+        """Returns a QuerySet of Papers with this ConditionType."""
+        return get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+
     def papers(self):
-        result = get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+        result = self.pnqoaper_list()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())
