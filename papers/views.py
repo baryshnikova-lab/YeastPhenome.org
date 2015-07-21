@@ -151,6 +151,7 @@ class PaperIndexView(generic.ListView):
 
         if type(self_) == cls:
             out[key]=len(qs)
+            #out[key]=cls.filtered_count(got)
             out['sub_navigation']=cls.template_ref.replace('_',' ').capitalize()
         else:
             out[key]=cls.filtered_count(got)
@@ -163,10 +164,9 @@ class PaperIndexView(generic.ListView):
         got=self._scrub_GET()
 
         # filter out by pmid and author
-        qs=context['papers_list']
+        papers=context['papers_list']
 
-        # Get the rest of the papers
-        papers=self.filtered_list(got,qs=qs)
+        papers=self.filtered_list(got,qs=papers)
         context['papers_list']=papers
 
         context['verbose']=got.get('verbose')
@@ -175,12 +175,18 @@ class PaperIndexView(generic.ListView):
             context['got'] = ''
 
         # Let get totals for each paper type
-        context.update(PaperAllIndexView.context_update(self,qs,got))
-        context.update(PaperHaploidIndexView.context_update(self,qs,got))
-        context.update(PaperDiploidHomozygousIndexView.context_update(self,qs,got))
-        context.update(PaperDiploidHeterozygousIndexView.context_update(self,qs,got))
-        context.update(PaperQuantitativeIndexView.context_update(self,qs,got))
-        context.update(PaperDiscreteIndexView.context_update(self,qs,got))
+        context.update(PaperAllIndexView.context_update
+                       (self,papers,got))
+        context.update(PaperHaploidIndexView.context_update
+                       (self,papers,got))
+        context.update(PaperDiploidHomozygousIndexView.context_update
+                       (self,papers,got))
+        context.update(PaperDiploidHeterozygousIndexView.context_update
+                       (self,papers,got))
+        context.update(PaperQuantitativeIndexView.context_update
+                       (self,papers,got))
+        context.update(PaperDiscreteIndexView.context_update
+                       (self,papers,got))
 
         return context
 
