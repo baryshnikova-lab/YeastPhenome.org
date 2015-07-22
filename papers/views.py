@@ -114,6 +114,16 @@ class PaperIndexView(generic.ListView):
         """Returns the Paper.objects filtered with get_filter and self.request.GET."""
         return Paper.objects.filter(self.get_filter(self._scrub_GET())).distinct()
 
+    @classmethod
+    def scrub_GET_txt(self,get):
+        """Returns text suitable for putting in the search box."""
+        return self.got_txt(self.scrub_GET(get))
+
+    @classmethod
+    def got_txt(self,got):
+        """Same as scrub_GET_txt() but assume got is already scrubbed."""
+        return ' '.join(got.getlist('s'))
+
     def _scrub_GET(self):
         """Returns a scrubbed self.request.GET"""
         if not(self.GOT):
@@ -167,8 +177,10 @@ class PaperIndexView(generic.ListView):
         papers=context['papers_list']
 
         papers=self.filtered_list(got,qs=papers)
-        context['papers_list']=papers
+        # at this pount papers is a list, no a QuerySet.
 
+        context['s']=self.got_txt(got)
+        context['papers_list']=papers
         context['verbose']=got.get('verbose')
         context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:

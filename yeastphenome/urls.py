@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	url(r'^$', 'yeastphenome.views.index', name='index'),
+    url(r'^$', 'yeastphenome.views.index', name='index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^papers/', include('papers.urls', namespace="papers")),
     url(r'^phenotypes/', include('phenotypes.urls', namespace="phenotypes")),

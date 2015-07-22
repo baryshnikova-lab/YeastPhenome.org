@@ -18,8 +18,15 @@
 	); 
 </script>
   
-<div id="breadcrumbs"><a href="/{{ got }}">{{ TITLE }}</a> / </div>
+
+<header style="float:left">
+<nav id="breadcrumbs"><a href="/{{ got }}">{{ TITLE }}</a> / </nav>
 <h1>Papers</h1>
+</header>
+
+<div class="right" style="float:right">
+{% include "search.html" %}
+</div>
 
 {% if papers_list %}
 <table id="papersTable" class="tablesorter" width="100%" border="1">

@@ -24,6 +24,6 @@ def index(request):
                'updated': max(latest_paper, latest_condition),
 
                # To repopulate the search box
-               'got':' '.join(PaperIndexView.scrub_GET(request.GET).getlist('s')),
+               's':PaperIndexView.scrub_GET_txt(request.GET)
                }
     return render(request, 'yeastphenome/index.html', context)

@@ -21,12 +21,7 @@ We are collecting phenotypic data derived from <strong>systematic screens</stron
 
 
 <div class="right">
-
-  <form action="/papers/" method="GET">
-    <p>Search: <input type="text" name="s" value="{{ got }}"/>&nbsp;<button type="submit">Submit</button></p>
-    <p class="small">Search PMIDs, first/last authors, and phenotypes.</p>
-  </form>
-
+{% include "search.html" %}
 </div><div id="right">
 
   <p>Current status for data collection:</p>
