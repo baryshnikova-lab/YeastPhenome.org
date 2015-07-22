@@ -71,7 +71,7 @@ class PaperIndexView(generic.ListView):
         os=Observable2.objects.filter(reduce(operator.or_,q))
         for o in os:
             # filter out papers not of out type
-            out=out.union(o.paper_list().filter(cls.the_filter))
+            out.update(o.paper_list().filter(cls.the_filter))
 
         # in the conditionType search we also want to check the
         # "short_name" column.
@@ -81,7 +81,7 @@ class PaperIndexView(generic.ListView):
         # here we get conditions
         cs=ConditionType.objects.filter(reduce(operator.or_,q))
         for c in cs:
-            out=out.union(c.paper_list().filter(cls.the_filter))
+            out.update(c.paper_list().filter(cls.the_filter))
 
         return out
 
