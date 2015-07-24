@@ -1,9 +1,12 @@
 from django.db import models
 from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
-from django.db.models.loading import get_model
 
 from phenotypes.models import Phenotype
+
+from django.db.models.loading import get_model
+#from django.apps import apps
+#get_model=apps.get_model
 
 
 class ConditionType(models.Model):
@@ -47,7 +50,7 @@ class ConditionType(models.Model):
         return get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
     def papers(self):
-        result = self.pnqoaper_list()
+        result = self.paper_list()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())

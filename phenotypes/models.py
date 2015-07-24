@@ -1,8 +1,10 @@
 from django.db import models
-from django.db.models.loading import get_model
 from django.core.urlresolvers import reverse
 from mptt.models import MPTTModel, TreeForeignKey
 
+from django.db.models.loading import get_model
+#from django.apps import apps
+#get_model=apps.get_model
 
 
 class Observable2(MPTTModel):
