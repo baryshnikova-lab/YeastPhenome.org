@@ -1,10 +1,9 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.apps import apps
 from mptt.models import MPTTModel, TreeForeignKey
 
-from django.db.models.loading import get_model
-#from django.apps import apps
-#get_model=apps.get_model
+
 
 
 class Observable2(MPTTModel):
@@ -38,7 +37,7 @@ class Observable2(MPTTModel):
 
     def paper_list(self):
         # Returns a list of papers associated with this Observable
-        return get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
+        return apps.get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
 
     def papers(self):
         # Return HTML list of papers
@@ -49,14 +48,14 @@ class Observable2(MPTTModel):
         return l
 
     def condition_types(self):
-        result = get_model('conditions','ConditionType').objects.filter(condition__conditionset__dataset__phenotype__observable2=self).distinct()
+        result = apps.get_model('conditions','ConditionType').objects.filter(condition__conditionset__dataset__phenotype__observable2=self).distinct()
         l = ''
         for r in result:
             l += '%s, ' % (r.link_detail())
         return l
 
     def datasets(self):
-        return get_model('papers','Dataset').objects.filter(phenotype__observable2=self).distinct()
+        return apps.get_model('papers','Dataset').objects.filter(phenotype__observable2=self).distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.id,)), self)
@@ -98,7 +97,7 @@ class Phenotype(models.Model):
     observable2_name.allow_tags = True
 
     def papers(self):
-        result = get_model('papers','Paper').objects.filter(dataset__phenotype=self).distinct()
+        result = apps.get_model('papers','Paper').objects.filter(dataset__phenotype=self).distinct()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())

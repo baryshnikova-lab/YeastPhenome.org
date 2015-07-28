@@ -1,12 +1,8 @@
 from django.db import models
 from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
-
+from django.apps import apps
 from phenotypes.models import Phenotype
-
-from django.db.models.loading import get_model
-#from django.apps import apps
-#get_model=apps.get_model
 
 
 class ConditionType(models.Model):
@@ -47,7 +43,7 @@ class ConditionType(models.Model):
 
     def paper_list(self):
         """Returns a QuerySet of Papers with this ConditionType."""
-        return get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+        return apps.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
     def papers(self):
         result = self.paper_list()
@@ -57,7 +53,7 @@ class ConditionType(models.Model):
         return l
 
     def datasets(self):
-        return get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self).distinct()
+        return apps.get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self).distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.id,)), self)
@@ -102,7 +98,7 @@ class ConditionSet(models.Model):
 
 
     def papers(self):
-        result = get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
+        result = apps.get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
         papers_list = ''
         for p in result:
             papers_list += '%s, ' % (p.link_detail())
@@ -110,7 +106,7 @@ class ConditionSet(models.Model):
     papers.allow_tags = True
 
     def datasets(self):
-        return get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+        return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
     def conditionset_link(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)
