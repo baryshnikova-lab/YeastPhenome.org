@@ -42,14 +42,15 @@
   </caption>
   <thead>
     <tr>
-      <th width="10%"><span>PMID</span></th>
-      <th width="20%"><span>FirstAuthor~LastAuthor, Year</span></th>
-      <th width="14%"><span>Phenotypes</span></th>
-      <th width="14%"><span>Conditions</span></th>
+      <th><span>PMID</span></th>
+      <th><span>FirstAuthor~LastAuthor, Year</span></th>
+      <th><span>Phenotypes</span></th>
+      <th><span>Conditions</span></th>
+      <th><span>Download</span></th>
 {% if verbose >= 1 %}
-      <th width="14%"><span>Type of data</span></th>
-      <th width="14%"><span>Data status</span></th>
-      <th width="14%"><span>List of tested genes</span></th>
+      <th><span>Type of data</span></th>
+      <th><span>Data status</span></th>
+      <th><span>List of tested genes</span></th>
 {% endif %}
     </tr>
   </thead>
@@ -64,6 +65,9 @@
         <td>{{ paper.link_detail|safe }}</td>
         <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
         <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+	<td>{% if paper.has_data %}
+{% include "zip.html" %}
+{% endif %}</td>
 {% if verbose >= 1 %}
 	<td>{{ paper.data_available|join:", " }}</td>
 	<td>{{ paper.latest_data_status|capfirst }}</td>

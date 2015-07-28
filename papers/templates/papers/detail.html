@@ -34,21 +34,12 @@
 {% else %}
 <dd class="nothing">&#8210; no notes &#8210;</dd>
 {% endif %}
-
 <dt>Downloads</dt>
-
-{% if paper.has_data %}
-
-{% if paper.download_path_exists %}
-<dd><a href="/papers/{{ paper.pk }}.zip">Zip</dd>
+<dd>{% if paper.has_data %}
+{% include "zip.html" %}
 {% else %}
-<dd>Unable to locate files.</dd>
-{% endif %}
-
-{% else %}
-<dd class="nothing">&#8210; no files &#8210;</dd>
-{% endif %}
-
+<span class="nothing">&#8210; no files &#8210;</span>
+{% endif %}</dd>
 </dl>
 
 <table id="papersTable" class="tablesorter" width="100%" border="1">

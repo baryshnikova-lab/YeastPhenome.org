@@ -3,10 +3,9 @@ from django.core.urlresolvers import reverse
 from django.apps import apps
 from mptt.models import MPTTModel, TreeForeignKey
 
-
-
-
 class Observable2(MPTTModel):
+    """Generally the way to fetch phenotypes."""
+
     name = models.CharField(max_length=200)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     description = models.TextField(blank=True, null=True)

@@ -1,0 +1,5 @@
+{% if paper.download_path_exists %}
+<a href="/papers/{{ paper.pk }}.zip">Zip</a>
+{% else %}
+Unable to locate files.
+{% endif %}
