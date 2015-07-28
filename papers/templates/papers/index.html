@@ -30,6 +30,7 @@
 
 {% if papers_list %}
 <table id="papersTable" class="tablesorter" width="100%" border="1">
+{% comment %}
   <caption>
     <nav>
       <span class="{% active sub_navigation 'All' %}"><a href="/papers/{{ got }}">All</a> <span class="small">{{ num_all }}</span></span>
@@ -40,17 +41,18 @@
       <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/{{ got }}">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
     </nav>
   </caption>
+{% endcomment %}
   <thead>
     <tr>
       <th><span>PMID</span></th>
       <th><span>FirstAuthor~LastAuthor, Year</span></th>
       <th><span>Phenotypes</span></th>
       <th><span>Conditions</span></th>
-      <th><span>Download</span></th>
-{% if verbose >= 1 %}
       <th><span>Type of data</span></th>
+{% if verbose >= 1 %}
       <th><span>Data status</span></th>
       <th><span>List of tested genes</span></th>
+      <th><span>Download</span></th>
 {% endif %}
     </tr>
   </thead>
@@ -65,13 +67,13 @@
         <td>{{ paper.link_detail|safe }}</td>
         <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
         <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+	<td>{{ paper.data_available|join:", " }}</td>
+{% if verbose >= 1 %}
+	<td>{{ paper.latest_data_status|capfirst }}</td>
+	<td>{{ paper.latest_tested_status|capfirst }}</td>
 	<td>{% if paper.has_data %}
 {% include "zip.html" %}
 {% endif %}</td>
-{% if verbose >= 1 %}
-	<td>{{ paper.data_available|join:", " }}</td>
-	<td>{{ paper.latest_data_status|capfirst }}</td>
-	<td>{{ paper.latest_tested_status|capfirst }}</td>
 {% endif %}
         </tr>
     {% endfor %}

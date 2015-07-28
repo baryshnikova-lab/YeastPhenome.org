@@ -152,19 +152,20 @@ class PaperIndexView(generic.ListView):
         if '?' == context['got']:
             context['got'] = ''
 
-        # Let get totals for each paper type
-        context.update(PaperAllIndexView.context_update
-                       (self,papers,got))
-        context.update(PaperHaploidIndexView.context_update
-                       (self,papers,got))
-        context.update(PaperDiploidHomozygousIndexView.context_update
-                       (self,papers,got))
-        context.update(PaperDiploidHeterozygousIndexView.context_update
-                       (self,papers,got))
-        context.update(PaperQuantitativeIndexView.context_update
-                       (self,papers,got))
-        context.update(PaperDiscreteIndexView.context_update
-                       (self,papers,got))
+        # # Let get totals for each paper type
+        # context.update(PaperAllIndexView.context_update
+        #                (self,papers,got))
+        # context.update(PaperHaploidIndexView.context_update
+        #                (self,papers,got))
+        # context.update(PaperDiploidHomozygousIndexView.context_update
+        #                (self,papers,got))
+        # context.update(PaperDiploidHeterozygousIndexView.context_update
+        #                (self,papers,got))
+        # context.update(PaperQuantitativeIndexView.context_update
+        #                (self,papers,got))
+        # context.update(PaperDiscreteIndexView.context_update
+        #                (self,papers,got))
+
 
         return context
 
