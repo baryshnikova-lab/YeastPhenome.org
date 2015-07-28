@@ -10,7 +10,7 @@ class Observable2(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     description = models.TextField(blank=True, null=True)
     definition = models.TextField(blank=True, null=True)
-    modified_on = models.DateField(auto_now=True)
+    modified_on = models.DateField(auto_now=True, null=True)
     ancestry = models.CharField(max_length=200, blank=True, null=True)
 
     def __unicode__(self):
@@ -72,7 +72,7 @@ class Phenotype(models.Model):
     description = models.TextField(blank=True, null=True)
     observable2 = TreeForeignKey(Observable2)
     reporter = models.CharField(max_length=200, null=True, blank=True)
-    modified_on = models.DateField(auto_now=True)
+    modified_on = models.DateField(auto_now=True, null=True)
 
     def __unicode__(self):
         if self.reporter == '':

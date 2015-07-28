@@ -63,11 +63,10 @@ class ConditionType(models.Model):
 class Condition(models.Model):
     name = models.CharField(max_length=200, blank=True)
     dose = models.CharField(max_length=200, blank=True, default='unknown')
-    other_names = models.CharField(max_length=200, blank=True)
-    description = models.TextField(blank=True)
+    other_names = models.CharField(max_length=200, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     type = models.ForeignKey(ConditionType, null=True, blank=True)
-
-    modified_on = models.DateField(auto_now=True)
+    modified_on = models.DateField(auto_now=True, null=True)
 
     class Meta:
         get_latest_by = 'modified_on'
@@ -87,7 +86,7 @@ class Condition(models.Model):
 class ConditionSet(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     conditions = models.ManyToManyField(Condition)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         conditions_list = ", ".join([unicode(condition) for condition in self.conditions.all()])

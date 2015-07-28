@@ -4,6 +4,8 @@ from django.db.models import Count, Sum
 from papers.models import Paper, ConditionType, Condition, ConditionSet, Observable2, Data
 from papers.views import PaperIndexView
 
+import datetime
+
 def index(request):
     paper_num_total = Paper.objects.all().count()
     paper_num_with_data = Data.objects.values('dataset__paper').distinct().count()
@@ -15,6 +17,10 @@ def index(request):
 
     most_studied_phenotype = Observable2.objects.annotate(num_datapoints=Sum('phenotype__dataset__tested_num')).order_by('-num_datapoints').first()
     most_studied_conditionset = ConditionSet.objects.exclude(name='standard').exclude(name='').values('name').annotate(num_datapoints=Sum('dataset__tested_num')).order_by('-num_datapoints').first()
+
+    if latest_condition is None:
+        # fudging NULL entries in the database
+        latest_condition = datetime.date(1,1,1)
 
     context = {'paper_num_total': paper_num_total, 'paper_num_with_data': paper_num_with_data,
                'phenotype_num_total': phenotype_num_total, 'phenotype_num_with_data': phenotype_num_with_data,

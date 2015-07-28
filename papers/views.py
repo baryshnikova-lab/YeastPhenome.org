@@ -36,9 +36,9 @@ class PaperIndexView(generic.ListView):
             papers=[] # hold list of paper ids
 
             for s in got.getlist('s'):
-                o2s=Observable2.objects.filter(name__contains=s)
+                o2s=Observable2.objects.filter(name__icontains=s)
                 cts=ConditionType.objects.filter(
-                    Q(name__contains=s)|Q(short_name__contains=s))
+                    Q(name__icontains=s)|Q(short_name__icontains=s))
 
                 ps=set()
                 for o2 in o2s:
@@ -51,10 +51,10 @@ class PaperIndexView(generic.ListView):
                 f=None
                 if s.isdigit():
                     # we don't need to check PMID unless it's all digits
-                    f=(Q(first_author__contains=s)|Q(last_author__contains=s)|
-                       Q(pmid__contains=s))
+                    f=(Q(first_author__icontains=s)|Q(last_author__icontains=s)|
+                       Q(pmid__contains=s)) # on icontains for PMID, it's a number
                 else:
-                    f=Q(first_author__contains=s)|Q(last_author__contains=s)
+                    f=Q(first_author__icontains=s)|Q(last_author__icontains=s)
 
                 for paper in Paper.objects.exclude(pk__in=ps).filter(f):
                     ps.add(paper.id)
