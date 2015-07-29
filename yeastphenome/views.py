@@ -15,7 +15,7 @@ def index(request):
     latest_paper = Paper.objects.all().latest().modified_on
     latest_condition = Condition.objects.all().latest().modified_on
 
-    most_studied_phenotype = Observable2.objects.annotate(num_datapoints=Sum('phenotype__dataset__tested_num')).order_by('-num_datapoints').first()
+    most_studied_phenotype = Observable2.objects.annotate(num_datapoints=Sum('phenotype__dataset__tested_num')).exclude(num_datapoints=None).order_by('-num_datapoints').first()
     most_studied_conditionset = ConditionSet.objects.exclude(name='standard').exclude(name='').values('name').annotate(num_datapoints=Sum('dataset__tested_num')).order_by('-num_datapoints').first()
 
     if latest_condition is None:
