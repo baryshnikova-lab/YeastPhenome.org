@@ -23,23 +23,31 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+#TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]
+
 ALLOWED_HOSTS = ['*',]
+
 
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+    # For some odd reason when we first migrate with postgres we need
+    # to do only these three first.
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
+
+    # Then add the rest when the first three are successful.
+    'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
+    'google_analytics',
+    'mptt',
+
     'papers',
     'phenotypes',
     'conditions',
-    'google_analytics',
-    'mptt',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -61,6 +69,10 @@ WSGI_APPLICATION = 'yeastphenome.wsgi.application'
 
 DATABASES = {
     'default': {
+#        'ENGINE':'django.db.backends.postgresql_psycopg2',
+#        'NAME':'database',
+#        'USER':'user',
+
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -111,4 +123,3 @@ TEMPLATES = [
 DOWNLOAD_PREFIX='YeastPhenome'
 DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
 TITLE='YeastPhenome.org - just installed'
-
