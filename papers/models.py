@@ -122,9 +122,7 @@ class Paper(models.Model):
     link_detail.allow_tags = True
 
     def sources_to_acknowledge(self):
-        result = Source.objects.filter(Q(acknowledge = True) & (Q(data_source__paper = self) | Q(tested_source__paper = self))).values_lis
-
-        t('person', flat=True).distinct()
+        result = Source.objects.filter(Q(acknowledge = True) & (Q(data_source__paper = self) | Q(tested_source__paper = self))).values_list('person', flat=True).distinct()
         result_list = ''
         for r in result:
             result_list += u'%s ' % (r)
