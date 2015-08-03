@@ -1,93 +1,78 @@
-{% load staticfiles %}
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Papers / {{ object }}</title>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
-
-<body>
-<script>
-	$(document).ready(function() 
-		{ 
-			$("#papersTable").tablesorter(); 
-		} 
-	); 
-</script>
-  
-<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / <a href="/papers/">Papers</a> /</div>
+<script>$(document).ready(function(){ 
+ $("#papersTable").tablesorter(); 
+});</script>
+</head><body><div class="container">
 
 <hgroup>
-<h1>{{ object }}</h1>
-{% if 0 != object.pmid %}
-<h1 class="pmid">PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></h1>
-{% endif %}
+  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'papers:all' %}">Papers</a> /</nav>
+  <h1>{{ object }}</h1>
+  {% if 0 != object.pmid %}
+  <p class="pmid">PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></p>
+  {% endif %}
 </hgroup>
 
-<dl>
+<dl class="dl-horizontal">
+  <dt>Notes</dt>
+  {% if object.notes %}
+  <dd>{{ object.notes }}</dd>
+  {% else %}
+  <dd class="nothing">&#8210; no notes &#8210;</dd>
+  {% endif %}
 
-<dt>Notes</dt>
-
-{% if object.notes %}
-<dd>{{ object.notes }}</dd>
-{% else %}
-<dd class="nothing">&#8210; no notes &#8210;</dd>
-{% endif %}
-<dt>Downloads</dt>
-<dd>{% if paper.has_data %}
-{% include "zip.html" %}
-{% else %}
-<span class="nothing">&#8210; no files &#8210;</span>
-{% endif %}</dd>
+  <dt>Downloads</dt>
+  <dd>{% if paper.has_data %}
+    {% include "zip.html" %}
+    {% else %}
+    <span class="nothing">&#8210; no files &#8210;</span>
+    {% endif %}</dd>
 </dl>
 
-<table id="papersTable" class="tablesorter" width="100%" border="1">
- <thead>
+{% if object.dataset_set.all %}
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  <thead>
     <tr>
-		<th><span>Phenotype</span></th>
-		<th><span>Condition set</span></th>
-		<th><span>Collection</span></th>
-		<th><span>Tested genes</span></th>
-		<th><span>Tested genes published</span></th>
-        <th><span>Tested genes available</span></th>
-		<th><span>Data measured</span></th>
-		<th><span>Data published</span></th>
-		<th><span>Data available</span></th>
-        <th><span>Has data</span></th>
-	</tr>
-</thead>
-
-<tbody>
-	
-	{% for dataset in object.dataset_set.all %}
-	<tr>
-		<td>{{ dataset.phenotype.observable2.link_detail|safe }}</td>
-		<td>{{ dataset.conditionset }}</td>
-		<td>{{ dataset.collection }}</td>
-		<td>{{ dataset.tested_num }}</td>
-		<td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
-        <td>
-            {% if not dataset.tested_source %}
-            No
-            {% else %}
-            {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
-            {% endif %}
-        </td>
-		<td>{{ dataset.data_measured|capfirst }}</td>
-		<td>{{ dataset.data_published|capfirst }}</td>
-		<td>{{ dataset.data_available|capfirst }}
-            <br>{{ dataset.data_source|safe }}
-            <br>{{ paper.latest_data_status|capfirst }}
-        </td>
-        <td>{{ dataset.has_data }}</td>
-		
-	</tr>
-	{% endfor %}
-
-</tbody>
-
+      <th>Phenotype</th>
+      <th>Condition set</th>
+      <th>Collection</th>
+      <th>Tested genes</th>
+      <th>Tested genes published</th>
+      <th>Tested genes available</th>
+      <th>Data measured</th>
+      <th>Data published</th>
+      <th>Data available</th>
+      <th>Has data</th>
+    </tr>
+  </thead><tbody>
+    {% for dataset in object.dataset_set.all %}
+    <tr>
+      <td>{{ dataset.phenotype.observable2.link_detail|safe }}</td>
+      <td>{{ dataset.conditionset }}</td>
+      <td>{{ dataset.collection }}</td>
+      <td>{{ dataset.tested_num }}</td>
+      <td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
+      <td>
+        {% if not dataset.tested_source %}
+        No
+        {% else %}
+        {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
+        {% endif %}
+      </td>
+      <td>{{ dataset.data_measured|capfirst }}</td>
+      <td>{{ dataset.data_published|capfirst }}</td>
+      <td>{{ dataset.data_available|capfirst }}
+        <br>{{ dataset.data_source|safe }}
+        <br>{{ paper.latest_data_status|capfirst }}
+      </td>
+      <td>{{ dataset.has_data }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
-</body>
-</html>
-
+{% else %}
+<aside class="bg-warning">No datasets are loaded.</aside>
+{% endif %}
+</div>{# container #}</body></html>

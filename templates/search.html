@@ -1,4 +1,4 @@
-<form action="/papers/" method="GET">
-  <p>Search: <input type="text" name="s" value="{{ s }}"/>&nbsp;<button type="submit">Submit</button></p>
-  <p class="small">Search PMIDs, first/last authors, and phenotypes.</p>
+<form action="{% url 'papers:all' %}" method="GET">
+  <p>Search: <input type="search" name="s" value="{{ s }}"/>&nbsp;<button type="submit">Submit</button></p>
+  <p class="small">Search <a href="{% url 'papers:all' %}">papers</a> by PMIDs, first/last authors, phenotypes, and conditions.</p>
 </form>

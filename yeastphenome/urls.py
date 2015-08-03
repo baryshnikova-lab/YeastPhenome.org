@@ -4,7 +4,8 @@ from papers import views
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', 'yeastphenome.views.index', name='index'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^papers/', include('papers.urls', namespace="papers")),

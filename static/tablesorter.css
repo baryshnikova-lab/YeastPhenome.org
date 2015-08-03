@@ -1,0 +1,20 @@
+
+th.header{
+    position:relative;
+    padding-left:1em !important;
+    padding-bottom:0 !important;
+}
+
+th.header:before{
+    position:absolute;
+    content:'\2B0D';
+    left:0;
+    bottom:0;
+}
+
+th.headerSortUp:before {
+    content:'\2B06';
+}
+th.headerSortDown:before {
+    content:'\2B07';
+}

@@ -1,50 +1,46 @@
-{% load staticfiles %}
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
-
-<body>
+{% load staticfiles %}<!DOCTYPE html>
+<html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
+<title>{{ TITLE }} / Contributors</title>
 <script>
-	$(document).ready(function() 
-		{ 
-			$("#papersTable").tablesorter(); 
-		} 
-	); 
+$(document).ready(function(){ 
+ $("#papersTable").tablesorter(); 
+}); 
 </script>
-  
-<div id="breadcrumbs"><a href="/">YeastPhenome.org</a> / </div>
-<h1>Contributors</h1>
+</head><body><div class="container">
 
- A special thanks goes to the authors of these <strong>{{ papers_list.count }} publications</strong> who have provided unpublished versions of their datasets, including raw quantitative data and/or lists of tested genes.
-    <p>
+<hgroup >
+  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> /</nav>
+  <h1>Contributors</h1>
+</hgroup>
+
+<p>A special thanks goes to the authors of these <strong>{{ papers_list.count }} <a href="{% url 'papers:all' %}">publications</a></strong> who have provided unpublished versions of their datasets, including raw quantitative data and/or lists of tested genes.</p>
+
 {% if papers_list %}
-    <table id="papersTable" class="tablesorter" width="100%" border="1">
-    <thead>
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  <thead>
     <tr>
-		<th><span>Contact person</span></th>
-		<th><span>Publication</span></th>
-		<th><span>Unpublished data</span></th>
-		<th><span>List of tested genes</span></th>
-	</tr>
-	</thead>
-	<tbody>
+      <th>Contact person</th>
+      <th>Publication</th>
+      <th>Unpublished data</th>
+      <th>List of tested genes</th>
+    </tr>
+  </thead><tbody>
     {% for paper in papers_list %}
-        <tr>
-        <td>{{ paper.sources_to_acknowledge }}</td>
-        <td>{{ paper.link_detail|safe }}</td>
-        <td>{{ paper.got_data|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
-		<td>{{ paper.got_tested|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
-        </tr>
+    <tr>
+      <td>{{ paper.sources_to_acknowledge }}</td>
+      <td>{{ paper.link_detail|safe }}</td>
+      <td>{{ paper.got_data|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
+      <td>{{ paper.got_tested|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
+    </tr>
     {% endfor %}
-    </tbody>
-    </table>
+  </tbody>
+</table>
 {% else %}
-    <p>No papers are available.</p>
+<p>No papers are available.</p>
 {% endif %}
-</body>
-</html>
+
+</div>{# container #}</body></html>
+
+
 

@@ -1,36 +1,34 @@
-{% load staticfiles %}
-{% load sub_navigation %}
-{% load my_filters %}
-<html>
-<head>
+{# {% load sub_navigation %} #}{% load my_filters %}<!DOCTYPE html>
+<html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Papers</title>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
-
-<body>
 <script>
-	$(document).ready(function() 
-		{ 
-			$("#papersTable").tablesorter(); 
-		} 
-	); 
-</script>
-  
+$(document).ready(function(){ 
+ $("#papersTable").tablesorter(); 
+});</script>
+</head><body><div class="container">
 
-<header style="float:left">
-<nav id="breadcrumbs"><a href="/{{ got }}">{{ TITLE }}</a> / </nav>
-<h1>Papers</h1>
-</header>
+<div class="row">
+  <hgroup class="col-md-7">
+    <nav><a href="{% url 'index' %}{{ got }}">{{ TITLE }}</a> / </nav>
+    <h1>Papers</h1>
+  </hgroup>
 
-<div class="right" style="float:right">
-{% include "search.html" %}
-</div>
+  <aside class="col-md-5">
+    {% include "search.html" %}
+  </aside>
+</div>{# row #}
+
 
 {% if papers_list %}
-<table id="papersTable" class="tablesorter" width="100%" border="1">
-{% comment %}
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  {% comment %}
+
+  <!-- This commented out caption corrosponds with commented out code
+       in the papers/views.py:PaperIndexView.get_content_data()
+       function.  To us this you will need to uncomment that, plus
+       uncomment "load sub_navigation" on the top of this page. -->
+
   <caption>
     <nav>
       <span class="{% active sub_navigation 'All' %}"><a href="/papers/{{ got }}">All</a> <span class="small">{{ num_all }}</span></span>
@@ -41,47 +39,45 @@
       <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/{{ got }}">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
     </nav>
   </caption>
-{% endcomment %}
+  {% endcomment %}
   <thead>
     <tr>
-      <th><span>PMID</span></th>
+      <th>PMID</th>
       <th><span>FirstAuthor~LastAuthor, Year</span></th>
       <th><span>Phenotypes</span></th>
       <th><span>Conditions</span></th>
       <th><span>Type of data</span></th>
-{% if verbose >= 1 %}
+      {% if verbose >= 1 %}
       <th><span>Data status</span></th>
       <th><span>List of tested genes</span></th>
       <th><span>Download</span></th>
-{% endif %}
+      {% endif %}
     </tr>
-  </thead>
-  <tbody>
+  </thead><tbody>
     {% for paper in papers_list %}
-        <tr>
-        <td>
-{% if 0 != paper.pmid %}
-<a class="external pmid" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
-{% endif %}
-</td>
-        <td>{{ paper.link_detail|safe }}</td>
-        <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
-        <td>{{ paper.conditions|join_and_more:7|safe }}</td>
-	<td>{{ paper.data_available|join:", " }}</td>
-{% if verbose >= 1 %}
-	<td>{{ paper.latest_data_status|capfirst }}</td>
-	<td>{{ paper.latest_tested_status|capfirst }}</td>
-	<td>{% if paper.has_data %}
-{% include "zip.html" %}
-{% endif %}</td>
-{% endif %}
-        </tr>
+    <tr>
+      <td>
+	{% if 0 != paper.pmid %}
+	<a class="external pmid" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
+	{% endif %}
+      </td>
+      <td>{{ paper.link_detail|safe }}</td>
+      <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
+      <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+      <td>{{ paper.data_available|join:", " }}</td>
+      {% if verbose >= 1 %}
+      <td>{{ paper.latest_data_status|capfirst }}</td>
+      <td>{{ paper.latest_tested_status|capfirst }}</td>
+      <td>{% if paper.has_data %}
+	{% include "zip.html" %}
+	{% endif %}</td>
+      {% endif %}
+      </tr>
     {% endfor %}
-    </tbody>
-    </table>
+  </tbody>
+</table>
 {% else %}
-    <p style="clear:both">No papers are available.</p>
+<aside class="bg-warning">No papers are available.</aside>
 {% endif %}
 {% include "footer.html" %}
-</body>
-</html>
+</div>{# container #}</body></html>

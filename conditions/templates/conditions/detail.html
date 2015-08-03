@@ -1,76 +1,64 @@
-{% load staticfiles %}
-<html>
-<head>
-
+<!DOCTYPE html>
+<html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Conditions / {{ object|capfirst }}</title>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
+<script>$(document).ready(function(){ 
+ $("#papersTable").tablesorter(); 
+});</script>
+</head><body><div class="container">
 
-<body>
-<script>
-	$(document).ready(function() 
-		{ 
-			$("#papersTable").tablesorter(); 
-		} 
-	); 
-</script>
-  
-<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / <a href="/conditions/">Conditions</a> /</div>
-<h1>{{ object|capfirst }}</h1>
+<hgroup>
+  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'conditions:index' %}">Conditions</a> /</nav>
+  <h1>{{ object|capfirst }}</h1>
+</hgroup>
 
-<p><strong>Description.</strong> {{ object.description }}</p>
+<dl class="dl-horizontal">
+  <dt>Description</dt>
+  <dd>{{ object.description }}</dd>
+</dl>
 
-<p><strong>Datasets.</strong>
-<p>
-<table id="papersTable" class="tablesorter" width="100%" border="1">
- <thead>
+{% if object.datasets %}
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  <thead>
     <tr>
-		<th><span>Paper</span></th>
-		<th><span>Condition set</span></th>
-        <th><span>Phenotype</span></th>
-		<th><span>Collection</span></th>
-		<th><span>Tested genes</span></th>
-		<th><span>Tested genes published</span></th>
-        <th><span>Tested genes available</span></th>
-		<th><span>Data measured</span></th>
-		<th><span>Data published</span></th>
-		<th><span>Data available</span></th>
-	</tr>
-</thead>
-
-<tbody>
-
-	{% for dataset in object.datasets %}
-	<tr>
-		<td>{{ dataset.paper.link_detail|safe }}</td>
-		<td>{{ dataset.conditionset }}</td>
-        <td>{{ dataset.phenotype.link_detail|safe }}</td>
-		<td>{{ dataset.collection }}</td>
-		<td>{{ dataset.tested_num }}</td>
-		<td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
-        <td>
-            {% if not dataset.tested_source %}
-            No
-            {% else %}
-            {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
-            {% endif %}
-        </td>
-		<td>{{ dataset.data_measured|capfirst }}</td>
-		<td>{{ dataset.data_published|capfirst }}</td>
-		<td>{{ dataset.data_available|capfirst }}
-            <br>{{ dataset.data_source|safe }}
-            <br>{{ paper.latest_data_status|capfirst }}
-        </td>
-
-	</tr>
-	{% endfor %}
-
-</tbody>
-
+      <th>Paper</th>
+      <th>Condition set</th>
+      <th>Phenotype</th>
+      <th>Collection</th>
+      <th>Tested genes</th>
+      <th>Tested genes published</th>
+      <th>Tested genes available</th>
+      <th>Data measured</th>
+      <th>Data published</th>
+      <th>Data available</th>
+    </tr>
+  </thead><tbody>
+    {% for dataset in object.datasets %}
+    <tr>
+      <td>{{ dataset.paper.link_detail|safe }}</td>
+      <td>{{ dataset.conditionset }}</td>
+      <td>{{ dataset.phenotype.link_detail|safe }}</td>
+      <td>{{ dataset.collection }}</td>
+      <td>{{ dataset.tested_num }}</td>
+      <td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
+      <td>
+        {% if not dataset.tested_source %}
+        No
+        {% else %}
+        {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
+        {% endif %}
+      </td>
+      <td>{{ dataset.data_measured|capfirst }}</td>
+      <td>{{ dataset.data_published|capfirst }}</td>
+      <td>{{ dataset.data_available|capfirst }}
+        <br>{{ dataset.data_source|safe }}
+        <br>{{ paper.latest_data_status|capfirst }}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
-
-</body>
-</html>
-
+{% else %}
+<aside class="bg-warning">No papers associated.</aside>
+{% endif %}
+</div{# container #}></body></html>

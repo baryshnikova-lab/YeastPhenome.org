@@ -1,61 +1,53 @@
-{% load staticfiles %}
-<html>
-<head>
-
+<!DOCTYPE html>
+<html lang="en"><head>
 <title>{{ TITLE }} / Conditions</title>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
+{% include "head.html" with JavaScript='tablesorter' %}
+<script>$(document).ready(function(){ 
+ $("#papersTable").tablesorter(); 
+});</script>
+</head><body><div class="container">  
 
-<body>
-<script>
-	$(document).ready(function() 
-		{ 
-			$("#papersTable").tablesorter(); 
-		} 
-	); 
-</script>
-  
-<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / </div>
-<h1>Conditions</h1>
+<hgroup>
+  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> /</nav>
+  <h1>Conditions</h1>
+</hgroup>
+
 {% if conditiontype_list %}
-<table id="papersTable" class="tablesorter" width="100%" border="1">
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  {% comment %}
   <caption>
     <nav>
       <span class="active">As a list</span>
       <span class="inactive" title="Not Implemented"><a href="/conditions/stats/">Graphically</a></span>
     </nav>
   </caption>
+  {% endcomment %}
   <thead>
     <tr>
-      <th width="20%"><span>Short name</span></th>
-      <th width="20%"><span>Full name</span></th>
-      <th width="20%"><span>Doses</span></th>
-      <th width="20%"><span>Phenotypes</span></th>
-      <th width="20%"><span>Papers</span></th>
+      <th>Short name</th>
+      <th>Full name</th>
+      <th>Doses</th>
+      <th>Phenotypes</th>
+      <th>Papers</th>
     </tr>
-  </thead>
-	<tbody>
+  </thead><tbody>
     {% for conditiontype in conditiontype_list %}
-        <tr>
-        <td>{{ conditiontype.link_detail|safe }}</td>
-        <td>
-            {% if not conditiontype.name = conditiontype.short_name %}
-            {{ conditiontype.name }}
-            {% endif %}
-        </td>
-        <td>{{ conditiontype.conditions|slice:":-2" }}</td>
-        <td>{{ conditiontype.phenotypes|slice:":-2"|safe }}</td>
-        <td>{{ conditiontype.papers|slice:":-2"|safe }}</td>
-        </tr>
+    <tr>
+      <td>{{ conditiontype.link_detail|safe }}</td>
+      <td>
+        {% if not conditiontype.name = conditiontype.short_name %}
+        {{ conditiontype.name }}
+        {% endif %}
+      </td>
+      <td>{{ conditiontype.conditions|slice:":-2" }}</td>
+      <td>{{ conditiontype.phenotypes|slice:":-2"|safe }}</td>
+      <td>{{ conditiontype.papers|slice:":-2"|safe }}</td>
+    </tr>
     {% endfor %}
-    </tbody>
-    </table>
+  </tbody>
+</table>
 {% else %}
-    <p>No papers are available.</p>
+<aside class="bg-warning">No papers are available.</aside>
 {% endif %}
 {% include "footer.html" %}
-</body>
-</html>
+</div>{# container #}</body></html>

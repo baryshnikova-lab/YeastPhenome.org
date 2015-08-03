@@ -1,56 +1,49 @@
-{% load staticfiles %}
-{% load mptt_tags %}
-{% load string_multiply %}
-{% load my_filters %}
-<html>
-<head>
-
+{% load mptt_tags %}{% load string_multiply %}{# load my_filters #}<!DOCTYPE html>
+<html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Phenotypes</title>
-<link rel="stylesheet" type="text/css" href="{% static 'papers/style.css' %}" />
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery-latest.js' %}"></script> 
-<script type="text/javascript" src="{% static 'papers/scripts/jquery.tablesorter/jquery.tablesorter.js' %}"></script>
-</head>
+<script>$(document).ready(function(){
+ $("#papersTable").tablesorter();
+});</script>
+</head><body><div class="container">
 
-<body>
-<script>
-	$(document).ready(function()
-		{
-			$("#papersTable").tablesorter();
-		}
-	);
-</script>
+<hgroup>
+  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / </nav>
+  <h1>Phenotypes</h1>
+</hgroup>
 
-<div id="breadcrumbs"><a href="/">{{ TITLE }}</a> / </div>
-<h1>Phenotypes</h1>
-<table id="papersTable" class="tablesorter" width="100%" border="1">
+<table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  {% comment %}
+
+  <!-- The graphics parts arn't implemented yet, so lets not link to
+       them.  Their other issues with this page, but I don't know what
+       they are. -->
+
   <caption>
     <nav>
       <span class="active">As a list</span>
       <span class="inactive" title="Not Implemented"><a href="/phenotypes/stats/">Graphically</a></span>
     </nav>
-  </caption>
+  </caption>{% endcomment %}
   <thead>
     <tr>
-      <th width="34%"><span>Name</span></th>
-      <th width="33%"><span>Conditions</span></th>
-      <th width="33%"><span>Papers</span></th>
+      <th>Name</th>
+      <th>Conditions</th>
+      <th>Papers</th>
     </tr>
-  </thead>
-    <tbody>
+  </thead><tbody>
     {% recursetree nodes %}
-        {% if node.has_annotated_descendants %}
-            <tr>
-                <td>{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
-                <td>{{ node.condition_types|slice:":-2"|safe }}</td>
-                <td>{{ node.papers|slice:":-2"|safe }}</td>
-                {% if not node.is_leaf_node %}
-                    {{ children }}
-                {% endif %}
-            </tr>
-        {% endif %}
+    {% if node.has_annotated_descendants %}
+    <tr>
+      <!-- putting text-nowrap is a <col> tag didn't work. -->
+      <td class="text-nowrap">{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
+      <td>{{ node.condition_types|slice:":-2"|safe }}</td>
+      <td>{{ node.papers|slice:":-2"|safe }}</td>
+      {% if not node.is_leaf_node %}{{ children }}{% endif %}
+    </tr>
+    {% endif %}
     {% endrecursetree %}
-    </tbody>
+  </tbody>
 </table>
 {% include "footer.html" %}
-</body>
-</html>
+</div>{# container #}</body></html>
