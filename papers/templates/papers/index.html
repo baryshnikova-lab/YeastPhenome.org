@@ -26,8 +26,9 @@ $(document).ready(function(){
 
   <!-- This commented out caption corrosponds with commented out code
        in the papers/views.py:PaperIndexView.get_content_data()
-       function.  To us this you will need to uncomment that, plus
-       uncomment "load sub_navigation" on the top of this page. -->
+       function, plus items in the papers/urls.py file.  To use this
+       you will need to uncomment those, plus uncomment "load
+       sub_navigation" on the top of this page. -->
 
   <caption>
     <nav>
@@ -43,14 +44,14 @@ $(document).ready(function(){
   <thead>
     <tr>
       <th>PMID</th>
-      <th><span>FirstAuthor~LastAuthor, Year</span></th>
-      <th><span>Phenotypes</span></th>
-      <th><span>Conditions</span></th>
-      <th><span>Type of data</span></th>
+      <th>FirstAuthor~LastAuthor, Year</span></th>
+      <th>Phenotypes</th>
+      <th>Conditions</th>
+      <th>Type of data</th>
       {% if verbose >= 1 %}
-      <th><span>Data status</span></th>
-      <th><span>List of tested genes</span></th>
-      <th><span>Download</span></th>
+      <th>Data status</th>
+      <th>List of tested genes</th>
+      <th>Download</th>
       {% endif %}
     </tr>
   </thead><tbody>
@@ -61,7 +62,7 @@ $(document).ready(function(){
 	<a class="external pmid" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
 	{% endif %}
       </td>
-      <td>{{ paper.link_detail|safe }}</td>
+      <td><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
       <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
       <td>{{ paper.conditions|join_and_more:7|safe }}</td>
       <td>{{ paper.data_available|join:", " }}</td>

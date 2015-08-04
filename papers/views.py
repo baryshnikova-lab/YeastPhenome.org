@@ -146,7 +146,6 @@ class PaperIndexView(generic.ListView):
         # check everything else.  Bleck.
 
         context['s']=self.got_txt(got)
-        print context['s']
         context['verbose']=got.get('verbose')
         context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:
@@ -165,7 +164,6 @@ class PaperIndexView(generic.ListView):
         #                (self,papers,got))
         # context.update(PaperDiscreteIndexView.context_update
         #                (self,papers,got))
-
 
         return context
 
