@@ -1,5 +1,5 @@
 {% if paper.download_path_exists %}
-<a href="/papers/{{ paper.pk }}.zip">Zip</a>
-{% else %}
-Unable to locate files.
-{% endif %}
+<a class="btn btn-primary" role="button" href="{% url 'papers:zipo' pk=paper.pk %}">Download Data</a>
+{% else %}<div title="Unable to locate data files">
+  <a class="btn btn-primary disabled" role="button" href="{% url 'papers:zipo' pk=paper.pk %}">Download Data</a>
+</div>{% endif %}

@@ -95,14 +95,6 @@ class PaperIndexView(generic.ListView):
         without notice."""
         OUT=QueryDict(mutable=True)
 
-        # their can only be one 'debug' items and it must equal an
-        # integer.
-        if 'verbose' in GET:
-            raw=GET['verbose'].strip()
-            if raw.isdigit():
-                # it's now scrubbed
-                OUT['verbose']=raw
-
         # multilpe 's' get split by white space as well
         if 's' in GET:
             esses = GET.getlist('s')
@@ -146,7 +138,6 @@ class PaperIndexView(generic.ListView):
         # check everything else.  Bleck.
 
         context['s']=self.got_txt(got)
-        context['verbose']=got.get('verbose')
         context['got'] = '?%s' % (got.urlencode())
         if '?' == context['got']:
             context['got'] = ''
@@ -207,10 +198,10 @@ class ContributorsListView(generic.ListView):
             Q(dataset__data_source__acknowledge=True) | Q(dataset__tested_source__acknowledge=True)).distinct()
 
 
-def zipo(request,paper_id):
+def zipo(request,pk):
     """Constructs a zip file in memory for users to download."""
 
-    p = get_object_or_404(Paper,pk=paper_id)
+    p = get_object_or_404(Paper,pk=pk)
     if not(p.has_data()):
         raise Http404("Paper has no data.");
 

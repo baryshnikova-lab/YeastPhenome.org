@@ -119,7 +119,7 @@ class Paper(models.Model):
     link_admin.allow_tags = True
 
     def link_detail(self):
-        #warnings.warn("link_detail", DeprecationWarning)
+        warnings.warn("link_detail", DeprecationWarning)
         return '<a href="%s">%s</a>' % (reverse("papers:detail", args=(self.id,)), self)
     link_detail.allow_tags = True
 

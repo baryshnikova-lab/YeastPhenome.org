@@ -1,7 +1,7 @@
 body{
     margin-top:2em;
 }
-aside{
+aside,footer{
     margin-bottom:20px;
     padding:20px;
     background-color:whitesmoke;
@@ -22,4 +22,14 @@ footer{
 .nothing{
     opacity:0.25;
     font-style:italic;
+}
+.email:before{
+    content:'\27E8';
+}
+.email:after{
+    content:'\27E9';
+}
+.external:after{
+    padding-left:.3ex;
+    content:url("images/external-link-blue-medium.png");
 }

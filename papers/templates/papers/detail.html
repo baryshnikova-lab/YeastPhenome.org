@@ -7,32 +7,24 @@
 });</script>
 </head><body><div class="container">
 
-<hgroup>
-  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'papers:all' %}">Papers</a> /</nav>
-  <h1>{{ object }}</h1>
-  {% if 0 != object.pmid %}
-  <p class="pmid">PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></p>
-  {% endif %}
-</hgroup>
-
-<dl class="dl-horizontal">
-  <dt>Notes</dt>
-  {% if object.notes %}
-  <dd>{{ object.notes }}</dd>
-  {% else %}
-  <dd class="nothing">&#8210; no notes &#8210;</dd>
-  {% endif %}
-
-  <dt>Downloads</dt>
-  <dd>{% if paper.has_data %}
-    {% include "zip.html" %}
-    {% else %}
-    <span class="nothing">&#8210; no files &#8210;</span>
-    {% endif %}</dd>
-</dl>
+<div class="row">
+  <hgroup class="col-md-7">
+    <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'papers:all' %}">Papers</a> /</nav>
+    <h1>{{ object }}</h1>
+    {% if 0 != object.pmid %}
+    <p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></p>
+    {% endif %}
+  </hgroup>
+  <div class="col-md-5">{% if paper.has_data %}
+    <div class="pull-right">{% include "zip.html" %}</div>
+  {% endif %}</div>
+</div{# row #}>
 
 {% if object.dataset_set.all %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  {% if object.notes %}
+  <caption>{{ object.notes }}</caption>
+  {% endif %}
   <thead>
     <tr>
       <th>Phenotype</th>
@@ -44,7 +36,9 @@
       <th>Data measured</th>
       <th>Data published</th>
       <th>Data available</th>
+      {% if request.GET.verbose >= 1 %}
       <th>Has data</th>
+      {% endif %}
     </tr>
   </thead><tbody>
     {% for dataset in object.dataset_set.all %}
@@ -67,12 +61,15 @@
         <br>{{ dataset.data_source|safe }}
         <br>{{ paper.latest_data_status|capfirst }}
       </td>
+      {% if request.GET.verbose >= 1 %}
       <td>{{ dataset.has_data }}</td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
 </table>
 {% else %}
+{% if object.notes %}<p>{{ object.notes }}</p>{% endif %}
 <aside class="bg-warning">No datasets are loaded.</aside>
 {% endif %}
 </div>{# container #}</body></html>

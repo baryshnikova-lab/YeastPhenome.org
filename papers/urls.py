@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/$', views.PaperDetailView.as_view(), name='detail'),
 
     # To get a zip file of data
-    url(r'^(?P<paper_id>\d+).zip$', views.zipo, name='zipo'),
+    url(r'^(?P<pk>\d+).zip$', views.zipo, name='zipo'),
 ]
