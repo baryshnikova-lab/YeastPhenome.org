@@ -3,7 +3,7 @@
 {% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Papers / {{ object }}</title>
 <script>$(document).ready(function(){ 
- $("#papersTable").tablesorter(); 
+ $("#papersTable").tablesorter({headers:{3:{sorter:false}}}); 
 });</script>
 </head><body><div class="container">
 
@@ -30,7 +30,7 @@
       <th rowspan="2">Phenotype</th>
       <th rowspan="2">Condition set</th>
       <th rowspan="2">Collection</th>
-      <td colspan="3">Tested genes</td>
+      <th colspan="3" style="text-align:center">Tested genes</th>
       <th rowspan="2">Data measured</th>
       <th rowspan="2">Data published</th>
       <th rowspan="2">Type of data</th>
