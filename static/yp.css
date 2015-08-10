@@ -33,3 +33,6 @@ footer{
     padding-left:.3ex;
     content:url("images/external-link-blue-medium.png");
 }
+thead td{
+    text-align:center;
+}
