@@ -3,18 +3,19 @@
     For comments &amp; feedback: <a class="email" href="mailto:abarysh@princeton.edu" title="Please, send whatever you have.">abarysh@princeton.edu</a>.
   </address>
 
-  {% comment %}
   {% if 'bootstrap' in JavaScript %}
-  <button type="button" class="btn btn-primary" data-toggle="model" data-target=".about">About</button>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#about">About</button>
 
-  <div class="modal fade about" tabindex="-1" role="dialog">
+  <div id="about" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
-	<p>Created and maintained by Anastasia Baryshnikova (<a href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>) at Princeton University.</p>
+	<div class="modal-header">
+	  <h3>About</h3>
+	</div><div class="modal-body">
+	  <p>Created and maintained by Anastasia Baryshnikova (<a class="external" href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>) at Princeton University.</p>
+	</div>
       </div>
     </div>
   </div>
   {% endif %}
-  {% endcomment %}
-
 </footer>
