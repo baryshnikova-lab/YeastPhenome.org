@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" %}
+{% include "head.html" with JavaScript='bootstrap' %}
 <title>{{ TITLE }}</title>
 </head><body><div class="container">
 
@@ -37,13 +37,9 @@
       <p>Updated on: {{ updated }}.</p>
     </aside>
 
-  </div>{# col-md-5 #}
-</div>{# row #}
-
-<footer class="container">
-  <address>Created and maintained by Anastasia Baryshnikova (<a href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>) at Princeton University.</address>
-</footer>
-
+  </div{# col-md-5 #}>
+</div{# row #}>
+{% include "footer.html" with JavaScript="bootstrap" %}
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -52,3 +48,4 @@
   ga('create', 'UA-48000664-1', 'yeastphenome.org');
   ga('send', 'pageview');
 </script></div>{# container #}</body></html>
+h
