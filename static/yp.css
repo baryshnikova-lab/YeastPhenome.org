@@ -37,3 +37,10 @@ footer{
 thead td{
     text-align:center;
 }
+.no,.yes{
+    visibility:hidden;
+}
+.yes:after{
+    visibility:visible;
+    content:'\2714';
+}

@@ -30,8 +30,8 @@ $(document).ready(function(){
     <tr>
       <td>{{ paper.sources_to_acknowledge }}</td>
       <td>{{ paper.link_detail|safe }}</td>
-      <td>{{ paper.got_data|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
-      <td>{{ paper.got_tested|yesno:"<i class='fa fa-check'></i><i class='invisible'>yes</i>,,"|safe }}</td>
+      <td>{{ paper.got_data|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
+      <td>{{ paper.got_tested|yesno:'<span class="yes">yes<span>,<span class="no">no</span>,'|safe }}</td>
     </tr>
     {% endfor %}
   </tbody>
