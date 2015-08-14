@@ -7,17 +7,17 @@
 });</script>
 </head><body><div class="container">
 
+ <hgroup>
+   <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'papers:all' %}">Papers</a> /</nav>
+   <h1>{{ object }}</h1>
+ </hgroup>
+
 <div class="row">
-  <hgroup class="col-md-7">
-    <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'papers:all' %}">Papers</a> /</nav>
-    <h1>{{ object }}</h1>
-    {% if 0 != object.pmid %}
+  <div class="col-md-8">{% if 0 != object.pmid %}
     <p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></p>
-    {% endif %}
-  </hgroup>
-  <div class="col-md-5">{% if paper.has_data %}
+    {% endif %}</div><div class="col-md-4">{% if paper.has_data %}
     <div class="pull-right">{% include "zip.html" %}</div>
-  {% endif %}</div>
+    {% endif %}</div>
 </div{# row #}>
 
 {% if object.dataset_set.all %}
