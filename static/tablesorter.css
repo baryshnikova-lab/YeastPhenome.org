@@ -1,3 +1,6 @@
+table{
+    margin-top:2em;
+}
 
 th.header{
     position:relative;
@@ -17,4 +20,10 @@ th.headerSortUp:before {
 }
 th.headerSortDown:before {
     content:'\2B07';
+}
+
+th[colspan]{
+    text-align:center;
+    border-right:1ex solid transparent;
+    border-left:1ex solid transparent;
 }

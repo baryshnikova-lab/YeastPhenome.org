@@ -3,7 +3,10 @@
 {% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ TITLE }} / Papers / {{ object }}</title>
 <script>$(document).ready(function(){ 
- $("#papersTable").tablesorter({headers:{3:{sorter:false}}}); 
+ $("#papersTable").tablesorter({headers:{
+  3:{sorter:false},
+  4:{sorter:false}
+ }});
 });</script>
 </head><body><div class="container">
 
@@ -30,15 +33,16 @@
       <th rowspan="2">Phenotype</th>
       <th rowspan="2">Condition set</th>
       <th rowspan="2">Collection</th>
-      <th colspan="3" style="text-align:center">Tested genes</th>
-      <th rowspan="2">Data measured</th>
-      <th rowspan="2">Data published</th>
-      <th rowspan="2">Type of data</th>
+      <th colspan="3">Tested genes</th>
+      <th colspan="3">Data</th>
       {% if request.GET.verbose >= 1 %}
       <th rowspan="2">Has data</th>
       {% endif %}
     </tr><tr>
       <th>#</th>
+      <th>Published</th>
+      <th>Available</th>
+      <th>Measured</th>
       <th>Published</th>
       <th>Available</th>
     </tr>
