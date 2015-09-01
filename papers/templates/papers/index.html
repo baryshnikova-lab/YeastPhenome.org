@@ -47,8 +47,8 @@ $(document).ready(function(){
       <th>FirstAuthor~LastAuthor, Year</span></th>
       <th>Phenotypes</th>
       <th>Conditions</th>
-      <th>Type of data</th>
       {% if request.GET.verbose >= 1 %}
+      <th>Type of data</th>
       <th>Data status</th>
       <th>List of tested genes</th>
       <th>Download</th>
@@ -65,8 +65,8 @@ $(document).ready(function(){
       <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
       <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
       <td>{{ paper.conditions|join_and_more:7|safe }}</td>
-      <td class="text-nowrap">{{ paper.data_available|join:", " }}</td>
       {% if request.GET.verbose >= 1 %}
+      <td class="text-nowrap">{{ paper.data_available|join:", " }}</td>
       <td>{{ paper.latest_data_status|capfirst }}</td>
       <td>{{ paper.latest_tested_status|capfirst }}</td>
       <td>{% if paper.has_data %}
