@@ -7,6 +7,8 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^about/$', views.about, name='about'),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^papers/', include('papers.urls', namespace="papers")),
     url(r'^phenotypes/', include('phenotypes.urls', namespace="phenotypes")),

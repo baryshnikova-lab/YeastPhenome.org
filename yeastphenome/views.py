@@ -33,3 +33,7 @@ def index(request):
                's':PaperIndexView.scrub_GET_txt(request.GET)
                }
     return render(request, 'yeastphenome/index.html', context)
+
+def about(request):
+    """Really just to have access to the dynamic template."""
+    return render(request, 'yeastphenome/about.html')
