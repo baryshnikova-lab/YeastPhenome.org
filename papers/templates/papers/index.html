@@ -69,9 +69,7 @@ $(document).ready(function(){
       <td class="text-nowrap">{{ paper.data_available|join:", " }}</td>
       <td>{{ paper.latest_data_status|capfirst }}</td>
       <td>{{ paper.latest_tested_status|capfirst }}</td>
-      <td>{% if paper.has_data %}
-	{% include "zip.html" %}
-	{% endif %}</td>
+      <td>{% include "zip.html" %}</td>
       {% endif %}
       </tr>
     {% endfor %}

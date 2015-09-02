@@ -202,7 +202,7 @@ def zipo(request,pk):
     """Constructs a zip file in memory for users to download."""
 
     p = get_object_or_404(Paper,pk=pk)
-    if not(p.has_data()):
+    if not(p.should_have_data()):
         raise Http404("Paper has no data.");
 
     zip_buff=StringIO()

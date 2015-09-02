@@ -85,10 +85,13 @@ class Paper(models.Model):
     def data_available(self):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
-    def has_data(self):
+    def should_have_data(self):
         """Return True if data has been loaded from data files."""
-
 	return 'loaded'==str(self.latest_data_status()) or 'loaded'==str(self.latest_tested_status())
+
+    def raw_available_data(self):
+        """Returns True if it should have data, and has access to raw data."""
+        return self.should_have_data() and self.download_path_exists
 
     @property
     def latest_data_status(self):
@@ -104,8 +107,8 @@ class Paper(models.Model):
 
     @property
     def download_path_exists(self):
-        """Reugardless if the paper should have data, returns True or Fals if
-        there is a datadirectory for this paper."""
+        """Regardless if the paper should have data, returns True or Fals if
+        there is a data directory for this paper."""
         return os.path.isdir(self.download_path())
 
     def static_dir_name(self):
