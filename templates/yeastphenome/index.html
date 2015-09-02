@@ -9,7 +9,7 @@
 </hgroup>
 
 <div class="row">
-  <div class="col-md-7">
+  <section class="col-md-7">
 
     <p>We are collecting phenotypic data derived from <strong>systematic screens</strong> of large-scale <strong>mutant collections</strong> in budding yeast <em>Saccharomyces cerevisiae</em>. Our goal is to study the relationship between different mutant phenotypes and integrate them into mapping of the functional organization of biological pathways.</p>
 
@@ -19,21 +19,21 @@
 
     <p>As of today, we are at the data gathering stage. The plan is to collect, organize and share in a <strong>standardized format</strong> all of the phenotypic data obtained by the yeast community. Updates on progress will be released via this website.</p>
 
-  </div>{# col-md-7 #}<div class="col-md-5">
+  </section{# col-md-7 #}><div class="col-md-5">
     <aside>{% include "search.html" %}</aside>
 
     <aside>
       <p>Current status for data collection:</p>
       <ul>
-	<li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers published</a>, {{ paper_num_with_data }} have data</li>
-	<li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes screened</a>, {{ phenotype_num_with_data }} have data</li>
+	<li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers published</a>{% if request.GET.verbose >= 1 %}, {{ paper_num_with_data }} have data{% endif %}</li>
+	<li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes screened</a>{% if request.GET.verbose >= 1 %}, {{ phenotype_num_with_data }} have data{% endif %}</li>
 	<li>{{ condition_num }} <a href="{% url 'conditions:index' %}">conditions</a></li>
       </ul>
       
-      <ul class="list-unstyled">
+      {% if request.GET.verbose >= 1 %}<ul class="list-unstyled">
 	<li>Most studied phenotype: {{ most_studied_phenotype.link_detail|safe }} ({{ most_studied_phenotype.num_datapoints }} datapoints).</li>
 	<li>Most studied experimental condition: {{ most_studied_conditionset.name }} ({{ most_studied_conditionset.num_datapoints }} datapoints).<li>
-      </ul>
+      </ul>{% endif %}
       <p>Updated on: {{ updated }}.</p>
     </aside>
 
@@ -47,4 +47,4 @@
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
   ga('create', 'UA-48000664-1', 'yeastphenome.org');
   ga('send', 'pageview');
-</script></div>{# container #}</body></html>
+</script></div{# container #}></body></html>
