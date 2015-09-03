@@ -8,11 +8,6 @@ there are a few added items that isn't a Django standard.
 
 ### Options
 
-#### `TITLE`
-
-The title of the web site, to make it easy to distinguisg the
-developement site from testing and production.
-
 #### `DATA_DIR`
 
 Link to directory containing directoris of PubMed IDs to be offered

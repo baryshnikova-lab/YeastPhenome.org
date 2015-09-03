@@ -1,7 +1,7 @@
 {# {% load sub_navigation %} #}{% load my_filters %}<!DOCTYPE html>
 <html lang="en"><head>
 {% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ TITLE }} / Papers</title>
+<title>{{ SITE_NAME }} / Papers</title>
 <script>
 $(document).ready(function(){ 
  $("#papersTable").tablesorter(); 
@@ -10,7 +10,7 @@ $(document).ready(function(){
 
 <div class="row">
   <hgroup class="col-md-7">
-    <nav><a href="{% url 'index' %}{{ got }}">{{ TITLE }}</a> / </nav>
+    <nav><a href="{% url 'index' %}{{ got }}">{{ SITE_NAME }}</a> / </nav>
     <h1>Papers</h1>
   </hgroup>
 

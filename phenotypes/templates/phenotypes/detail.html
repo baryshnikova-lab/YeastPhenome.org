@@ -1,14 +1,14 @@
 {% load staticfiles %}{% load string_multiply %}<!DOCTYPE html>
 <html lang="en"><head>
 {% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ TITLE }} / Phenotypes / {{ object|capfirst }}</title>
+<title>{{ SITE_NAME }} / Phenotypes / {{ object|capfirst }}</title>
 <script>$(document).ready(function(){ 
  $("#papersTable").tablesorter(); 
 });</script>
 </head><body><div class="container">
   
 <hgroup>
-  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / <a href="{% url 'phenotypes:index' %}">Phenotypes</a> /</nav>
+  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / <a href="{% url 'phenotypes:index' %}">Phenotypes</a> /</nav>
   <h1>{{ object|capfirst }}</h1>
 </hgroup>
 

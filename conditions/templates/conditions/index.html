@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<title>{{ TITLE }} / Conditions</title>
+<title>{{ SITE_NAME }} / Conditions</title>
 {% include "head.html" with JavaScript='tablesorter' %}
 <script>$(document).ready(function(){ 
  $("#papersTable").tablesorter(); 
@@ -8,7 +8,7 @@
 </head><body><div class="container">  
 
 <hgroup>
-  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> /</nav>
+  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> /</nav>
   <h1>Conditions</h1>
 </hgroup>
 

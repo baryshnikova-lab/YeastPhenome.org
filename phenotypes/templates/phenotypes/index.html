@@ -1,14 +1,14 @@
 {% load mptt_tags %}{% load string_multiply %}{# load my_filters #}<!DOCTYPE html>
 <html lang="en"><head>
 {% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ TITLE }} / Phenotypes</title>
+<title>{{ SITE_NAME }} / Phenotypes</title>
 <script>$(document).ready(function(){
  $("#papersTable").tablesorter();
 });</script>
 </head><body><div class="container">
 
 <hgroup>
-  <nav><a href="{% url 'index' %}">{{ TITLE }}</a> / </nav>
+  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / </nav>
   <h1>Phenotypes</h1>
 </hgroup>
 
