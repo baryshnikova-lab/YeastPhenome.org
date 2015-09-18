@@ -1,7 +1,11 @@
 body{
     margin-top:2em;
 }
-aside,footer{
+.container-fluid{
+    margin-left:10%;
+    margin-right:10%;
+}
+aside{
     margin-bottom:20px;
     padding:20px;
     background-color:whitesmoke;
