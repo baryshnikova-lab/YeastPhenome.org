@@ -25,9 +25,9 @@
     <aside>
       <p>Current status for data collection:</p>
       <ul>
-	<li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers published</a>{% if request.GET.verbose >= 1 %}, {{ paper_num_with_data }} have data{% endif %}</li>
-	<li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes screened</a>{% if request.GET.verbose >= 1 %}, {{ phenotype_num_with_data }} have data{% endif %}</li>
-	<li>{{ condition_num }} <a href="{% url 'conditions:index' %}">conditions</a></li>
+	<li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers</a>{% if request.GET.verbose >= 1 %}, {{ paper_num_with_data }} have data{% endif %}</li>
+	<li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes</a>{% if request.GET.verbose >= 1 %}, {{ phenotype_num_with_data }} have data{% endif %}</li>
+	<li>{{ condition_num }} <a href="{% url 'conditions:index' %}">experimental conditions</a></li>
       </ul>
       
       {% if request.GET.verbose >= 1 %}<ul class="list-unstyled">
