@@ -1,16 +1,13 @@
 {% load staticfiles %}{% load string_multiply %}<!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Phenotypes / {{ object|capfirst }}</title>
-<script>$(document).ready(function(){ 
- $("#papersTable").tablesorter(); 
-});</script>
-</head><body><div class="container-fluid">
+{% include "head.html" with JavaScript='tablesorter' %}
+<div class="container-fluid">
   
-<hgroup>
-  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / <a href="{% url 'phenotypes:index' %}">Phenotypes</a> /</nav>
-  <h1>{{ object|capfirst }}</h1>
-</hgroup>
+<ol class="breadcrumb">
+  <li><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
+  <li>{{ object|capfirst }}</li>
+</ol>
 
 <p>
 {% for ancestor in object.get_ancestors %}
@@ -75,5 +72,10 @@
 <aside class="bg-warning">No datasets are available.</aside>
 {% endif %}
 {% include "footer.html" %}
-</div></body></html>
-o
+</div{# container-fluid #}>
+
+<script>$(document).ready(function(){
+ $("#papersTable").tablesorter();
+});</script>
+
+</body></html>

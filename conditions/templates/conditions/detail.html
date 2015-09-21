@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Conditions / {{ object|capfirst }}</title>
-<script>$(document).ready(function(){ 
- $("#papersTable").tablesorter(); 
-});</script>
-</head><body><div class="container-fluid">
+{% include "head.html" with JavaScript='tablesorter' %}
+<div class="container-fluid">
 
-<hgroup>
-  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / <a href="{% url 'conditions:index' %}">Conditions</a> /</nav>
-  <h1>{{ object|capfirst }}</h1>
-</hgroup>
+<ol class="breadcrumb">
+  <li><a href="{% url 'conditions:index' %}">Conditions</a></li>
+  <li>{{ object|capfirst }}</li>
+</ol>
 
+{% if object.descripton %}
 <dl class="dl-horizontal">
   <dt>Description</dt>
   <dd>{{ object.description }}</dd>
 </dl>
+{% endif %}
 
 {% if object.datasets %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
@@ -62,4 +61,10 @@
 <aside class="bg-warning">No papers associated.</aside>
 {% endif %}
 {% include "footer.html" %}
-</div{# container #}></body></html>
+</div{# container-fluid #}>
+
+<script>$(document).ready(function(){
+ $("#papersTable").tablesorter();
+});</script>
+
+</body></html>

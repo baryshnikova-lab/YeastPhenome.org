@@ -1,16 +1,12 @@
 {% load mptt_tags %}{% load string_multiply %}{# load my_filters #}<!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Phenotypes</title>
-<script>$(document).ready(function(){
- $("#papersTable").tablesorter();
-});</script>
-</head><body><div class="container-fluid">
+{% include "head.html" with JavaScript='tablesorter' %}
+<div class="container-fluid">
 
-<hgroup>
-  <nav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / </nav>
-  <h1>Phenotypes</h1>
-</hgroup>
+<ol class="breadcrumb">
+  <li>Phenotypes</li>
+</ol>
 
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
   {% comment %}
@@ -46,4 +42,10 @@
   </tbody>
 </table>
 {% include "footer.html" %}
-</div>{# container #}</body></html>
+</div{# container-fluid #}>
+
+<script>$(document).ready(function(){
+ $("#papersTable").tablesorter();
+});</script>
+
+</body></html>
