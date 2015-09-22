@@ -10,8 +10,8 @@
 {% endif %}{% endif %}
 <link rel="stylesheet" href="{% static 'yp.css' %}">
 </head><body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
 
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nb-1">
@@ -29,7 +29,7 @@
 	<li><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
 	<li><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
       </ul>
-      <form class="navbar-form navbar-left" role="search" action="{% url 'papers:all' %}" method="GET">
+      <form class="navbar-form navbar-right" role="search" action="{% url 'papers:all' %}" method="GET">
 	<div class="form-group">
 	  <input type="search" name="s" value="{{ s }}">
 	</div>
