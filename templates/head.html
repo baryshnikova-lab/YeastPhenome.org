@@ -1,9 +1,9 @@
 {% load staticfiles %}<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 {% if JavaScript %}{% if 'tablesorter' in JavaScript %}
 <script src="{% static 'jquery.tablesorter.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'tablesorter.css' %}">
@@ -14,28 +14,32 @@
   <div class="container-fluid">
 
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nb-1">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nb-search">
+	<span class="sr-only">Search</span>
+	<span class="glyphicon glyphicon-search"></span>
+      </button>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nb-sections">
 	<span class="sr-only">Sections</span>
 	<span class="icon-bar"></span>
 	<span class="icon-bar"></span>
+        <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="{% url 'index' %}">{{ SITE_NAME }}</a>
     </div{# navbar-header #}>
 
-    <div class="collapse navbar-collapse" id="nb-1">
-      <ul class="nav navbar-nav">
-	<li{% if 'papers' = active %} class="active"{% endif %}><a href="{% url 'papers:all' %}">Papers</a></li>
-	<li{% if 'phenotypes' = active %} class="active"{% endif %}><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
-	<li{% if 'conditions' = active %} class="active"{% endif %}><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
-      </ul>
+    <ul class="collapse navbar-collapse nav navbar-nav" id="nb-sections">
+      <li{% if 'papers' = active %} class="active"{% endif %}><a href="{% url 'papers:all' %}">Papers</a></li>
+      <li{% if 'phenotypes' = active %} class="active"{% endif %}><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
+      <li{% if 'conditions' = active %} class="active"{% endif %}><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
+    </ul{# nb-sections #}>
+    <div class="collapse navbar-collapse" id="nb-search">
       <form class="navbar-form navbar-right" role="search" action="{% url 'papers:all' %}" method="GET">
 	<div class="form-group">
 	  <input type="search" name="s" value="{{ s }}" class="form-control" placeholder="search">
 	</div>
 	<button type="submit" class="btn btn-default">Submit</button>
       </form>
-    </div{# nb-1 #}>
-
+    </div{# nb-search #}>
   </div{# container-fluid #}>
 </nav>
