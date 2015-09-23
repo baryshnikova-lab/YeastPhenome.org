@@ -25,13 +25,13 @@
 
     <div class="collapse navbar-collapse" id="nb-1">
       <ul class="nav navbar-nav">
-	<li><a href="{% url 'papers:all' %}">Papers</a></li>
-	<li><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
-	<li><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
+	<li{% if 'papers' = active %} class="active"{% endif %}><a href="{% url 'papers:all' %}">Papers</a></li>
+	<li{% if 'phenotypes' = active %} class="active"{% endif %}><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
+	<li{% if 'conditions' = active %} class="active"{% endif %}><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
       </ul>
       <form class="navbar-form navbar-right" role="search" action="{% url 'papers:all' %}" method="GET">
 	<div class="form-group">
-	  <input type="search" name="s" value="{{ s }}">
+	  <input type="search" name="s" value="{{ s }}" style="width:10ex">
 	</div>
 	<button type="submit" class="btn btn-default">Submit</button>
       </form>
