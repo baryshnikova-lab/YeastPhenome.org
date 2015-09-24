@@ -22,23 +22,23 @@
   {% if object.notes %}
   <caption>{{ object.notes }}</caption>
   {% endif %}
+  {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/>
+  <col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
   <thead>
     <tr>
-      <th rowspan="2">Phenotype</th>
-      <th rowspan="2">Condition set</th>
-      <th rowspan="2">Collection</th>
-      <th colspan="3">Tested genes</th>
-      <th colspan="3">Data</th>
+      <th>Phenotypes</th>
+      <th>Conditions</th>
+      <th>Collected</th>
+      <th>Tested space</th>
       {% if request.GET.verbose >= 1 %}
-      <th rowspan="2">Has data</th>
+      <th>Tested Published / Available / Status</th>
       {% endif %}
-    </tr><tr>
-      <th>#</th>
-      <th>Published</th>
-      <th>Available</th>
-      <th>Measured</th>
-      <th>Published</th>
-      <th>Available</th>
+      <th>Data Type</th>
+      {% if request.GET.verbose >= 1 %}
+      <th>Data Measured / Published</th>
+      <th>Has data</th>
+      {% endif %}
+
     </tr>
   </thead><tbody>
     {% for dataset in object.dataset_set.all %}
@@ -47,21 +47,14 @@
       <td>{{ dataset.conditionset }}</td>
       <td>{{ dataset.collection }}</td>
       <td>{{ dataset.tested_num }}</td>
-      <td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
-      <td>
-        {% if not dataset.tested_source %}
-        No
-        {% else %}
-        {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
-        {% endif %}
-      </td>
-      <td>{{ dataset.data_measured|capfirst }}</td>
-      <td>{{ dataset.data_published|capfirst }}</td>
-      <td>{{ dataset.data_available|capfirst }}
-        <br>{{ dataset.data_source|safe }}
-        <br>{{ paper.latest_data_status|capfirst }}
-      </td>
       {% if request.GET.verbose >= 1 %}
+      <td>{{ dataset.tested_genes_published|yesno|capfirst }} /
+	{{ dataset.tested_source|safe }} /
+	{{ paper.latest_tested_status|capfirst }}</td>
+      {% endif %}
+      <td>{{ dataset.data_available|capfirst }}</td>
+      {% if request.GET.verbose >= 1 %}
+      <td>{{ dataset.data_measured|capfirst }}/{{ dataset.data_published|capfirst }}</td>
       <td>{{ dataset.has_data }}</td>
       {% endif %}
     </tr>
@@ -76,10 +69,7 @@
 </div>{# container-fluid #}
 
 <script>$(document).ready(function(){
- $("#papersTable").tablesorter({headers:{
-  3:{sorter:false},
-  4:{sorter:false}
- }});
+ $("#papersTable").tablesorter();
 });</script>
 
 </body></html>
