@@ -18,41 +18,50 @@
 
 {% if object.datasets %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+  {% if request.GET.verbose >= 1 %}
+  <col/>
+  <col class="bg-info"/>
+  <col/>
+  <col/>
+  <col/>
+  <col class="bg-info"/>
+  <col/>
+  <col class="bg-info"/>
+  {% endif %}
   <thead>
-    <tr>
-      <th>Paper</th>
-      <th>Condition set</th>
-      <th>Phenotype</th>
-      <th>Collection</th>
-      <th>Tested genes</th>
-      <th>Tested genes published</th>
-      <th>Tested genes available</th>
-      <th>Data measured</th>
-      <th>Data published</th>
-      <th>Data available</th>
-    </tr>
+    <th>Papers</th>
+    {% if request.GET.verbose >= 1 %}<th>Condition set</th>{% endif %}
+    <th>Phenotype</th>
+    <th>Collection</th>
+    <th>Tested genes</th>
+    {% if request.GET.verbose >= 1 %}<th>Tested: <ul>
+	<li>published</li>
+	<li>available</li>
+    </ul></th>{% endif %}
+    <th>Data type</th>
+    {% if request.GET.verbose >= 1 %}<th>Data: <ul>
+	<li>measured</li>
+	<li>published</li>
+	<li>source</li>
+    </ul></th>{% endif %}
   </thead><tbody>
     {% for dataset in object.datasets %}
     <tr>
       <td>{{ dataset.paper.link_detail|safe }}</td>
-      <td>{{ dataset.conditionset }}</td>
+      {% if request.GET.verbose >= 1 %}<td>{{ dataset.conditionset }}</td>{% endif %}
       <td>{{ dataset.phenotype.link_detail|safe }}</td>
       <td>{{ dataset.collection }}</td>
       <td>{{ dataset.tested_num }}</td>
-      <td>{{ dataset.tested_genes_published|yesno|capfirst }}</td>
-      <td>
-        {% if not dataset.tested_source %}
-        No
-        {% else %}
-        {{ dataset.tested_source|safe }}<br>{{ paper.latest_tested_status|capfirst }}
-        {% endif %}
-      </td>
-      <td>{{ dataset.data_measured|capfirst }}</td>
-      <td>{{ dataset.data_published|capfirst }}</td>
-      <td>{{ dataset.data_available|capfirst }}
-        <br>{{ dataset.data_source|safe }}
-        <br>{{ paper.latest_data_status|capfirst }}
-      </td>
+      {% if request.GET.verbose >= 1 %}<td><ul>
+	  <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
+	  <li>{{ dataset.tested_source|safe }}</li>
+      </ul></td>{% endif %}
+      <td>{{ dataset.data_available|capfirst }}</td>
+      {% if request.GET.verbose >= 1 %}<td><ul>
+	  <li>{{ dataset.data_measured|capfirst }}</li>
+	  <li>{{ dataset.data_published|capfirst }}</li>
+	  <li>{{ dataset.data_source|safe }}</li>
+      </li></td>{% endif %}
     </tr>
     {% endfor %}
   </tbody>
