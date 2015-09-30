@@ -7,6 +7,8 @@
 {% if JavaScript %}{% if 'tablesorter' in JavaScript %}
 <script src="{% static 'jquery.tablesorter.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'tablesorter.css' %}">
+{% endif %}{% if 'pubmed' in JavaScript %}
+<script src="{% static 'pubmed.js' %}"></script>
 {% endif %}{% endif %}
 <link rel="stylesheet" href="{% static 'yp.css' %}">
 </head><body>

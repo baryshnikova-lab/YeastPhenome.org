@@ -5,6 +5,7 @@ from django.http.request import QueryDict
 
 from papers.models import Paper
 import operator
+import urllib2,re
 
 from phenotypes.models import Observable2
 from conditions.models import ConditionType
@@ -186,6 +187,20 @@ class PaperDiscreteIndexView(PaperIndexView):
 class PaperDetailView(generic.DetailView):
     model = Paper
     template_name = 'papers/detail.html'
+
+    def get_context_data(self,**kwargs):
+        context=super(PaperDetailView,self).get_context_data(**kwargs)
+        pmid = context['object'].pmid
+        ml = os.path.join(settings.MEDLINE_DIR, "%s.txt" % (pmid))
+        if os.path.isfile(ml):
+            pass
+        else:
+            out = open(ml,'w')
+            url = "https://www.ncbi.nlm.nih.gov/pubmed/%s?report=medline&format=text" % (pmid)
+            r = urllib2.urlopen(url)
+            out.write(re.sub('<[^<]+?>', '', r.read()).strip())
+            out.close()
+        return context
 
 
 class ContributorsListView(generic.ListView):

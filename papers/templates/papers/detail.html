@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <title>{{ SITE_NAME }} / Papers / {{ object }}</title>
-{% include "head.html" with JavaScript='tablesorter' active='papers' %}
+{% include "head.html" with JavaScript='tablesorter pubmed' active='papers' %}
 <div class="container-fluid">
 
-<ol class="breadcrumb">
+<!-- ol class="breadcrumb">
   <li><a href="{% url 'papers:all' %}">Papers</a></li>
   <li>{{ object }}</li>
-</ol>
+</ol -->
 
-<div class="row">
-  <div class="col-md-8">{% if 0 != object.pmid %}
-    <p>PMID <a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></p>
-    {% endif %}</div><div class="col-md-4">
-    <div class="pull-right">{% include "zip.html" %}</div>
-    </div>
-</div{# row #}>
+<section>
+  <div class="pull-right">{% include "zip.html" %}</div>
+  <h1>{{ object }}</h1>
+
+  {% if 0 != object.pmid %}
+  <ul itemscope="paper" class="dl-horizontal">{# item="..." an MEDLINE entries #}
+    <dt>PubMed ID</dt><dd><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></dd>
+    <dt>Title</dt><dd itemprop="TI">&#8987;</dd>
+    <dt>Full author list</dt><dd itemprop="FAU">&#8987;</dd>
+    <dt>Citation</dt><dd itemprop="CRDT">&#8987;</dd>
+    <dt>Abstract</dt><dd itemprop="AB">&#8987;</dd>
+  </ul>
+  {% endif %}
+</section>
+
 
 {% if object.dataset_set.all %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
