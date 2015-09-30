@@ -1,11 +1,3 @@
-var yp={
-    pubmed:{
-	go:function(){
-	    console.log('yo!');	
-	}
-    }
-};
-
 $(document).ready(function(){
     var paper=$('[itemscope=paper');
     var pmid=paper.find('[itemprop=PMID]').text();
@@ -33,11 +25,24 @@ $(document).ready(function(){
 	}
 	['TI','FAU','CRDT','AB'].forEach(function(prop){
 	    paper.find('[itemprop='+prop+']')
-		.text(medline[prop].join(' • '));
+		.text(medline[prop].join(' • '));
 	})
+
+	// add collapsing abstract
+	paper.find('#abstract').click(function(){
+	    var tag=$(this);
+	    var gly=tag.children();
+	    var tog=tag.next().slideToggle(
+		{duration:'fast',done:function(){
+		if(gly.is('.glyphicon-eye-open')){
+		    gly.attr('class','glyphicon glyphicon-eye-close');
+		}else{
+		    gly.attr('class','bar glyphicon glyphicon-eye-open');
+		}
+	    }});
+	});
+
     }).fail(function(){
 	paper.find('.remove_on_error').remove()
     })
-	
-
 });
