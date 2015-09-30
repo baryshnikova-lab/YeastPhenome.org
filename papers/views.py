@@ -195,11 +195,14 @@ class PaperDetailView(generic.DetailView):
         if os.path.isfile(ml):
             pass
         else:
-            out = open(ml,'w')
-            url = "https://www.ncbi.nlm.nih.gov/pubmed/%s?report=medline&format=text" % (pmid)
-            r = urllib2.urlopen(url)
-            out.write(re.sub('<[^<]+?>', '', r.read()).strip())
-            out.close()
+            try:
+                out = open(ml,'w')
+                url = "https://www.ncbi.nlm.nih.gov/pubmed/%s?report=medline&format=text" % (pmid)
+                r = urllib2.urlopen(url)
+                out.write(re.sub('<[^<]+?>', '', r.read()).strip())
+                out.close()
+            except IOError:
+                pass
         return context
 
 

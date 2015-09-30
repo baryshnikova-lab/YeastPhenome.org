@@ -16,10 +16,10 @@
   {% if 0 != object.pmid %}
   <ul itemscope="paper" class="dl-horizontal">{# item="..." an MEDLINE entries #}
     <dt>PubMed ID</dt><dd><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></dd>
-    <dt>Title</dt><dd itemprop="TI">&#8987;</dd>
-    <dt>Full author list</dt><dd itemprop="FAU">&#8987;</dd>
-    <dt>Citation</dt><dd itemprop="CRDT">&#8987;</dd>
-    <dt>Abstract</dt><dd itemprop="AB">&#8987;</dd>
+    <dt class="remove_on_error">Title</dt><dd class="remove_on_error" itemprop="TI">&#8987;</dd>
+    <dt class="remove_on_error">Full author list</dt><dd class="remove_on_error" itemprop="FAU">&#8987;</dd>
+    <dt class="remove_on_error">Citation</dt><dd class="remove_on_error" itemprop="CRDT">&#8987;</dd>
+    <dt class="remove_on_error">Abstract</dt><dd class="remove_on_error" itemprop="AB">&#8987;</dd>
   </ul>
   {% endif %}
 </section>
