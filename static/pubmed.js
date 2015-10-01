@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var paper=$('[itemscope=paper');
+    var paper=$('[itemscope=paper]');
     var pmid=paper.find('[itemprop=PMID]').text();
     var url='/static/MEDLINE/'+pmid+'.txt';
 
