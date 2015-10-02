@@ -51,6 +51,17 @@ thead td{
 .disabled{
     opacity:0.2 !important;
 }
-#abstract{
+
+/*
+ * For futzing with stuff of the paper/details page.
+ */
+
+[itemscope=paper] #abstract{
     cursor:pointer;
+}
+[itemscope=paper] li:after{
+    content:'\00A0\00A0\2022';
+}
+[itemscope=paper] li:last-child:after{
+    content:'';
 }
