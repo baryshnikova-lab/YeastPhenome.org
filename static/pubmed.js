@@ -1,6 +1,9 @@
 $(document).ready(function(){
     var paper=$('[itemscope=paper]');
     var pmid=paper.find('[itemprop=PMID]').text();
+    if(!pmid){
+	return false;
+    }
     var url='/static/MEDLINE/'+pmid+'.txt';
 
     $.get(url,function(data){
@@ -23,9 +26,21 @@ $(document).ready(function(){
 		medline[prop][medline[prop].length-1]+=' '+line.trim();
 	    }
 	}
-	['TI','FAU','CRDT','AB'].forEach(function(prop){
-	    paper.find('[itemprop='+prop+']')
-		.text(medline[prop].join(' • '));
+	['TI','FAU','AB','SO'].forEach(function(prop){
+	    var tag=paper.find('[itemprop='+prop+']');
+	    if(1===medline[prop].length){
+		tag.text(medline[prop][0])
+	    }else{
+		// If we have multiple items, put it in an ordered
+		// list
+		tag.empty();
+		var ol=tag
+		    .append('<ol class="list-inline"></ol>')
+		    .children(':first-child');
+		medline[prop].forEach(function(v){
+		    ol.append('<li>'+v+'</li>');
+		});
+	    }
 	})
 
 	// add collapsing abstract

@@ -51,3 +51,6 @@ thead td{
 .disabled{
     opacity:0.2 !important;
 }
+#abstract{
+    cursor:pointer;
+}

@@ -13,15 +13,13 @@
   <div class="pull-right">{% include "zip.html" %}</div>
   <h1>{{ object }}</h1>
 
-  {% if 0 != object.pmid %}
-  <ul itemscope="paper" class="dl-horizontal">{# item="..." an MEDLINE entries #}
+  {% if 0 != object.pmid %}<ul itemscope="paper" class="dl-horizontal">
     <dt>PubMed ID</dt><dd><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></dd>
     <dt class="remove_on_error">Title</dt><dd class="remove_on_error" itemprop="TI">&#8987;</dd>
     <dt class="remove_on_error">Full author list</dt><dd class="remove_on_error" itemprop="FAU">&#8987;</dd>
-    <dt class="remove_on_error">Citation</dt><dd class="remove_on_error" itemprop="CRDT">&#8987;</dd>
+    <dt class="remove_on_error">Citation</dt><dd class="remove_on_error"><cite itemprop="SO">&#8987;</cite></dd>
     <dt id="abstract" class="remove_on_error">Abstract <span class="view glyphicon glyphicon-eye-open"></span></dt><dd class="remove_on_error" itemprop="AB">&#8987;</dd>
-  </ul>
-  {% endif %}
+  </ul>{% endif %}
 </section>
 
 

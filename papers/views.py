@@ -191,6 +191,9 @@ class PaperDetailView(generic.DetailView):
     def get_context_data(self,**kwargs):
         context=super(PaperDetailView,self).get_context_data(**kwargs)
         pmid = context['object'].pmid
+        if 0==pmid:
+            # If we have no PMID just bail
+            return context
         ml = os.path.join(settings.MEDLINE_DIR, "%s.txt" % (pmid))
         if os.path.isfile(ml):
             pass
