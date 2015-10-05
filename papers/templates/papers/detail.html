@@ -20,9 +20,10 @@
 
 {% if object.dataset_set.all %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% if object.notes %}
-  <caption>{{ object.notes }}</caption>
-  {% endif %}
+  {% if object.notes or contact %}<caption>
+    {% if object.notes %}<p>{{ object.notes }}</p>{% endif %}
+    {% if contact %}<p>This data was provided by: {{ contact }}</p>{% endif %}
+  </caption>{% endif %}
   {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/>
   <col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
   <thead>

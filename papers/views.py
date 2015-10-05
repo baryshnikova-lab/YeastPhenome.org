@@ -190,6 +190,8 @@ class PaperDetailView(generic.DetailView):
 
     def get_context_data(self,**kwargs):
         context=super(PaperDetailView,self).get_context_data(**kwargs)
+
+        context['contact']=context['object'].sources_to_acknowledge()
         pmid = context['object'].pmid
         if 0==pmid:
             # If we have no PMID just bail
