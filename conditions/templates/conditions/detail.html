@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<title>{{ SITE_NAME }} / Conditions / {{ object|capfirst }}</title>
+<title>{{ SITE_NAME }} / Experimental conditions / {{ object|capfirst }}</title>
 {% include "head.html" with JavaScript='tablesorter' active='conditions' %}
 <div class="container-fluid">
-<h1>Condition {{ object|capfirst }}</h1>
+<h1>{{ object|capfirst }}</h1>
 
 {% if object.descripton %}
 <dl class="dl-horizontal">
