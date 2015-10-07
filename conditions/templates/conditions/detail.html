@@ -3,11 +3,7 @@
 <title>{{ SITE_NAME }} / Conditions / {{ object|capfirst }}</title>
 {% include "head.html" with JavaScript='tablesorter' active='conditions' %}
 <div class="container-fluid">
-
-<ol class="breadcrumb">
-  <li><a href="{% url 'conditions:index' %}">Conditions</a></li>
-  <li>{{ object|capfirst }}</li>
-</ol>
+<h1>Condition {{ object|capfirst }}</h1>
 
 {% if object.descripton %}
 <dl class="dl-horizontal">

@@ -3,17 +3,12 @@
 <title>{{ SITE_NAME }} / Phenotypes / {{ object|capfirst }}</title>
 {% include "head.html" with JavaScript='tablesorter' active='phenotypes' %}
 <div class="container-fluid">
-  
-<ol class="breadcrumb">
-  <li><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
-  <li>{{ object|capfirst }}</li>
-</ol>
-
-<p>
+<hgroup><p>
 {% for ancestor in object.get_ancestors %}
 {% filter multiply:ancestor.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} {{ ancestor.link_detail|safe|capfirst }}</br>
 {% endfor %}
-</p>
+</p><h1>{{ object|capfirst }}</h1>
+</hgroup>
 
 {% comment %}
 <!-- I can't find an example of output from this, so for now lets

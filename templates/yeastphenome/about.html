@@ -1,14 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" %}
+{% include "head.html" with active='about' %}
 <title>{{ SITE_NAME }}</title>
 </head><body><div class="container-fluid">
-
-<hgroup>
-  <dav><a href="{% url 'index' %}">{{ SITE_NAME }}</a> / </nav>
-  <h1>About</h1>
-</hgroup>
-
+<h1>About</h1>
 
 <section>
   <p>YeastPhenome.org collects phenotypic data derived from <strong>systematic screens</strong> of large-scale <screen>mutant collections</screen> in budding yeast Saccharomyces cerevisiae. Our goal is to study the relationship between different mutant phenotypes and integrate them into mapping of the functional organization of biological pathways.</p>

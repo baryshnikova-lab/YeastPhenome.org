@@ -1,9 +1,9 @@
 {% load staticfiles %}<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 {% if JavaScript %}{% if 'tablesorter' in JavaScript %}
 <script src="{% static 'jquery.tablesorter.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'tablesorter.css' %}">
@@ -12,7 +12,7 @@
 {% endif %}{% endif %}
 <link rel="stylesheet" href="{% static 'yp.css' %}">
 </head><body>
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
 
     <div class="navbar-header">
@@ -31,6 +31,7 @@
       <li{% if 'papers' = active %} class="active"{% endif %}><a href="{% url 'papers:all' %}">Papers</a></li>
       <li{% if 'phenotypes' = active %} class="active"{% endif %}><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
       <li{% if 'conditions' = active %} class="active"{% endif %}><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
+      <li{% if 'about' = active %} class="active"{% endif %}><a href="{% url 'about' %}">About</a></li>
     </ul{# nb-sections #}>
     <div class="collapse navbar-collapse" id="nb-search">
       <form class="navbar-form navbar-right" role="search" action="{% url 'papers:all' %}" method="GET">
