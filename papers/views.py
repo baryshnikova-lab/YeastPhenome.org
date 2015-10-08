@@ -191,8 +191,24 @@ class PaperDetailView(generic.DetailView):
     def get_context_data(self,**kwargs):
         context=super(PaperDetailView,self).get_context_data(**kwargs)
 
-        context['contact']=context['object'].sources_to_acknowledge()
-        pmid = context['object'].pmid
+        obj=context['object']
+        names=obj.sources_to_acknowledge()
+        if names:
+            print names
+            what=[]
+            if obj.got_data():
+                what.append('data')
+            if obj.got_tested():
+                what.append('list of genes')
+            ww='was'
+            if len(what)>1:
+                ww='were'
+            context['thanks']='This %s %s kindly provided by: %s' % (
+                ' and '.join(what),ww,names);
+            # If we ever get more then two items we will have to do
+            # this differently
+
+        pmid=obj.pmid
         if 0==pmid:
             # If we have no PMID just bail
             return context
