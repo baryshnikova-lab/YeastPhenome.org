@@ -194,19 +194,20 @@ class PaperDetailView(generic.DetailView):
         obj=context['object']
         names=obj.sources_to_acknowledge()
         if names:
-            print names
-            what=[]
-            if obj.got_data():
-                what.append('data')
-            if obj.got_tested():
-                what.append('list of genes')
-            ww='was'
-            if len(what)>1:
-                ww='were'
-            context['thanks']='This %s %s kindly provided by: %s' % (
-                ' and '.join(what),ww,names);
-            # If we ever get more then two items we will have to do
-            # this differently
+            gd=obj.got_data()
+            gt=obj.got_tested()
+
+            thanks=False
+            if gd:
+                if gt:
+                    thanks='The most complete dataset and the list of tested genes for this publication were kindly provided by: %s';
+                else:
+                    thanks='The most complete dataset for this publication was kindly provided by: %s';
+            elif gt:
+                thanks='The list of tested genes for this publication was kindly provided by: %s'
+            if thanks:
+                context['thanks']=thanks % names
+
 
         pmid=obj.pmid
         if 0==pmid:
