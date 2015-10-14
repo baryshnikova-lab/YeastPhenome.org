@@ -17,6 +17,13 @@ as zip files.
 
 The prefix to use when downloading a zip file.
 
+#### `MEDLINE_DIR`
+
+Rather then staring in the database MEDLINE formatted information is
+stored it it's raw text format in the directory sepcified here.  This
+must alse me accessed via the url `.../static/MEDLINE/*pmid*.txt` URL.
+So the default is probably what you want.
+
 ### PostgreSQL
 
 The `migrate` option doesn't seem to work in one step when using
