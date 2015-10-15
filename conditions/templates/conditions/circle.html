@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<title>{{ SITE_NAME }} / Experimental conditions</title>
+<script>var flare={{ flare|safe }};</script>
+{% include "head.html" with JavaScript='d3 circle' active='conditions' %}
+<div class="container-fluid">
+
+<nav class="pull-right">
+  <a class="btn btn-default" href="{% url 'conditions:index' %}">Table</a>
+  <a class="btn btn-default" href="{% url 'conditions:graph' %}">Graph</a>
+</nav>
+<h1>Experimental conditions</h1>
+<div id="circle"></div>
+{% include "footer.html" %}
+</div{# container-fluid #}>
+</body></html>

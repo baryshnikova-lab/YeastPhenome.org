@@ -24,6 +24,12 @@ class ConditionType(models.Model):
     external_link = models.CharField(max_length=200, blank=True, null=True)
     chebi_id = models.CharField(max_length=200, blank=True, null=True)
 
+    def must_display_name(self):
+        """Displays name if we have no short name."""
+        if '' == self.short_name:
+            return u'%s' % (self.name)
+        return u'%s' % (self.short_name)
+
     def __unicode__(self):
         return u'%s' % (self.short_name)
 
@@ -46,6 +52,7 @@ class ConditionType(models.Model):
         return apps.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
     def papers(self):
+        """Returns a string contaiting HTML for all the papers."""
         result = self.paper_list()
         l = ''
         for p in result:

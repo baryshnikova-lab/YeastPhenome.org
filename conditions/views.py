@@ -1,9 +1,10 @@
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.db.models import Count
+from django.http import HttpResponse
 import json
 
-from conditions.models import ConditionType
+from .models import ConditionType
 
 
 class ConditionIndexView(generic.ListView):
@@ -14,22 +15,26 @@ class ConditionIndexView(generic.ListView):
     def get_queryset(self):
         return ConditionType.objects.order_by('name')
 
-
-class ConditionGraphView(TemplateView):
-    template_name = 'conditions/graph.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(ConditionGraphView, self).get_context_data(**kwargs)
-        data = [{
-            'type':s.type,
-            'name':s.name,
-            'short_name':s.shortname,
-            'size':s.num_datasets,
-        } for s in ConditionType.objects.annotate(num_datasets=Count('condition__conditionset__dataset')).order_by('-num_datasets')]
-        context['stats'] = json.dumps(data)
-        return context
-
-
 class ConditionDetailView(generic.DetailView):
     model = ConditionType
     template_name = 'conditions/detail.html'
+
+class CirclePacking(generic.ListView):
+    model = ConditionType
+    template_name = 'conditions/circle.html'
+
+    def flare(self,ctl):
+        out={'name':'flare','children':[]}
+        for ct in ctl:
+            paper_count=len(ct.paper_list())
+            if 0<paper_count:
+                out['children'].append({
+                    'name':ct.must_display_name(),
+                    'size':paper_count
+                })
+        return out
+
+    def get_context_data(self,**kwargs):
+        context = super(generic.ListView,self).get_context_data(**kwargs)
+        context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
+        return context

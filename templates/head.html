@@ -9,7 +9,12 @@
 <link rel="stylesheet" href="{% static 'tablesorter.css' %}">
 {% endif %}{% if 'pubmed' in JavaScript %}
 <script src="{% static 'pubmed.js' %}"></script>
-{% endif %}{% endif %}
+{% endif %}{% if 'd3' in JavaScript %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+{% if 'circle' in JavaScript %}
+<link rel="stylesheet" href="{% static 'circle.css' %}">
+<script src="{% static 'circle.js' %}"></script>
+{% endif %}{% endif %}{% endif %}
 <link rel="stylesheet" href="{% static 'yp.css' %}">
 </head><body>
 <nav class="navbar navbar-default">

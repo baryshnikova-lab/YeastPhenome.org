@@ -2,7 +2,15 @@
 <html lang="en"><head>
 <title>{{ SITE_NAME }} / Experimental conditions</title>
 {% include "head.html" with JavaScript='tablesorter' active='conditions' %}
-<div class="container-fluid"><h1>Experimental conditions</h1>
+<div class="container-fluid">
+
+<nav class="pull-right">
+  <a class="btn btn-default" href="{% url 'conditions:index' %}">Table</a>
+  <a class="btn btn-default" href="{% url 'conditions:graph' %}">Graph</a>
+</nav>
+<h1>Experimental conditions</h1>
+
+
 {% if conditiontype_list %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
   {% comment %}
