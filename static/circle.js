@@ -19,7 +19,15 @@ $(document).ready(function(){
 	.data(pack.nodes)
 	.enter().append("g")
 	.attr("class", function(d) { return d.children ? "node" : "leaf node"; })
-	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+	.append('a')
+	.attr('xlink:href',function(d){
+	    if('id' in d){
+		return '/conditions/'+d.id+'/';
+	    }
+	    return null;
+	})
+    ;
 
     node.append("title")
 	.text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });

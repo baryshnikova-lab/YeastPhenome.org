@@ -30,11 +30,13 @@ class CirclePacking(generic.ListView):
             if 0<paper_count:
                 out['children'].append({
                     'name':ct.must_display_name(),
-                    'size':paper_count
+                    'size':paper_count,
+                    'id':ct.id
                 })
         return out
 
     def get_context_data(self,**kwargs):
         context = super(generic.ListView,self).get_context_data(**kwargs)
+        # Luckly json is based on JavaScript so we just dump it out with this.
         context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
         return context
