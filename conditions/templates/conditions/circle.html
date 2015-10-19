@@ -2,15 +2,18 @@
 <html lang="en"><head>
 <title>{{ SITE_NAME }} / Experimental conditions</title>
 <script>var flare={{ flare|safe }};</script>
-{% include "head.html" with JavaScript='d3 circle' active='conditions' %}
+{% include "head.html" with JavaScript=request.resolver_match.url_name active='conditions' %}
 <div class="container-fluid">
 
 <nav class="pull-right">
   <a class="btn btn-default" href="{% url 'conditions:index' %}">Table</a>
-  <a class="btn btn-default" href="{% url 'conditions:graph' %}">Graph</a>
+  <a class="btn btn-default" href="{% url 'conditions:d3circle' %}">Circle</a>
+  <a class="btn btn-default" href="{% url 'conditions:d3square' %}">Square</a>
 </nav>
+
 <h1>Experimental conditions</h1>
-<div id="circle"></div>
+<div id="graphic"></div>
+
 {% include "footer.html" %}
 </div{# container-fluid #}>
 </body></html>

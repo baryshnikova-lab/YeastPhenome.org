@@ -9,7 +9,7 @@ $(document).ready(function(){
 	.value(function(d){return d.size;})
 	.sort(function(a,b){return b.name.localeCompare(a.name);})
     ;
-    var svg=d3.select("#circle").append("svg")
+    var svg=d3.select("#graphic").append("svg")
 	.attr("width",diameter)
 	.attr("height",diameter)
 	.append("g")

@@ -19,7 +19,7 @@ class ConditionDetailView(generic.DetailView):
     model = ConditionType
     template_name = 'conditions/detail.html'
 
-class CirclePacking(generic.ListView):
+class D3Packing(generic.ListView):
     model = ConditionType
     template_name = 'conditions/circle.html'
 
