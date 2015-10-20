@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 
 from django.shortcuts import get_object_or_404, render
@@ -35,16 +36,17 @@ class ObservableDetailView(generic.DetailView):
 
 class D3Packing(generic.ListView):
     model = Observable2
-    template_name='circle.html'
+    template_name='graph.html'
+    context_object_name = 'nodes'
 
-    def flare(self,ptl):
+    def flare(self,nodes):
         out={'name':'flare','children':[]}
-        for pt in ptl:
-            print pt
+        for node in nodes:
+            print nodes
         return out
 
-    def get_context_data(self,**kwards):
+    def get_context_data(self,**kwargs):
         context = super(generic.ListView,self).get_context_data(**kwargs)
         # Luckly json is based on JavaScript so we just dump it out with this.
-        context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
+        context['flare'] = json.dumps(self.flare(context['nodes']))
         return context
