@@ -21,7 +21,7 @@ class ConditionDetailView(generic.DetailView):
 
 class D3Packing(generic.ListView):
     model = ConditionType
-    template_name = 'conditions/circle.html'
+    template_name = 'graph.html'
 
     def flare(self,ctl):
         out={'name':'flare','children':[]}
