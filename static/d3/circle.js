@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
     // Basically nicked from http://bl.ocks.org/mbostock/4063530
 
     var diameter=960;
@@ -22,8 +21,8 @@ $(document).ready(function(){
 	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 	.append('a')
 	.attr('xlink:href',function(d){
-	    if('id' in d){
-		return '/conditions/'+d.id+'/';
+	    if('href' in d){
+		return d.href;
 	    }
 	    return null;
 	})

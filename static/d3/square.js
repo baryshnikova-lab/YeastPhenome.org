@@ -40,8 +40,8 @@ $(document).ready(function(){
 
     node.append('a')
 	.attr('href',function(d){
-	    if('id' in d){
-		return '/conditions/'+d.id+'/';
+	    if('href' in d){
+		return d.href
 	    }
 	    return null;
 	})

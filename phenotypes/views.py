@@ -31,6 +31,7 @@ class ObservableIndexView(generic.ListView):
 
 
 class ObservableDetailView(generic.DetailView):
+
 	model = Observable2
 	template_name = 'phenotypes/detail.html'
 
@@ -39,14 +40,29 @@ class D3Packing(generic.ListView):
     template_name='graph.html'
     context_object_name = 'nodes'
 
+    def foo(self,node):
+        out = {
+            'name':node.name,
+            'size':len(node.paper_list()),
+            'href':'/phenotypes/%d/' % (node.id),
+           }
+        if node.is_leaf_node():
+            return out
+        out['children'] = []
+
+        for child in node.get_children():
+            out['children'].append(self.foo(child))
+        return out
+
     def flare(self,nodes):
         out={'name':'flare','children':[]}
         for node in nodes:
-            print nodes
+            if None==node.parent:
+                out['children'].append(self.foo(node))
         return out
 
     def get_context_data(self,**kwargs):
         context = super(generic.ListView,self).get_context_data(**kwargs)
         # Luckly json is based on JavaScript so we just dump it out with this.
-        context['flare'] = json.dumps(self.flare(context['nodes']))
+        context['flare'] = json.dumps(self.flare(context['nodes']),indent=1)
         return context

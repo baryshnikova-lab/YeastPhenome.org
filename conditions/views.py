@@ -31,7 +31,7 @@ class D3Packing(generic.ListView):
                 out['children'].append({
                     'name':ct.must_display_name(),
                     'size':paper_count,
-                    'id':ct.id
+                    'href':'/conditions/%d/' % (ct.id)
                 })
         return out
 
