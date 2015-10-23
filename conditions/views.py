@@ -21,17 +21,17 @@ class ConditionDetailView(generic.DetailView):
 
 class D3Packing(generic.ListView):
     model = ConditionType
-    template_name = 'graph.html'
+    template_name = 'conditions/d3.html'
 
     def flare(self,ctl):
-        out={'name':'flare','children':[]}
+        out={'name':'conditions','children':[]}
         for ct in ctl:
             paper_count=len(ct.paper_list())
             if 0<paper_count:
                 out['children'].append({
                     'name':ct.must_display_name(),
                     'size':paper_count,
-                    'href':'/conditions/%d/' % (ct.id)
+                    'id':ct.id,
                 })
         return out
 

@@ -7,6 +7,7 @@ $(document).ready(function(){
 	.size([diameter-4,diameter-4])
 	.value(function(d){return d.size;})
 	.sort(function(a,b){return b.name.localeCompare(a.name);})
+	.padding(1)
     ;
     var svg=d3.select("#graphic").append("svg")
 	.attr("width",diameter)
@@ -21,22 +22,26 @@ $(document).ready(function(){
 	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 	.append('a')
 	.attr('xlink:href',function(d){
-	    if('href' in d){
-		return d.href;
+	    if(('id' in d) && d.size){
+		return '/'+flare.name+'/'+d.id+'/';
 	    }
 	    return null;
 	})
     ;
 
-    node.append("title")
-	.text(function(d) { return d.name + (d.children ? "" : ": " + format(d.size)); });
+    node.append("title").text(function(d){
+	return d.name + (d.size ? ": " + format(d.size) : '');
+    });
 
     node.append("circle")
 	.attr("r", function(d) { return d.r; });
     
-    node.filter(function(d) { return !d.children; }).append("text")
+    node
+	.filter(function(d) { return !d.children; })
+	.append("text")
 	.attr("dy", ".3em")
 	.style("text-anchor", "middle")
 	.text(function(d) { return d.name.substring(0, d.r / 3); });
+	//.text(function(d) { return d.name });
 
 });

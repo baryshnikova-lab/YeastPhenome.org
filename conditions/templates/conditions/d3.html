@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <title>{{ SITE_NAME }} / Experimental conditions</title>
 <script>var flare={{ flare|safe }};</script>
-{% include "head.html" with JavaScript=request.resolver_match.url_name active=request.resolver_match.namespaces.0 %}
+{% include "head.html" with JavaScript="d3" d3=request.resolver_match.url_name active=request.resolver_match.namespaces.0 %}
 <div class="container-fluid">
 {% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 %}
 <h1>Experimental conditions</h1>

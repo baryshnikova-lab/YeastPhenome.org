@@ -37,28 +37,32 @@ class ObservableDetailView(generic.DetailView):
 
 class D3Packing(generic.ListView):
     model = Observable2
-    template_name='graph.html'
+    template_name='phenotypes/d3.html'
     context_object_name = 'nodes'
 
-    def foo(self,node):
+    def aux(self,node):
         out = {
             'name':node.name,
             'size':len(node.paper_list()),
-            'href':'/phenotypes/%d/' % (node.id),
+            'dsize':len(node.paper_list()),
+            'id':node.id,
            }
         if node.is_leaf_node():
             return out
         out['children'] = []
 
         for child in node.get_children():
-            out['children'].append(self.foo(child))
+            decedents=self.aux(child);
+            if decedents['dsize'] > 0:
+                out['dsize'] += decedents['dsize'];
+                out['children'].append(decedents)
         return out
 
     def flare(self,nodes):
-        out={'name':'flare','children':[]}
+        out={'name':'phenotypes','children':[]}
         for node in nodes:
             if None==node.parent:
-                out['children'].append(self.foo(node))
+                out['children'].append(self.aux(node))
         return out
 
     def get_context_data(self,**kwargs):

@@ -11,13 +11,9 @@
 <script src="{% static 'pubmed.js' %}"></script>
 {% endif %}{% if 'd3' in JavaScript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
-{% if 'circle' in JavaScript %}
-<link rel="stylesheet" href="{% static 'd3/circle.css' %}">
-<script src="{% static 'd3/circle.js' %}"></script>
-{% elif 'square' in JavaScript %}
-<link rel="stylesheet" href="{% static 'd3/square.css' %}">
-<script src="{% static 'd3/square.js' %}"></script>
-{% endif %}{% endif %}{% endif %}
+<link rel="stylesheet" href="{% static 'd3/'|add:d3|add:'.css' %}">
+<script src="{% static 'd3/'|add:d3|add:'.js' %}"></script>
+{% endif %}{% endif %}
 <link rel="stylesheet" href="{% static 'yp.css' %}">
 </head><body>
 <nav class="navbar navbar-default">
