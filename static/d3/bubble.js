@@ -30,7 +30,6 @@ $(document).ready(function(){
     var format=d3.format(",d");
     var color=d3.scale.category20c();
 
-
     var bubble=d3.layout.pack()
 	.sort(null)
 	.size([diameter,diameter])
@@ -50,7 +49,6 @@ $(document).ready(function(){
 	.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
 	.append('a')
 	.attr('xlink:href',function(d){
-	    console.log(d);
 	    if('id' in d){
 		return '/'+flare.name+'/'+d.id+'/';
 	    }
@@ -65,7 +63,10 @@ $(document).ready(function(){
 
     node.append("circle")
 	.attr("r", function(d) { return d.r; })
-	.style("fill", function(d) { return color(d.packageName); });
+	.style("fill", function(d) {
+	    return color(d.value);
+	})
+    ;
 
     node.append("text")
 	.attr("dy", ".3em")
