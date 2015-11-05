@@ -6,8 +6,9 @@
 <div class="container-fluid">
 {% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 %}
 <h1>Phenotypes</h1>
-<div id="graphic"></div>
-
+<div id="graphic">
+  <table id="legend"></table>
+</div>
 {% include "footer.html" %}
 </div{# container-fluid #}>
 </body></html>

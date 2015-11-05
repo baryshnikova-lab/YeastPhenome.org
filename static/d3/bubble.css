@@ -1,1 +1,15 @@
-/* nothing */
+#graphic{
+    position:relative;
+}
+table#legend{
+    position:absolute;
+    font-size:smaller;
+    right:0;
+}
+table#legend tr th:first-child{
+    padding-right:1ex;
+}
+table#legend tr td:first-child{
+    text-align:right;
+    padding-right:3ex;
+}

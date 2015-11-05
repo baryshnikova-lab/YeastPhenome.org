@@ -2,7 +2,7 @@ function classes(root) {
     var classes = [];
 
     function recurse(name, node) {
-	if('size' in node){
+	if(('size' in node) && (0 != node.size)){
 	    classes.push({
 		packageName:name,
 		className:node.name,
@@ -28,10 +28,12 @@ $(document).ready(function(){
 
     var diameter=960;
     var format=d3.format(",d");
-    var color=d3.scale.category20c();
+    color=d3.scale.category20c();
 
     var bubble=d3.layout.pack()
-	.sort(null)
+	.sort(function(a,b){
+	    return b.className.localeCompare(a.className)
+	})
 	.size([diameter,diameter])
 	.padding(1.5)
     ;
@@ -62,8 +64,13 @@ $(document).ready(function(){
     ;
 
     node.append("circle")
-	.attr("r", function(d) { return d.r; })
+	.attr("r", function(d) { 
+	    return d.r;
+	})
 	.style("fill", function(d) {
+	    if(0==d.value){
+		console.log(d.value);
+	    }
 	    return color(d.value);
 	})
     ;
@@ -75,4 +82,12 @@ $(document).ready(function(){
 
     //d3.select(self.frameElement).style("height", diameter + "px");
 
+    var key=$('#legend');
+    key.append('<tr><th>Papers</th><th>Color</th></tr>');
+    color.domain().sort(function(a,b){
+	return a-b;
+    }).forEach(function(d){
+	key.append('<tr><td>'+d+'</td><td style="background:'+
+		   color(d)+'"></td></tr>');
+    });
 });
