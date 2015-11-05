@@ -1,5 +1,6 @@
 function classes(root) {
     var classes = [];
+    var domain = [];
 
     function recurse(name, node) {
 	if(('size' in node) && (0 != node.size)){
@@ -8,7 +9,10 @@ function classes(root) {
 		className:node.name,
 		value:node.size,
 		id:node.id,
-	    })
+	    });
+	    if(-1 == domain.indexOf(node.size)){
+		domain.push(node.size);
+	    }
 	}
 
 	if (node.children) node.children.forEach(
@@ -18,7 +22,9 @@ function classes(root) {
 	);
     }
     recurse(null, root);
-    return {children: classes};
+    return {children:classes,domain:domain.sort(function(a,b){
+	return a-b;
+    })};
 }
 
 
@@ -28,7 +34,13 @@ $(document).ready(function(){
 
     var diameter=960;
     var format=d3.format(",d");
-    color=d3.scale.category20c();
+
+    var flat=classes(flare);
+    console.log(flat);
+    //var color=d3.scale.category20c().domain(flat.domain);
+    var color=d3.scale.ordinal()
+	.domain(flat.domain)
+	.range(colorbrewer.BuGn[9]);
 
     var bubble=d3.layout.pack()
 	.sort(function(a,b){
@@ -44,7 +56,7 @@ $(document).ready(function(){
     ;
 
     var node = svg.selectAll(".node")
-	.data(bubble.nodes(classes(flare))
+	.data(bubble.nodes(flat)
 	      .filter(function(d) { return !d.children; }))
 	.enter().append("g")
 	.attr("class", "node")

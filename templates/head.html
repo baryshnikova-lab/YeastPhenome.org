@@ -11,6 +11,7 @@
 <script src="{% static 'pubmed.js' %}"></script>
 {% endif %}{% if 'd3' in JavaScript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="{% static 'd3/colorbrewer.js' %}"></script>
 <link rel="stylesheet" href="{% static 'd3/'|add:d3|add:'.css' %}">
 <script src="{% static 'd3/'|add:d3|add:'.js' %}"></script>
 {% endif %}{% endif %}
