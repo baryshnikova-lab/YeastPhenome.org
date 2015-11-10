@@ -1,7 +1,9 @@
 {# {% load sub_navigation %} #}{% load my_filters %}<!DOCTYPE html>
 <html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Papers</title>
-{% include "head.html" with JavaScript='tablesorter' active='papers' %}
+</head><body>
+{% include "navbar.html" with active='papers' %}
 <div class="container-fluid"><h1>Papers</h1>
 {% if papers_list %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">

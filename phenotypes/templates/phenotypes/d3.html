@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+{% include "head.html" with JavaScript="d3" d3=request.resolver_match.url_name %}
 <title>{{ SITE_NAME }} / Phenotypes</title>
-<script>var flare={{ flare|safe }};</script>
-{% include "head.html" with JavaScript="d3" d3=request.resolver_match.url_name active=request.resolver_match.namespaces.0 %}
+<script>
+var flare={{ flare|safe }};
+var colors=colorbrewer.BuPu[9];
+</script>
+</head><body>
+{% include "navbar.html" with active="phenotypes" %}
 <div class="container-fluid">
 {% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 %}
 <h1>Phenotypes</h1>

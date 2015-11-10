@@ -70,7 +70,7 @@ $(document).ready(function(){
     });
 
     //var color=d3.scale.category20c().domain(flat.domain);
-    var color=smush(domain,flat.domain,colorbrewer.BuPu[9]);
+    var color=smush(domain,flat.domain,colors);
     var bubble=d3.layout.pack()
 	.sort(function(a,b){
 	    return b.className.localeCompare(a.className)

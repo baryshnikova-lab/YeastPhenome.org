@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" with active='about' %}
+{% include "head.html" %}
 <title>{{ SITE_NAME }}</title>
-</head><body><div class="container-fluid">
+</head><body>
+{% include "navbar.html" with active='about' %}
+<div class="container-fluid">
 <h1>About</h1>
 
 <section>

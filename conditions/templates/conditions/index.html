@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Experimental conditions</title>
-{% include "head.html" with JavaScript='tablesorter' active='conditions' %}
+</head><body>
+{% include "navbar.html" with active='conditions' %}
 <div class="container-fluid">
 {% include "d3menu.html" with namespace='conditions' %}
 <h1>Experimental conditions</h1>

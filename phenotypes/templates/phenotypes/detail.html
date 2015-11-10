@@ -1,7 +1,9 @@
 {% load staticfiles %}{% load string_multiply %}<!DOCTYPE html>
 <html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Phenotypes / {{ object|capfirst }}</title>
-{% include "head.html" with JavaScript='tablesorter' active='phenotypes' %}
+</head><body>
+{% include "navbar.html" with active='phenotypes' %}
 <div class="container-fluid">
 <hgroup><p>
 {% for ancestor in object.get_ancestors %}

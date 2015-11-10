@@ -1,7 +1,9 @@
 {% load mptt_tags %}{% load string_multiply %}{# load my_filters #}<!DOCTYPE html>
 <html lang="en"><head>
+{% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Phenotypes</title>
-{% include "head.html" with JavaScript='tablesorter' active='phenotypes' %}
+</head><body>
+{% include "navbar.html" with active='phenotypes' %}
 <div class="container-fluid">
 {% include "d3menu.html" with namespace='phenotypes' %}
 <h1>Phenotypes</h1>
