@@ -7,7 +7,15 @@
 {% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 %}
 <h1>Experimental conditions</h1>
 <div id="graphic">
-  <table id="legend"></table>
+  <table id="legend">
+    <thead>
+      <tr>
+	<th>Papers</th>
+	<th>Color</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 {% include "footer.html" %}
 </div{# container-fluid #}>

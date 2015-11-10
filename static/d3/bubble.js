@@ -1,6 +1,6 @@
 function classes(root) {
     var classes = [];
-    var domain = [];
+    var domain = {};
 
     function recurse(name, node) {
 	if(('size' in node) && (0 != node.size)){
@@ -10,8 +10,10 @@ function classes(root) {
 		value:node.size,
 		id:node.id,
 	    });
-	    if(-1 == domain.indexOf(node.size)){
-		domain.push(node.size);
+	    if(node.size in domain){
+		domain[node.size]++;
+	    }else{
+		domain[node.size]=1;
 	    }
 	}
 
@@ -22,11 +24,38 @@ function classes(root) {
 	);
     }
     recurse(null, root);
-    return {children:classes,domain:domain.sort(function(a,b){
-	return a-b;
-    })};
+    return {children:classes,domain:domain}
 }
 
+function smush(domain,d2c,colors){
+    // if(domain.length > colors.length){
+    // 	return d3.scale.ordinal()
+    // 	    .domain(domain)
+    // 	    .range(colors);
+    // }
+
+    var s=d3.rgb(colors[colors.length - 2]);
+    var e=d3.rgb(colors[0]);
+
+    var rstep=(e.r - s.r)/domain.length;
+    var gstep=(e.g - s.g)/domain.length;
+    var bstep=(e.b - s.b)/domain.length;
+
+    var range=[];
+    for(i in domain){
+	var r=s.r+(i*rstep);
+	var g=s.g+(i*gstep);
+	var b=s.b+(i*bstep);
+	range.unshift(d3.rgb(r,g,b));
+    }
+
+    var out=d3.scale.linear()
+	.domain(domain)
+	.range(range)
+    ;
+
+    return out;
+}
 
 
 $(document).ready(function(){
@@ -36,12 +65,12 @@ $(document).ready(function(){
     var format=d3.format(",d");
 
     var flat=classes(flare);
-    console.log(flat);
-    //var color=d3.scale.category20c().domain(flat.domain);
-    var color=d3.scale.ordinal()
-	.domain(flat.domain)
-	.range(colorbrewer.BuGn[9]);
+    var domain=Object.keys(flat.domain).sort(function(a,b){
+	return a-b;
+    });
 
+    //var color=d3.scale.category20c().domain(flat.domain);
+    var color=smush(domain,flat.domain,colorbrewer.BuPu[9]);
     var bubble=d3.layout.pack()
 	.sort(function(a,b){
 	    return b.className.localeCompare(a.className)
@@ -94,12 +123,11 @@ $(document).ready(function(){
 
     //d3.select(self.frameElement).style("height", diameter + "px");
 
-    var key=$('#legend');
-    key.append('<tr><th>Papers</th><th>Color</th></tr>');
-    color.domain().sort(function(a,b){
-	return a-b;
-    }).forEach(function(d){
+    var key=$('#legend tbody');
+    domain.forEach(function(d){
 	key.append('<tr><td>'+d+'</td><td style="background:'+
-		   color(d)+'"></td></tr>');
+		   color(d)+'">'+
+		   //flat.domain[d]+
+		   '</td></tr>');
     });
 });
