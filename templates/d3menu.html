@@ -1,6 +1,6 @@
-<nav class="pull-right">
-  <a class="btn btn-default" href="{% url namespace|add:':index' %}">Table</a>
-  {#<a class="btn btn-default" href="{% url namespace|add:':circle' %}">Circle</a>#}
-  {#<a class="btn btn-default" href="{% url namespace|add:':square' %}">Square</a>#}
-  <a class="btn btn-default" href="{% url namespace|add:':bubble' %}">Bubble</a>
+<nav>
+  <ul class="nav nav-tabs">
+    <li{% if not active %} class="active"{% endif %}><a href="{% url namespace|add:':index' %}">Table</a></li>
+    <li{% if 'bubble' = active %} class="active"{% endif %}><a href="{% url namespace|add:':bubble' %}">Graphics</a></li>
+  </ul>
 </nav>

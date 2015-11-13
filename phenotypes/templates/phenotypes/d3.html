@@ -9,8 +9,8 @@ var colors=colorbrewer.BuPu[9];
 </head><body>
 {% include "navbar.html" with active="phenotypes" %}
 <div class="container-fluid">
-{% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 %}
 <h1>Phenotypes</h1>
+{% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 active=request.resolver_match.url_name %}
 <div id="graphic">
   <table id="legend">
     <thead>
