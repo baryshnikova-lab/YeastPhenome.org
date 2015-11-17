@@ -15,7 +15,6 @@ class Observable2Admin(MPTTModelAdmin):
             obj.ancestry = '%s%03d.' % (obj.parent.ancestry, obj.id)
             obj.save()
 
-
 class MutantTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']
     list_display = ['id', 'name', 'definition']

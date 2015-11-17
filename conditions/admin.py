@@ -35,7 +35,8 @@ class ConditionSetAdmin(admin.ModelAdmin):
     search_fields = ('conditions__type__name', 'conditions__type__short_name',)
     ordering = ('conditions__type__short_name',)
     inlines = (DatasetInline,)
-
+    class Media:
+        js={'foo.js'}
 
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)
