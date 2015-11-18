@@ -30,10 +30,6 @@ class DatasetInline(admin.TabularInline):
     raw_id_fields = ('conditionset', 'phenotype', 'tested_source','data_source')
     readonly_fields = ('id', 'changetestedsource_link','changedatasource_link')
     extra = 0
-    class Media:
-        # Hopefully I can find a better way to do this.
-        js={'foo.js'}
-
 
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 1000
