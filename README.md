@@ -54,3 +54,10 @@ INSTALLED_APPS = (
 
 Then `migrate` the database.  After that, uncomment out the bottom
 part of the block and `migrate` again.
+
+## `static/admin/...`
+
+As curators use the admin site to curate it is important to keep the
+`static/admin` up with the current version of Django you are using.
+So when using something like WSGI make sure that it points to the code
+in the python library.
