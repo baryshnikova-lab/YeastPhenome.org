@@ -14,6 +14,8 @@ class Observable2Admin(MPTTModelAdmin):
         if not obj.ancestry:
             obj.ancestry = '%s%03d.' % (obj.parent.ancestry, obj.id)
             obj.save()
+    class Media:
+        js={'ancestor.js'};
 
 class MutantTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']

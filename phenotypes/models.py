@@ -7,11 +7,11 @@ class Observable2(MPTTModel):
     """Generally the way to fetch phenotypes."""
 
     name = models.CharField(max_length=200)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children',to_field='ancestry')
     description = models.TextField(blank=True, null=True)
     definition = models.TextField(blank=True, null=True)
     modified_on = models.DateField(auto_now=True, null=True)
-    ancestry = models.CharField(max_length=200, blank=True, null=True)
+    ancestry = models.CharField(max_length=200, blank=True, null=True, unique=True)
 
     def __unicode__(self):
         return u'%s' % self.name
