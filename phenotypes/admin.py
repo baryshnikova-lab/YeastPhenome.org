@@ -14,6 +14,16 @@ class Observable2Admin(MPTTModelAdmin):
         if not obj.ancestry:
             obj.ancestry = '%s%03d.' % (obj.parent.ancestry, obj.id)
             obj.save()
+
+    def to_field_allowed(self, request, to_field):
+        """This is a littel hacky, but setting to_field='ancestry' in
+        Observable2.parent broke MPTTModel.get_children() when
+        generating the graphics.  So until I can figure out a better
+        way..."""
+
+        if 'ancestry' == to_field:
+            return True
+        return super(MPTTModelAdmin,self).to_field_allowed(request, to_field)
     class Media:
         js={'ancestor.js'};
 

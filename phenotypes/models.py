@@ -7,7 +7,8 @@ class Observable2(MPTTModel):
     """Generally the way to fetch phenotypes."""
 
     name = models.CharField(max_length=200)
-    parent = TreeForeignKey('self', null=True, blank=True, related_name='children',to_field='ancestry')
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    #,to_field='ancestry') # See ./admin.py:Observable2Admin.to_field_allowed
     description = models.TextField(blank=True, null=True)
     definition = models.TextField(blank=True, null=True)
     modified_on = models.DateField(auto_now=True, null=True)
