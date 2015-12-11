@@ -17,6 +17,10 @@ as zip files.
 
 The prefix to use when downloading a zip file.
 
+#### `README`
+
+Path to a readme file in be included in the downloaded zip file.
+
 #### `MEDLINE_DIR`
 
 Rather then staring in the database MEDLINE formatted information is

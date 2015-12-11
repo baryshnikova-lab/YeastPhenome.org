@@ -248,6 +248,10 @@ def zipo(request,pk):
     zip_buff=StringIO()
     zip_file=ZipFile(zip_buff,'w')
 
+    rm=settings.README
+    if rm and os.path.isfile(rm):
+        zip_file.write(rm,os.path.basename(rm))
+
     dp=p.download_path()
     for root,_,basenames in os.walk(dp):
         for name in basenames:

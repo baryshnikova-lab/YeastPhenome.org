@@ -123,4 +123,5 @@ TEMPLATES = [
 # Project spcific configurations, see ../READEME.md for a description
 DOWNLOAD_PREFIX='YeastPhenome'
 DATA_DIR='/data/YeastPhenome.org/Yeastphenome.org-Loading-data/Datasets'
+README=os.path.join(DATA_DIR,'README.md')
 MEDLINE_DIR=os.path.join(BASE_DIR,"static","MEDLINE")
