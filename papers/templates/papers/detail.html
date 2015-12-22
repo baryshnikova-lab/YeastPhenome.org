@@ -48,7 +48,7 @@
   </thead><tbody>
     {% for dataset in object.dataset_set.all %}
     <tr>
-      <td>{{ dataset.phenotype.observable2.link_detail|safe }}</td>
+      <td>{{ dataset.phenotype.link_detail|safe }}</td>
       <td>{{ dataset.conditionset }}</td>
       <td>{{ dataset.collection }}</td>
       <td>{{ dataset.tested_num }}</td>
