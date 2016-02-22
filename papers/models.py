@@ -10,6 +10,7 @@ from django.conf import settings
 
 import os
 import warnings
+from operator import attrgetter
 
 class Status(models.Model):
     STATUS_CHOICES = (
@@ -141,6 +142,15 @@ class Paper(models.Model):
         result = self.dataset_set.filter(tested_source__acknowledge = True).distinct()
         return len(result) > 0
 
+    def dataset_list(self):
+        """Like dataset_set.all() but returns a serted list."""
+        dss=self.dataset_set.all()
+        out = [];
+        for ds in dss:
+            out.append(ds)
+        out.sort(lambda a,b: cmp(a.sort_string(),b.sort_string()))
+        return out
+
 
 class Statusdata(models.Model):
     paper = models.ForeignKey(Paper)
@@ -243,6 +253,15 @@ class Dataset(models.Model):
 
     def __unicode__(self):
         return u'(%s, %s, %s)' % (self.collection, self.phenotype, self.conditionset)
+
+    def sort_string(self):
+        """Just to make things easer to sort."""
+        out=u"%s %s %s %d %s" %(self.phenotype,
+                               self.conditionset,
+                               self.collection,
+                               self.tested_num,
+                               self.data_available)
+        return out.lower()
 
     def tested_genes_published(self):
         return self.tested_list_published

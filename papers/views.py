@@ -190,8 +190,9 @@ class PaperDetailView(generic.DetailView):
 
     def get_context_data(self,**kwargs):
         context=super(PaperDetailView,self).get_context_data(**kwargs)
-
         obj=context['object']
+
+        # Give credit if we where credit id due.
         names=obj.sources_to_acknowledge()
         if names:
             gd=obj.got_data()
@@ -207,8 +208,9 @@ class PaperDetailView(generic.DetailView):
                 thanks='The list of tested genes for this publication was kindly provided by: %s'
             if thanks:
                 context['thanks']=thanks % names
+        # Credit now given
 
-
+        # Fetch PMID info if we have to
         pmid=obj.pmid
         if 0==pmid:
             # If we have no PMID just bail
@@ -225,6 +227,7 @@ class PaperDetailView(generic.DetailView):
                 out.close()
             except IOError:
                 pass
+
         return context
 
 
