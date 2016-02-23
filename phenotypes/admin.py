@@ -35,7 +35,7 @@ class MutantTypeAdmin(admin.ModelAdmin):
 
 class PhenotypeAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ['observable2_name', 'name', 'reporter', 'papers']
+    list_display = ['observable2_name', 'name', 'reporter', 'paper_admin']
     ordering = ['observable2__ancestry']
     search_fields = ['name', ]
 

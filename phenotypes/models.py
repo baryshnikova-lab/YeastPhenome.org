@@ -96,14 +96,24 @@ class Phenotype(models.Model):
         return '<span style="white-space: nowrap;">%s %s</span>' % (self.ancestry(), self.observable2.name)
     observable2_name.allow_tags = True
 
+    def paper_list(self):
+        return apps.get_model('papers','Paper').objects.filter(dataset__phenotype=self).distinct()
+
     def papers(self):
-        result = apps.get_model('papers','Paper').objects.filter(dataset__phenotype=self).distinct()
+        result = self.paper_list()
         l = ''
         for p in result:
             l += '%s, ' % (p.link_detail())
         return l
     papers.allow_tags = True
 
+    def paper_admin(self):
+        result = self.paper_list()
+        l = ''
+        for p in result:
+            l += '%s, ' % (p.link_admin())
+        return l
+    paper_admin.allow_tags = True
 
 class MutantType(models.Model):
     name = models.CharField(max_length=200)
