@@ -118,6 +118,8 @@ class ConditionSet(models.Model):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)
     conditionset_link.allow_tags = True
 
-    def save(self):
-        self.name = " + ".join([unicode(condition_type) for condition_type in ConditionType.objects.filter(condition__conditionset=self).distinct().order_by('short_name')])
-        super(ConditionSet, self).save()
+# We don't want to auto set names, but I don't want to forget how to
+# it so we keep this around for now.
+    # def save(self):
+    #     self.name = " + ".join([unicode(condition_type) for condition_type in ConditionType.objects.filter(condition__conditionset=self).distinct().order_by('short_name')])
+    #     super(ConditionSet, self).save()
