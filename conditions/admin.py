@@ -27,7 +27,6 @@ class ConditionTypeAdmin(admin.ModelAdmin):
     radio_fields = {'group': admin.VERTICAL}
     search_fields = ('name', 'short_name')
 
-
 class ConditionSetAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'papers',)
     list_filter = ['conditions__type__short_name']
@@ -35,6 +34,9 @@ class ConditionSetAdmin(admin.ModelAdmin):
     search_fields = ('conditions__type__name', 'conditions__type__short_name',)
     ordering = ('conditions__type__short_name',)
     inlines = (DatasetInline,)
+
+    class Media:
+        js=('conditionset.js',)
 
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)
