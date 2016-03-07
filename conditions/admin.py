@@ -31,7 +31,7 @@ class ConditionSetAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'papers',)
     list_filter = ['conditions__type__short_name']
     filter_horizontal = ['conditions']
-    search_fields = ('conditions__type__name', 'conditions__type__short_name',)
+    search_fields = ('name', 'conditions__type__name', 'conditions__type__short_name',)
     ordering = ('conditions__type__short_name',)
     inlines = (DatasetInline,)
 
