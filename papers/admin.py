@@ -33,7 +33,8 @@ class DatasetInline(admin.TabularInline):
 
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ('pmid', 'user', '__unicode__', 'DatasetList')
+    list_display = ('pmid', 'user', '__unicode__', 'DatasetList',
+                    'latest_tested_status','latest_data_status')
     list_filter = ['pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author')
     fields = [('user',), ('first_author', 'last_author','pub_date', 'pmid'), ('notes', 'private_notes'), ]
