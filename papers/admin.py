@@ -16,7 +16,7 @@ class StatustestedInline(admin.TabularInline):
 class SourceAdmin(admin.ModelAdmin):
     model = Source
     list_display = ('__unicode__',)
-    fields = ('sourcetype','link','person','date','release','acknowledge')
+    fields = ('sourcetype', 'link', 'person', 'date', 'release', 'acknowledge')
 
 
 class CollectionAdmin(admin.ModelAdmin):
@@ -29,8 +29,8 @@ class DatasetInline(admin.TabularInline):
     fields = ('id', 'conditionset', 'phenotype', 'collection', 'tested_num', 'tested_list_published', 'tested_source',
               'changetestedsource_link', 'data_measured', 'data_published', 'data_available', 'data_source',
               'changedatasource_link', 'notes')
-    raw_id_fields = ('conditionset', 'phenotype', 'tested_source','data_source')
-    readonly_fields = ('id', 'changetestedsource_link','changedatasource_link')
+    raw_id_fields = ('conditionset', 'phenotype', 'tested_source', 'data_source')
+    readonly_fields = ('id', 'changetestedsource_link', 'changedatasource_link')
     extra = 0
 
 

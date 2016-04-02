@@ -54,7 +54,7 @@ class Paper(models.Model):
         return list(map(str, self.dataset_set.values_list('collection', flat=True).distinct()))
 
     def phenotype_list(self):
-        # return a list of Observable2 objects that this paper is in
+        # Returns a list of Observable2 objects that this paper is in
         return Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
 
     @property
@@ -67,7 +67,7 @@ class Paper(models.Model):
         return phenotype_list
 
     def condition_list(self):
-        """Returns a QuerySet of conditions associated with this paper."""
+        # Returns a QuerySet of conditions associated with this paper
         return ConditionType.objects.filter(condition__conditionset__dataset__paper=self)
 
     @property
@@ -88,31 +88,28 @@ class Paper(models.Model):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
     def should_have_data(self):
-        """Returns True if data has been loaded from data files."""
+        # Returns True if data has been loaded from data files
         return 'loaded' == str(self.latest_data_status()) or 'loaded' == str(self.latest_tested_status())
 
     def raw_available_data(self):
-        """Returns True if it should have data, and has access to raw data."""
+        # Returns True if it should have data, and has access to raw data
         return self.should_have_data() and self.download_path_exists
 
     def latest_data_status(self):
         return self.statusdata_set.latest()
-
     latest_data_status.admin_order_field = 'statusdata__status__status_name'
 
     def latest_tested_status(self):
         return self.statustested_set.latest()
-
     latest_tested_status.admin_order_field = 'statustested__status__status_name'
 
     def download_path(self):
-        """Returns a path of where datafiles should be, regardless if it has data files or not."""
+        # Returns a path of where datafiles should be, regardless if it has data files or not
         return os.path.join(settings.DATA_DIR, str(self.pmid))
 
     @property
     def download_path_exists(self):
-        """Regardless if the paper should have data, returns True or False if
-        there is a data directory for this paper."""
+        # Regardless if the paper should have data, returns True or False if there is a data directory for this paper
         return os.path.isdir(self.download_path())
 
     def static_dir_name(self):
@@ -146,12 +143,12 @@ class Paper(models.Model):
         return len(result) > 0
 
     def dataset_list(self):
-        """Like dataset_set.all() but returns a sorted list."""
+        # Like dataset_set.all() but returns a sorted list
         dss = self.dataset_set.all()
         out = []
         for ds in dss:
             out.append(ds)
-        out.sort(lambda a,b: cmp(a.sort_string(),b.sort_string()))
+        out.sort(lambda a, b: cmp(a.sort_string(), b.sort_string()))
         return out
 
 
@@ -188,12 +185,14 @@ class Collection(models.Model):
     def __unicode__(self):
         return u'%s' % (self.shortname)
 
+
 class Sourcetype(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     shortname = models.CharField(max_length=200, null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % (self.name)
+
 
 class Source(models.Model):
     sourcetype = models.ForeignKey(Sourcetype, null=True, blank=True, related_name='sourcetype')
@@ -219,6 +218,7 @@ class Source(models.Model):
     def change_link(self):
         return '<a href="%s" target="_blank">Edit</a>' % (reverse("admin:papers_source_change", args=(self.id,)))
     change_link.allow_tags = True
+
 
 class Dataset(models.Model):
     paper = models.ForeignKey(Paper)
@@ -258,12 +258,12 @@ class Dataset(models.Model):
         return u'(%s, %s, %s)' % (self.collection, self.phenotype, self.conditionset)
 
     def sort_string(self):
-        """Just to make things easer to sort."""
-        out=u"%s %s %s %d %s" %(self.phenotype,
-                               self.conditionset,
-                               self.collection,
-                               self.tested_num,
-                               self.data_available)
+        # Just to make things easier to sort
+        out = u"%s %s %s %d %s" % (self.phenotype,
+                                   self.conditionset,
+                                   self.collection,
+                                   self.tested_num,
+                                   self.data_available)
         return out.lower()
 
     def tested_genes_published(self):
@@ -285,6 +285,7 @@ class Dataset(models.Model):
     def has_data(self):
         return self.data_set.exists()
     has_data.boolean = True
+
 
 class Data(models.Model):
     dataset = models.ForeignKey(Dataset, null=True, blank=True)
