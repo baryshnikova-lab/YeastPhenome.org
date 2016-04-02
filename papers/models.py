@@ -3,14 +3,15 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 #from django.utils.safestring import SafeUnicode
 
+from django.conf import settings
+from django.contrib.auth.models import User
 from phenotypes.models import Observable2
 from conditions.models import ConditionType, Condition, ConditionSet
-from django.contrib.auth.models import User
-from django.conf import settings
 
 import os
 import warnings
 from operator import attrgetter
+
 
 class Status(models.Model):
     STATUS_CHOICES = (
@@ -58,7 +59,7 @@ class Paper(models.Model):
 
     @property
     def phenotypes(self):
-        # Retuns HTML of papers
+        # Returns HTML of papers
         result = self.phenotype_list()
         phenotype_list = ''
         for p in result:
@@ -87,28 +88,30 @@ class Paper(models.Model):
         return list(map(str, self.dataset_set.values_list('data_available', flat=True).distinct()))
 
     def should_have_data(self):
-        """Return True if data has been loaded from data files."""
-	return 'loaded'==str(self.latest_data_status()) or 'loaded'==str(self.latest_tested_status())
+        """Returns True if data has been loaded from data files."""
+        return 'loaded' == str(self.latest_data_status()) or 'loaded' == str(self.latest_tested_status())
 
     def raw_available_data(self):
         """Returns True if it should have data, and has access to raw data."""
         return self.should_have_data() and self.download_path_exists
 
-    @property
     def latest_data_status(self):
-        return self.statusdata_set.latest
+        return self.statusdata_set.latest()
 
-    @property
+    latest_data_status.admin_order_field = 'statusdata__status__status_name'
+
     def latest_tested_status(self):
-        return self.statustested_set.latest
+        return self.statustested_set.latest()
+
+    latest_tested_status.admin_order_field = 'statustested__status__status_name'
 
     def download_path(self):
         """Returns a path of where datafiles should be, regardless if it has data files or not."""
-        return os.path.join(settings.DATA_DIR,str(self.pmid))
+        return os.path.join(settings.DATA_DIR, str(self.pmid))
 
     @property
     def download_path_exists(self):
-        """Regardless if the paper should have data, returns True or Fals if
+        """Regardless if the paper should have data, returns True or False if
         there is a data directory for this paper."""
         return os.path.isdir(self.download_path())
 
@@ -143,9 +146,9 @@ class Paper(models.Model):
         return len(result) > 0
 
     def dataset_list(self):
-        """Like dataset_set.all() but returns a serted list."""
-        dss=self.dataset_set.all()
-        out = [];
+        """Like dataset_set.all() but returns a sorted list."""
+        dss = self.dataset_set.all()
+        out = []
         for ds in dss:
             out.append(ds)
         out.sort(lambda a,b: cmp(a.sort_string(),b.sort_string()))

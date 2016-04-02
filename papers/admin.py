@@ -26,18 +26,21 @@ class CollectionAdmin(admin.ModelAdmin):
 
 class DatasetInline(admin.TabularInline):
     model = Dataset
-    fields = ('id','conditionset', 'phenotype', 'collection','tested_num','tested_list_published','tested_source','changetestedsource_link','data_measured','data_published','data_available','data_source','changedatasource_link','notes')
+    fields = ('id', 'conditionset', 'phenotype', 'collection', 'tested_num', 'tested_list_published', 'tested_source',
+              'changetestedsource_link', 'data_measured', 'data_published', 'data_available', 'data_source',
+              'changedatasource_link', 'notes')
     raw_id_fields = ('conditionset', 'phenotype', 'tested_source','data_source')
     readonly_fields = ('id', 'changetestedsource_link','changedatasource_link')
     extra = 0
 
+
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 1000
     list_display = ('pmid', 'user', '__unicode__', 'DatasetList',
-                    'latest_tested_status','latest_data_status')
+                    'latest_data_status', 'latest_tested_status')
     list_filter = ['pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author')
-    fields = [('user',), ('first_author', 'last_author','pub_date', 'pmid'), ('notes', 'private_notes'), ]
+    fields = [('user',), ('first_author', 'last_author', 'pub_date', 'pmid'), ('notes', 'private_notes'), ]
     inlines = (StatusdataInline, StatustestedInline, DatasetInline,)
     search_fields = ('pmid', 'first_author', 'last_author')
 
@@ -52,10 +55,20 @@ class PaperAdmin(admin.ModelAdmin):
             list += '%s  ' % (unicode(d))
         return list
 
+    def get_queryset(self, request):
+        return Paper.objects.extra(
+            where=["papers_statusdata.id = ( "
+                   "select max(papers_statusdata.id) from papers_statusdata "
+                   "where papers_statusdata.paper_id = papers_paper.id ) ",
+                   "papers_statustested.id = ( "
+                   "select max(papers_statustested.id) from papers_statustested "
+                   "where papers_statustested.paper_id = papers_paper.id ) "],
+            tables=["papers_statusdata", "papers_statustested"]
+        )
+
 
 class StatusAdmin(admin.ModelAdmin):
     inlines = (StatusdataInline, StatustestedInline)
-
 
 
 admin.site.register(Paper, PaperAdmin)
