@@ -59,10 +59,12 @@ class PaperAdmin(admin.ModelAdmin):
         return Paper.objects.extra(
             where=["papers_statusdata.id = ( "
                    "select max(papers_statusdata.id) from papers_statusdata "
-                   "where papers_statusdata.paper_id = papers_paper.id ) ",
+                   "where papers_statusdata.paper_id = papers_paper.id ) OR "
+                   "papers_statusdata.id is null",
                    "papers_statustested.id = ( "
                    "select max(papers_statustested.id) from papers_statustested "
-                   "where papers_statustested.paper_id = papers_paper.id ) "],
+                   "where papers_statustested.paper_id = papers_paper.id ) OR "
+                   "papers_statustested.id is null"],
             tables=["papers_statusdata", "papers_statustested"]
         )
 
