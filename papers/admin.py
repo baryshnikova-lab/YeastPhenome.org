@@ -55,16 +55,15 @@ class PaperAdmin(admin.ModelAdmin):
             list += '%s  ' % (unicode(d))
         return list
 
-    def get_queryset(self, request):
-        return Paper.objects.extra(
-            where=["papers_statusdata.id = ( "
+    def get_query_set(self, request):
+        qs = super(PaperAdmin, self).get_queryset(request)
+        return qs.extra(
+            where=["papers_statusdata.id is null OR papers_statusdata.id = ( "
                    "select max(papers_statusdata.id) from papers_statusdata "
-                   "where papers_statusdata.paper_id = papers_paper.id ) OR "
-                   "papers_statusdata.id is null",
-                   "papers_statustested.id = ( "
+                   "where papers_statusdata.paper_id = papers_paper.id )",
+                   "papers_statustested.id is null OR papers_statustested.id = ( "
                    "select max(papers_statustested.id) from papers_statustested "
-                   "where papers_statustested.paper_id = papers_paper.id ) OR "
-                   "papers_statustested.id is null"],
+                   "where papers_statustested.paper_id = papers_paper.id )"],
             tables=["papers_statusdata", "papers_statustested"]
         )
 
