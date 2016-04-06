@@ -5,7 +5,7 @@ from django.http.request import QueryDict
 
 from papers.models import Paper
 import operator
-import urllib2,re
+import urllib2, re
 
 from phenotypes.models import Observable2
 from conditions.models import ConditionType
@@ -19,20 +19,19 @@ from cStringIO import StringIO
 from zipfile import ZipFile
 
 
-
 class PaperIndexView(generic.ListView):
     """A virtual class."""
     model = Paper
     template_name = 'papers/index.html'
     context_object_name = 'papers_list'
 
-    the_filter = False # this should be overloaded
-    GOT = False # for caching multiple requests
-    template_ref = None # for tweaking with the template
+    the_filter = False  # this should be overloaded
+    GOT = False  # for caching multiple requests
+    template_ref = None  # for tweaking with the template
 
     def get_queryset(self):
 
-        got=self.scrub_GET()
+        got = self.scrub_GET()
         if 's' in got:
             papers=[] # hold list of paper ids
 
