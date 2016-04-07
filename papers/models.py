@@ -46,6 +46,9 @@ class Paper(models.Model):
     data_statuses = models.ManyToManyField(Status, through='Statusdata', related_name='data_statuses')
     tested_statuses = models.ManyToManyField(Status, through='Statustested', related_name='tested_statuses')
 
+    latest_data_status = models.ForeignKey('Statusdata', blank=True, null=True, related_name='latest_data_status_of_paper')
+    latest_tested_status = models.ForeignKey('Statustested', blank=True, null=True, related_name='latest_tested_status_of_paper')
+
     class Meta:
         get_latest_by = 'modified_on'
 
@@ -89,19 +92,11 @@ class Paper(models.Model):
 
     def should_have_data(self):
         # Returns True if data has been loaded from data files
-        return 'loaded' == str(self.latest_data_status()) or 'loaded' == str(self.latest_tested_status())
+        return 'loaded' == str(self.latest_data_status.status.status_name) or 'loaded' == str(self.latest_tested_status.status.status_name)
 
     def raw_available_data(self):
         # Returns True if it should have data, and has access to raw data
         return self.should_have_data() and self.download_path_exists
-
-    def latest_data_status(self):
-        return self.statusdata_set.latest()
-    latest_data_status.admin_order_field = 'statusdata__status__status_name'
-
-    def latest_tested_status(self):
-        return self.statustested_set.latest()
-    latest_tested_status.admin_order_field = 'statustested__status__status_name'
 
     def download_path(self):
         # Returns a path of where datafiles should be, regardless if it has data files or not
@@ -128,7 +123,7 @@ class Paper(models.Model):
     link_detail.allow_tags = True
 
     def sources_to_acknowledge(self):
-        result = Source.objects.filter(Q(acknowledge = True) & (Q(data_source__paper = self) | Q(tested_source__paper = self))).values_list('person', flat=True).distinct()
+        result = Source.objects.filter(Q(acknowledge=True) & (Q(data_source__paper=self) | Q(tested_source__paper=self))).values_list('person', flat=True).distinct()
         result_list = ''
         for r in result:
             result_list += u'%s ' % (r)

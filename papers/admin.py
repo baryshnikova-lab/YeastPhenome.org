@@ -47,6 +47,10 @@ class PaperAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.user:
             obj.user = request.user
+        if obj.statusdata_set.all():
+            obj.latest_data_status = obj.statusdata_set.latest()
+        if obj.statustested_set.all():
+            obj.latest_tested_status = obj.statustested_set.latest()
         obj.save()
 
     def DatasetList(self, obj):
@@ -54,18 +58,6 @@ class PaperAdmin(admin.ModelAdmin):
         for d in Dataset.objects.filter(paper=obj.id):
             list += '%s  ' % (unicode(d))
         return list
-
-    def get_query_set(self, request):
-        qs = super(PaperAdmin, self).get_queryset(request)
-        return qs.extra(
-            where=["papers_statusdata.id is null OR papers_statusdata.id = ( "
-                   "select max(papers_statusdata.id) from papers_statusdata "
-                   "where papers_statusdata.paper_id = papers_paper.id )",
-                   "papers_statustested.id is null OR papers_statustested.id = ( "
-                   "select max(papers_statustested.id) from papers_statustested "
-                   "where papers_statustested.paper_id = papers_paper.id )"],
-            tables=["papers_statusdata", "papers_statustested"]
-        )
 
 
 class StatusAdmin(admin.ModelAdmin):
