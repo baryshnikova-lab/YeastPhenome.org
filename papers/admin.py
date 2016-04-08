@@ -45,13 +45,31 @@ class PaperAdmin(admin.ModelAdmin):
     search_fields = ('pmid', 'first_author', 'last_author')
 
     def save_model(self, request, obj, form, change):
-        if not obj.user:
-            obj.user = request.user
-        if obj.statusdata_set.all():
-            obj.latest_data_status = obj.statusdata_set.latest()
-        if obj.statustested_set.all():
-            obj.latest_tested_status = obj.statustested_set.latest()
-        obj.save()
+        pass
+
+    def save_related(self, request, form, formsets, change):
+        paper = form.instance
+
+        # If creating a  new paper, just save the instance first
+        if paper.pk is None:
+            super(PaperAdmin, self).save_model(request, paper, form, change)
+
+        # When the paper exists, first save the related data, then update the paper itself
+        form.save_m2m()
+        for formset in formsets:
+            self.save_formset(request, form, formset, change=change)
+        if not paper.user:
+            paper.user = request.user
+        if paper.statusdata_set.all():
+            paper.latest_data_status = paper.statusdata_set.latest()
+        else:
+            paper.latest_data_status = None
+        if paper.statustested_set.all():
+            paper.latest_tested_status = paper.statustested_set.latest()
+        else:
+            paper.latest_tested_status = None
+        super(PaperAdmin, self).save_model(request, paper, form, change)
+
 
     def DatasetList(self, obj):
         list = ""

@@ -10,7 +10,6 @@ from conditions.models import ConditionType, Condition, ConditionSet
 
 import os
 import warnings
-from operator import attrgetter
 
 
 class Status(models.Model):
@@ -46,8 +45,12 @@ class Paper(models.Model):
     data_statuses = models.ManyToManyField(Status, through='Statusdata', related_name='data_statuses')
     tested_statuses = models.ManyToManyField(Status, through='Statustested', related_name='tested_statuses')
 
-    latest_data_status = models.ForeignKey('Statusdata', blank=True, null=True, related_name='latest_data_status_of_paper')
-    latest_tested_status = models.ForeignKey('Statustested', blank=True, null=True, related_name='latest_tested_status_of_paper')
+    latest_data_status = models.ForeignKey('Statusdata', blank=True, null=True,
+                                           related_name='latest_data_status_of_paper',
+                                           on_delete=models.SET_NULL)
+    latest_tested_status = models.ForeignKey('Statustested', blank=True, null=True,
+                                             related_name='latest_tested_status_of_paper',
+                                             on_delete=models.SET_NULL)
 
     class Meta:
         get_latest_by = 'modified_on'
