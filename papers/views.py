@@ -52,7 +52,7 @@ class PaperIndexView(generic.ListView):
                 if s.isdigit():
                     # we don't need to check PMID unless it's all digits
                     f=(Q(first_author__icontains=s)|Q(last_author__icontains=s)|
-                       Q(pmid__contains=s)) # on icontains for PMID, it's a number
+                       Q(pmid__contains=s))  # on icontains for PMID, it's a number
                 else:
                     f=Q(first_author__icontains=s)|Q(last_author__icontains=s)
 
@@ -73,7 +73,7 @@ class PaperIndexView(generic.ListView):
 
 
     @classmethod
-    def scrub_GET_txt(self,get):
+    def scrub_GET_txt(self, get):
         """Returns text suitable for putting in the search box."""
         return self.got_txt(self._scrub_GET(get))
 
@@ -163,50 +163,57 @@ class PaperAllIndexView(PaperIndexView):
     queryset = Paper.objects.order_by('pmid')
     template_ref = 'all'
 
+
 class PaperHaploidIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__ploidy=1)
     template_ref = 'haploid'
+
 
 class PaperDiploidHomozygousIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__shortname='hom')
     template_ref = 'diploid_homozygous'
 
+
 class PaperDiploidHeterozygousIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__shortname='het')
     template_ref='diploid_heterozygous'
+
 
 class PaperQuantitativeIndexView(PaperIndexView):
     the_filter = Q(dataset__data_available='quantitative')
     template_ref='quantitative'
 
+
 class PaperDiscreteIndexView(PaperIndexView):
     the_filter = Q(dataset__data_available='discrete')
     template_ref='discrete'
+
 
 class PaperDetailView(generic.DetailView):
     model = Paper
     template_name = 'papers/detail.html'
 
-    def get_context_data(self,**kwargs):
-        context=super(PaperDetailView,self).get_context_data(**kwargs)
-        obj=context['object']
+    def get_context_data(self, **kwargs):
+        context = super(PaperDetailView, self).get_context_data(**kwargs)
+        obj = context['object']
 
-        # Give credit if we where credit id due.
-        names=obj.sources_to_acknowledge()
+        # Give credit if where credit is due.
+        names = obj.sources_to_acknowledge()
         if names:
-            gd=obj.got_data()
-            gt=obj.got_tested()
+            gd = obj.got_data()
+            gt = obj.got_tested()
 
-            thanks=False
+            thanks = False
             if gd:
                 if gt:
-                    thanks='The most complete dataset and the list of tested genes for this publication were kindly provided by: %s';
+                    thanks = 'The data and the list of tested genes for this publication were kindly provided by: %s.'
                 else:
-                    thanks='The most complete dataset for this publication was kindly provided by: %s';
+                    thanks = 'The data for this publication was kindly provided by: %s.'
+                thanks = thanks + '<p><mark>The data contains unpublished values and is more complete that its published version. However, it may contain false positives and thus should be handled with care.</mark></p>'
             elif gt:
-                thanks='The list of tested genes for this publication was kindly provided by: %s'
+                thanks = 'The list of tested genes for this publication was kindly provided by: %s.'
             if thanks:
-                context['thanks']=thanks % names
+                context['thanks'] = thanks % names
         # Credit now given
 
         # Fetch PMID info if we have to

@@ -2,7 +2,9 @@
 <html lang="en"><head>
 {% include "head.html" with JavaScript='pubmed' %}
 <title>{{ SITE_NAME }} / Papers / {{ object }}</title>
-</head></body>
+</head>
+
+<body>
 {% include "navbar.html" with active='papers' %}
 <div class="container-fluid">
 
@@ -22,10 +24,12 @@
 
 {% if object.dataset_set.all %}
 <table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% if object.notes or thanks %}<caption>
+  {% if object.notes or thanks %}
+    <caption>
     {% if object.notes %}<p>{{ object.notes }}</p>{% endif %}
-    {% if thanks %}<p>{{ thanks }}</p>{% endif %}
-  </caption>{% endif %}
+    {% if thanks %}<p>{{ thanks|safe }}</p>{% endif %}
+    </caption>
+   {% endif %}
   {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/><col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
   <thead>
     <tr>
