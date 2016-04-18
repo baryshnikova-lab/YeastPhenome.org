@@ -13,7 +13,7 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <h1>Database of Systematic Phenotype Data in Yeast</h1>
+            <h1>Database of Systematic Phenotypes in Yeast <small>beta version</small></h1>
         </div>
     </div>
 
@@ -21,21 +21,21 @@
 
         <div class="col-xs-8">
 
-            <p>We are collecting phenotypic data derived from <strong>systematic screens</strong> of large-scale <strong>mutant collections</strong> in budding yeast <em>Saccharomyces cerevisiae</em>. Our goal is to study the relationship between different mutant phenotypes and integrate them into mapping of the functional organization of biological pathways.</p>
+            <div class="jumbotron">
 
-            <p>We are interested in both <strong>quantitative</strong> and <strong>qualitative</strong> phenotypes, as long as, for a given study, the data were collected systematically and for a large number of mutants.</p>
+                <p>Our goal is to collect, organize and share in a standardized format all phenotypic surveys of the <em>Saccharomyces cerevisiae</em> deletion collection.</p>
 
-            <p>Our primary <strong>source of data</strong> are the supplementary materials of the relevant <a href="{% url 'papers:all' %}"><strong>publications</strong></a>. On top of that, <a href="{% url 'contributors' %}">many authors</a> have contributed more complete and previously unpublished versions of their datasets (e.g., raw quantitative values from which the published hit list was derived). These datasets will be specifically flagged to emphasize their special status.</p>
+                <p><a class="btn btn-primary btn-lg" href="{% url 'about' %}" role="button">Learn more</a></p>
 
-            <p>As of today, we are at the data gathering stage. The plan is to collect, organize and share in a <strong>standardized format</strong> all of the phenotypic data obtained by the yeast community. Updates on progress will be released via this website.</p>
+            </div>
 
         </div>
 
         <div class="col-xs-4">
             <p>Current status for data collection:</p>
             <ul>
-                <li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers</a>{% if request.GET.verbose >= 1 %}, {{ paper_num_with_data }} have data{% endif %}</li>
-                <li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes</a>{% if request.GET.verbose >= 1 %}, {{ phenotype_num_with_data }} have data{% endif %}</li>
+                <li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers</a></li>
+                <li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes</a></li>
                 <li>{{ condition_num }} <a href="{% url 'conditions:index' %}">experimental conditions</a></li>
             </ul>
 
