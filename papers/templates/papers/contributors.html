@@ -23,7 +23,7 @@
       <td>{{ paper.sources_to_acknowledge }}</td>
       <td>{{ paper.link_detail|safe }}</td>
       <td>{{ paper.got_data|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
-      <td>{{ paper.got_tested|yesno:'<span class="yes">yes<span>,<span class="no">no</span>,'|safe }}</td>
+      <td>{{ paper.got_tested|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -32,7 +32,7 @@
 <p>No papers are available.</p>
 {% endif %}
 
-</div{# container-fluid #}>
+</div>
 
 <script>
 $(document).ready(function(){
@@ -40,7 +40,11 @@ $(document).ready(function(){
 });
 </script>
 
-</body></html>
+{% include "ga.html" %}
+
+</body>
+
+</html>
 
 
 

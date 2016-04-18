@@ -30,12 +30,12 @@
         <tbody>
 
         {% for paper in papers_list %}
-            <tr>
-                <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
-                <td>{{ paper.pmid }}</td>
-                <td>{{ paper.phenotypes }}</td>
-                <td>{{ paper.conditions|join_and_more:7|safe }}</td>
-            </tr>
+        <tr>
+            <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
+            <td>{{ paper.pmid }}</td>
+            <td>{{ paper.phenotypes }}</td>
+            <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+        </tr>
         {% endfor %}
 
         </tbody>
@@ -54,7 +54,11 @@
 <script>
     $(document).ready(function(){
         $("#papersTable").tablesorter();
-    });</script>
+    });
+</script>
+
+{% include "ga.html" %}
+
 
 </body>
 </html>
