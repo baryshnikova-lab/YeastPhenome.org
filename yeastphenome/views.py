@@ -1,10 +1,13 @@
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Count, Sum
 
-from papers.models import Paper, ConditionType, Condition, ConditionSet, Observable2, Data
+from papers.models import Paper, Data
+from conditions.models import Condition, ConditionSet
+from phenotypes.models import Observable2
 from papers.views import PaperIndexView
 
 import datetime
+
 
 def index(request):
     latest_paper = Paper.objects.all().latest().modified_on
