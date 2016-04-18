@@ -1,26 +1,38 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-{% include "head.html" with JavaScript="d3" d3=request.resolver_match.url_name %}
-<title>{{ SITE_NAME }} / Experimental conditions</title>
-<script>
-var flare={{ flare|safe }};
-var colors=colorbrewer.OrRd[9];
-</script>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript="d3" d3=request.resolver_match.url_name %}
+    <title>{{ SITE_NAME }} / Experimental conditions</title>
+
+    <script>
+        var flare={{ flare|safe }};
+        var colors=colorbrewer.OrRd[9];
+    </script>
+</head>
+
+<body>
+
 {% include "navbar.html" with active=request.resolver_match.namespaces.0 %}
+
 <div class="container-fluid">
-<h1>Experimental conditions</h1>
-{% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 active=request.resolver_match.url_name %}
-<div id="graphic">
-  <table id="legend">
-    <thead>
-      <tr>
-	<th>Papers</th>
-	<th>Color</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+
+    <h1>Experimental conditions</h1>
+    {% include "d3menu.html" with namespace=request.resolver_match.namespaces.0 active=request.resolver_match.url_name %}
+    <div id="graphic">
+        <table id="legend">
+            <thead>
+            <tr>
+                <th>Papers</th>
+                <th>Color</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    {% include "footer.html" %}
 </div>
-{% include "footer.html" %}
-</div{# container-fluid #}>
-</body></html>
+
+{% include "ga.html" %}
+
+</body>
+</html>
