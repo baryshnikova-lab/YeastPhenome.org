@@ -1,50 +1,74 @@
-.container-fluid{
-    margin-left:5%;
-    margin-right:5%;
+.container-fluid {
+    margin-left: 5%;
+    margin-right: 5%;
 }
+
 aside{
     margin:7px;
     padding:20px;
     background-color:whitesmoke;
 }
+
+a {
+    text-decoration: underline;
+}
+
+body {
+    font-family: "Helvetica Neue", Verdana, Arial, Helvetica, Geneva, sans-serif;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
 h1 small:before{
     content:'\2014\00A0';
 }
+
 hgroup{
     margin-bottom:3ex;
 }
+
 hgroup h1{
     margin-top:0;
     margin-bottom:2ex;
 }
+
 footer{
-    border-top:2px double whitesmoke;
+    border-top: none;
+    padding-top: 10px;
+    margin-top: 5%;
 }
+
 .nothing{
     opacity:0.25;
     font-style:italic;
 }
-.email:before{
-    content:'\27E8';
-}
-.email:after{
-    content:'\27E9';
-}
+
 .external:after{
     white-space:nowrap;
     padding-left:.3ex;
     content:url("images/external-link-blue-medium.png");
 }
+
 thead td{
     text-align:center;
 }
-.no,.yes{
+
+.no, .yes{
     visibility:hidden;
 }
+
 .yes:after{
     visibility:visible;
     content:'\2714';
 }
+
 .disabled{
     opacity:0.2 !important;
 }
@@ -66,4 +90,8 @@ thead td{
 }
 [itemscope=paper] li:last-child:after{
     content:'';
+}
+
+.table>tbody>tr>th.first, .table>tbody>tr>td.first {
+    border-top: none;
 }

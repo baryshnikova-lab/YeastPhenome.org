@@ -206,12 +206,12 @@ class PaperDetailView(generic.DetailView):
             thanks = False
             if gd:
                 if gt:
-                    thanks = 'The data and the list of tested genes for this publication were kindly provided by: %s.'
+                    thanks = 'The data and the list of tested genes for this publication were kindly provided by <b>%s</b>.'
                 else:
-                    thanks = 'The data for this publication was kindly provided by: %s.'
-                thanks = thanks + '<p><mark>The data contains unpublished values and is more complete that its published version. However, it may contain false positives and thus should be handled with care.</mark></p>'
+                    thanks = 'The data for this publication was kindly provided by <b>%s</b>.'
+                thanks = thanks + '<br>The data contains unpublished values and is more complete than its published version. However, it may contain false positives and thus should be handled with care.'
             elif gt:
-                thanks = 'The list of tested genes for this publication was kindly provided by: %s.'
+                thanks = 'The list of tested genes for this publication was kindly provided by <b>%s</b>.'
             if thanks:
                 context['thanks'] = thanks % names
         # Credit now given

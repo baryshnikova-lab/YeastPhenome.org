@@ -1,74 +1,60 @@
-{# {% load sub_navigation %} #}{% load my_filters %}<!DOCTYPE html>
-<html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ SITE_NAME }} / Papers</title>
-</head><body>
+{% load my_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' %}
+    <title>Papers / {{ SITE_NAME }}</title>
+</head>
+
+<body>
+
 {% include "navbar.html" with active='papers' %}
-<div class="container-fluid"><h1>Papers</h1>
-{% if papers_list %}
-<table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% comment %}
 
-  <!-- This commented out caption corrosponds with commented out code
-       in the papers/views.py:PaperIndexView.get_content_data()
-       function, plus items in the papers/urls.py file.  To use this
-       you will need to uncomment those, plus uncomment "load
-       sub_navigation" on the top of this page. -->
+<div class="container-fluid">
 
-  <caption>
-    <nav>
-      <span class="{% active sub_navigation 'All' %}"><a href="/papers/{{ got }}">All</a> <span class="small">{{ num_all }}</span></span>
-      <span class="{% active sub_navigation 'Haploid' %}"><a href="/papers/haploid/{{ got }}">Haploid</a>&nbsp;<span class="small">{{ num_haploid }}</span></span>
-      <span class="{% active sub_navigation 'Diploid homozygous' %}"><a href="/papers/diploid/homozygous/{{ got }}">Homozygous diploid</a>&nbsp;<span class="small">{{ num_diploid_homozygous }}</span></span>
-      <span class="{% active sub_navigation 'Diploid heterozygous' %}"><a href="/papers/diploid/heterozygous/{{ got }}">Heterozygous diploid</a> <span class="small">{{ num_diploid_heterozygous }}</span></span>
-      <span class="{% active sub_navigation 'Quantitative' %}"><a href="/papers/quantitative/{{ got }}">Quantitative data</a> <span class="small">{{ num_quantitative }}</span></span>
-      <span class="{% active sub_navigation 'Discrete' %}"><a href="/papers/discrete/{{ got }}">Discrete data</a> <span class="small">{{ num_discrete }}</span></span>
-    </nav>
-  </caption>
-  {% endcomment %}
-  <thead>
-    <tr>
-      <th>PMID</th>
-      <th class="text-nowrap">FirstAuthor~LastAuthor, Year</th>
-      <th>Phenotypes</th>
-      <th>Conditions</th>
-      {% if request.GET.verbose >= 1 %}
-      <th>Type of data</th>
-      <th>Data status</th>
-      <th>List of tested genes</th>
-      <th>Download</th>
-      {% endif %}
-    </tr>
-  </thead><tbody>
-    {% for paper in papers_list %}
-    <tr>
-      <td>
-	{% if 0 != paper.pmid %}
-	<a class="external pmid" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ paper.pmid }}/">{{ paper.pmid }}</a>
-	{% endif %}
-      </td>
-      <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
-      <td>{{ paper.phenotypes|slice:":-2"|safe }}</td>
-      <td>{{ paper.conditions|join_and_more:7|safe }}</td>
-      {% if request.GET.verbose >= 1 %}
-      <td class="text-nowrap">{{ paper.data_available|join:", " }}</td>
-      <td>{{ paper.latest_data_status|capfirst }}</td>
-      <td>{{ paper.latest_tested_status|capfirst }}</td>
-      <td>{% include "zip.html" %}</td>
-      {% endif %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<aside class="bg-warning">No papers are available.</aside>
-{% endif %}
-{% include "footer.html" %}
-</div{# container-fluid #}>
+    <h1>Papers</h1>
+
+    {% if papers_list %}
+
+    <table id="papersTable" class="tablesorter table table-striped" width="100%">
+
+        <thead>
+        <tr>
+            <th class="text-nowrap">FirstAuthor~LastAuthor, Year</th>
+            <th>PMID</th>
+            <th>Phenotypes</th>
+            <th>Conditions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        {% for paper in papers_list %}
+            <tr>
+                <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
+                <td>{{ paper.pmid }}</td>
+                <td>{{ paper.phenotypes }}</td>
+                <td>{{ paper.conditions|join_and_more:7|safe }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    {% else %}
+
+    <aside class="bg-warning">No papers are available.</aside>
+
+    {% endif %}
+
+    {% include "footer.html" %}
+
+</div>
 
 <script>
-$(document).ready(function(){
- $("#papersTable").tablesorter();
-});</script>
+    $(document).ready(function(){
+        $("#papersTable").tablesorter();
+    });</script>
 
-</body></html>
+</body>
+</html>

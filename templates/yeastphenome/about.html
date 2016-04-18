@@ -1,33 +1,59 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-{% include "head.html" %}
-<title>{{ SITE_NAME }}</title>
-</head><body>
+<html lang="en">
+<head>
+    {% include "head.html" %}
+    <title>{{ SITE_NAME }}</title>
+</head>
+
+<body>
+
 {% include "navbar.html" with active='about' %}
+
 <div class="container-fluid">
-<h1>About</h1>
 
-<section>
-  <p>YeastPhenome.org collects phenotypic data derived from <strong>systematic screens</strong> of large-scale <screen>mutant collections</screen> in budding yeast Saccharomyces cerevisiae. Our goal is to study the relationship between different mutant phenotypes and integrate them into mapping of the functional organization of biological pathways.</p>
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>About</h1>
+        </div>
+    </div>
 
-  <p>We are interested in both <strong>quantitative</strong> and <strong>qualitative</strong> phenotypes, as long as, for a given study, the data were collected systematically and for a large number of mutants.</p>
+    <div class="row">
 
-  <p>Our primary <strong>source of data</strong> are the supplementary materials of the relevant <a href="{% url 'papers:all' %}"><strong>publications</strong></a> On top of that, <a href="{% url 'contributors' %}">many authors</a> have contributed more complete and previously unpublished versions of their datasets (e.g., raw quantitative values from which the published hit list was derived). These datasets will be specifically flagged to emphasize their special status.</p>
+        <div class="col-xs-12">
 
-  <p>As of today, we are at the data gathering stage. The plan is to collect, organize and share in a <strong>standardized format</strong> all of the phenotypic data obtained by the yeast community. Updates on progress will be released via this website.</p>
+            <p>YeastPhenome.org is a collaborative project focused on compiling a comprehensive compendium of systematic phenotypic data for budding yeast <em>Saccharomyces cerevisiae</em>.</p>
 
-  <p>Yeastphenome.org was created and is being maintained at <a class="external" href="http://www.princeton.edu/">Princeton University</a> by:</p>
+            <p>Our goal is to gather, process and standardize the results of every genome-scale experiment that has examined the yeast deletion collection for one or more phenotypes.</p>
 
-  <ul>
-    <li>Anastasia Baryshnikova (principal investigator, <a class="external" href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>)</li>
-    <li>Sven Heinicke (database and website support)</li>
-    <li>Fan Kang (database support)</li>
-    <li>Mark Schroeder (server support)</li>
-    <li>Rose Oughtred (literature curator)</li>
-    <li>Christie Chang (literature curator)</li>
-    <li>Brianna Richardson (undergraduate student)</li>
-  </ul>
-</section>
+            <p>We are interested in both quantitative and qualitative phenotypes, as long as, for a given study, the data were collected systematically and for a large number of mutants.</p>
 
-{% include "footer.html" %}
-</div{# container #}></body></html>
+            <p>Our primary source of data are the supplementary materials of the relevant <a href="{% url 'papers:all' %}">publications</a>. On top of that, <a href="{% url 'contributors' %}">many authors</a> have contributed more complete and previously unpublished versions of their datasets (e.g., raw quantitative values from which the published hit list was derived). These datasets are specifically flagged to emphasize their special status.</p>
+
+            <p>Yeastphenome.org was created and is being maintained at <a class="external" href="http://www.princeton.edu/">Princeton University</a> by:</p>
+
+            <ul>
+                <li>Anastasia Baryshnikova (principal investigator, <a class="external" href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>)</li>
+                <li>Rose Oughtred (literature curator)</li>
+                <li>Christie Chang (literature curator)</li>
+                <li>Jennifer Rust (literature curator)</li>
+                <li>Brianna Richardson (curator, programmer)</li>
+                <li>Sven Heinicke (database and website support)</li>
+                <li>Fan Kang (database support)</li>
+                <li>Mark Schroeder (server support)</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% include "footer.html" %}
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

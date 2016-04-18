@@ -3,27 +3,26 @@ table{
 }
 
 th.header{
-    position:relative;
+    position: relative;
     padding-left:1em !important;
-    padding-bottom:0 !important;
+    cursor: pointer;
 }
 
 th.header:before{
-    position:absolute;
-    content:'\2B0D';
-    left:0;
-    bottom:0;
+    position: absolute;
+    content: '\2195';
+    left: 0;
 }
 
 th.headerSortUp:before {
-    content:'\2B06';
+    content: '\2191';
 }
 th.headerSortDown:before {
-    content:'\2B07';
+    content: '\2193';
 }
 
 th[colspan]{
-    text-align:center;
-    border-right:1ex solid transparent;
-    border-left:1ex solid transparent;
+    text-align: center;
+    border-right: 1ex solid transparent;
+    border-left: 1ex solid transparent;
 }

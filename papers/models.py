@@ -1,35 +1,22 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-#from django.utils.safestring import SafeUnicode
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from phenotypes.models import Observable2
-from conditions.models import ConditionType, Condition, ConditionSet
+from conditions.models import ConditionType, ConditionSet
 
 import os
 import warnings
 
 
 class Status(models.Model):
-    STATUS_CHOICES = (
-        ('loaded', 'loaded'),
-        ('to load', 'to load'),
-        ('requested', 'requested'),
-        ('to request', 'to request'),
-        ('waiting for tested', 'waiting for tested'),
-        ('clarification needed', 'clarification needed'),
-        ('not available', 'not available'),
-        ('undefined', 'undefined'),
-        ('abandoned','abandoned'),
-    )
-
     status_name = models.CharField(max_length=200,
-                                   choices=STATUS_CHOICES, default='undefined', blank=True, null=True)
+                                   default='undefined', blank=True, null=True)
 
     def __unicode__(self):
-        return u'%s' % (self.status_name)
+        return u'%s' % self.status_name
 
 
 class Paper(models.Model):
@@ -65,7 +52,12 @@ class Paper(models.Model):
 
     @property
     def phenotypes(self):
-        # Returns HTML of papers
+        # Returns a string containing the list of phenotypes for this paper
+        return ', '.join([unicode(i) for i in self.phenotype_list()])
+
+    @property
+    def phenotypes_links(self):
+        # Returns a string containing the list of phenotypes (with links) for this paper
         result = self.phenotype_list()
         phenotype_list = ''
         for p in result:
@@ -95,7 +87,7 @@ class Paper(models.Model):
 
     def should_have_data(self):
         # Returns True if data has been loaded from data files
-        return 'loaded' == str(self.latest_data_status.status.status_name) or 'loaded' == str(self.latest_tested_status.status.status_name)
+        return self.latest_data_status and 'loaded' == str(self.latest_data_status.status.status_name)
 
     def raw_available_data(self):
         # Returns True if it should have data, and has access to raw data
