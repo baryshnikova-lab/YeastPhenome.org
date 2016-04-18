@@ -1,85 +1,111 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-{% include "head.html" with JavaScript='pubmed' %}
-<title>{{ SITE_NAME }} / Papers / {{ object }}</title>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='pubmed' %}
+    <title>{{ object }} / Papers / {{ SITE_NAME }}</title>
 </head>
 
 <body>
 {% include "navbar.html" with active='papers' %}
 <div class="container-fluid">
 
-<section>
-  <div class="pull-right">{% include "zip.html" %}</div>
-  <h1>{{ object }}</h1>
+    <div class="row">
 
-  {% if 0 != object.pmid %}<dl itemscope="paper" class="dl-horizontal">
-    <dt>PubMed ID</dt><dd><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></dd>
-    <dt class="remove_on_error">Title</dt><dd class="remove_on_error" itemprop="TI">&#8987;</dd>
-    <dt class="remove_on_error">Authors</dt><dd class="remove_on_error" itemprop="FAU">&#8987;</dd>
-    <dt class="remove_on_error">Citation</dt><dd class="remove_on_error"><cite itemprop="SO">&#8987;</cite></dd>
-    <dt id="abstract" class="remove_on_error">Abstract <span class="view glyphicon glyphicon-eye-open"></span></dt><dd class="remove_on_error" itemprop="AB">&#8987;</dd>
-  </dl>{% endif %}
-</section>
+        <div class="col-xs-12">
 
+            <div class="pull-right">{% include "zip.html" %}</div>
+            <h1>{{ object }}</h1>
 
-{% if object.dataset_set.all %}
-<table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% if object.notes or thanks %}
-    <caption>
-    {% if object.notes %}<p>{{ object.notes }}</p>{% endif %}
-    {% if thanks %}<p>{{ thanks|safe }}</p>{% endif %}
-    </caption>
-   {% endif %}
-  {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/><col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
-  <thead>
-    <tr>
-      <th>Phenotypes</th>
-      <th>Conditions</th>
-      <th>Collection</th>
-      <th>Tested genes</th>
-      {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
-	  <li>published</li>
-	  <li>available</li>
-	  <li>status</li>
-      </ul></th>{% endif %}
-      <th>Data type</th>
-      {% if request.GET.verbose >= 1 %}<th>Data: <ul>
-	  <li>measured</li>
-	  <li>published</li>
-	  <li>data</li>
-      </ul></th>{% endif %}
-    </tr>
-  </thead><tbody>
-    {% for dataset in object.dataset_list %}
-    <tr>
-      <td>{{ dataset.phenotype.link_detail|safe }}</td>
-      <td>{{ dataset.conditionset }}</td>
-      <td>{{ dataset.collection }}</td>
-      <td>{{ dataset.tested_num }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
-	  <li>{{ dataset.tested_source|safe }}</li>
-	  <li>{{ paper.latest_tested_status|capfirst }}</li>
-      </ul></td>{% endif %}
-      <td>{{ dataset.data_available|capfirst }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.data_measured|capfirst }}</li>
-	  <li>{{ dataset.data_published|capfirst }}</li>
-	  <li>{{ dataset.has_data }}</li>
-      </ul></td>{% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-{% if object.notes %}<p>{{ object.notes }}</p>{% endif %}
-<aside class="bg-warning">No datasets are loaded.</aside>
-{% endif %}
-{% include "footer.html" %}
-</div>{# container-fluid #}
+            {% if 0 != object.pmid %}
+            <table class="table" itemscope="paper">
+                <tr>
+                    <th width="20%" scope="row" class="first">Pubmed ID</th>
+                    <td class="first"><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></td>
+                </tr>
+                <tr class="remove_on_error">
+                    <th scope="row">Title</th>
+                    <td><span itemprop="TI">&#8987;</span></td>
+                </tr>
+                <tr class="remove_on_error">
+                    <th scope="row">Authors</th>
+                    <td><span itemprop="FAU">&#8987;</span></td>
+                </tr>
+                <tr class="remove_on_error">
+                    <th scope="row">Abstract</th>
+                    <td><span itemprop="AB">&#8987;</span></td>
+                </tr>
+                <tr class="remove_on_error">
+                    <th scope="row">Citation</th>
+                    <td><span itemprop="SO">&#8987;</span></td>
+                </tr>
+            </table>
+            {% endif %}
+
+            <div>{{ object.notes }}</div>
+
+            <h3>Datasets</h3>
+
+            {% if thanks %}
+                <div class="alert alert-warning" role="alert">
+                    {{ thanks|safe }}
+                </div>
+            {% endif %}
+
+            {% if object.dataset_set.all %}
+
+            <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+                {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/><col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
+                <thead>
+                <tr>
+                    <th>Phenotypes</th>
+                    <th>Conditions</th>
+                    <th>Collection</th>
+                    <th>Tested genes</th>
+                    {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
+                    <li>published</li>
+                    <li>available</li>
+                    <li>status</li>
+                </ul></th>{% endif %}
+                    <th>Data type</th>
+                    {% if request.GET.verbose >= 1 %}<th>Data: <ul>
+                    <li>measured</li>
+                    <li>published</li>
+                    <li>data</li>
+                </ul></th>{% endif %}
+                </tr>
+                </thead><tbody>
+            {% for dataset in object.dataset_list %}
+            <tr>
+                <td>{{ dataset.phenotype.link_detail|safe }}</td>
+                <td>{{ dataset.conditionset }}</td>
+                <td>{{ dataset.collection }}</td>
+                <td>{{ dataset.tested_num }}</td>
+                {% if request.GET.verbose >= 1 %}<td><ul>
+                <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
+                <li>{{ dataset.tested_source|safe }}</li>
+                <li>{{ paper.latest_tested_status|capfirst }}</li>
+            </ul></td>{% endif %}
+                <td>{{ dataset.data_available|capfirst }}</td>
+                {% if request.GET.verbose >= 1 %}<td><ul>
+                <li>{{ dataset.data_measured|capfirst }}</li>
+                <li>{{ dataset.data_published|capfirst }}</li>
+                <li>{{ dataset.has_data }}</li>
+            </ul></td>{% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+
+            {% endif %}
+
+            {% include "footer.html" %}
+
+        </div>
+    </div>
+</div>
 
 <script>$(document).ready(function(){
- $("#papersTable").tablesorter();
+    $("#papersTable").tablesorter();
 });</script>
 
 </body></html>
