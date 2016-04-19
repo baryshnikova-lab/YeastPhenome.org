@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from pubchempy import Compound
+
 from conditions.models import ConditionSet, Condition, ConditionType
 from papers.models import Dataset
 
@@ -8,7 +10,7 @@ class DatasetInline(admin.TabularInline):
     model = Dataset
     fields = ('conditionset', 'phenotype', 'collection','tested_num','tested_list_published','tested_source','changetestedsource_link','data_measured','data_published','data_available','data_source','changedatasource_link','notes')
     raw_id_fields = ('conditionset', 'phenotype', 'tested_source', 'data_source')
-    readonly_fields = ('changetestedsource_link','changedatasource_link')
+    readonly_fields = ('changetestedsource_link', 'changedatasource_link')
     extra = 0
 
 
@@ -21,11 +23,19 @@ class ConditionAdmin(admin.ModelAdmin):
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_name', 'group', 'external_link')
+    list_display = ('name', 'short_name', 'group', 'pubchem_id')
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
     search_fields = ('name', 'short_name')
+    fields = ('name', 'short_name', 'group', 'description', 'pubchem_id', 'pubchem_name')
+    readonly_fields = ('pubchem_name',)
+
+    def save_model(self, request, obj, form, change):
+        comp = Compound.from_cid(form.cleaned_data['pubchem_id'])
+        obj.pubchem_name = comp.synonyms[0]
+        obj.save()
+
 
 class ConditionSetAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'papers',)
@@ -36,7 +46,7 @@ class ConditionSetAdmin(admin.ModelAdmin):
     inlines = (DatasetInline,)
 
     class Media:
-        js=('conditionset.js',)
+        js = ('conditionset.js',)
 
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)

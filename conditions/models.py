@@ -8,7 +8,9 @@ from phenotypes.models import Phenotype
 class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     short_name = models.CharField(max_length=200, blank=True, null=True)
-    other_names = models.CharField(max_length=200, blank=True, null=True)
+
+    pubchem_id = models.CharField(max_length=200, blank=True, null=True)
+    pubchem_name = models.CharField(max_length=200, blank=True, null=True)
 
     CONDITION_GROUP_CHOICES = (
         ('chemical', 'chemical'),
@@ -21,8 +23,6 @@ class ConditionType(models.Model):
                             choices=CONDITION_GROUP_CHOICES,
                             blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    external_link = models.CharField(max_length=200, blank=True, null=True)
-    chebi_id = models.CharField(max_length=200, blank=True, null=True)
 
     def must_display_name(self):
         """Displays name if we have no short name."""
