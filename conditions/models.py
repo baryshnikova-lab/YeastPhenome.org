@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.query import QuerySet
 from django.core.urlresolvers import reverse
 from django.apps import apps
 from phenotypes.models import Phenotype
@@ -9,7 +8,7 @@ class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     short_name = models.CharField(max_length=200, blank=True, null=True)
 
-    pubchem_id = models.IntegerField(blank=True, null=True)
+    pubchem_id = models.PositiveIntegerField(blank=True, null=True)
     pubchem_name = models.CharField(max_length=200, blank=True, null=True)
 
     CONDITION_GROUP_CHOICES = (
@@ -25,7 +24,7 @@ class ConditionType(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def must_display_name(self):
-        """Displays name if we have no short name."""
+        # Displays name if we have no short name.
         if '' == self.short_name:
             return u'%s' % (self.name)
         return u'%s' % (self.short_name)
@@ -48,11 +47,11 @@ class ConditionType(models.Model):
         return list
 
     def paper_list(self):
-        """Returns a QuerySet of Papers with this ConditionType."""
+        # Returns a QuerySet of Papers with this ConditionType.
         return apps.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
     def papers(self):
-        """Returns a string containing HTML for all the papers."""
+        # Returns a string containing HTML for all the papers.
         result = self.paper_list()
         l = ''
         for p in result:
