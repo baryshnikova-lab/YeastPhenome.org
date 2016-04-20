@@ -68,11 +68,8 @@ class ConditionType(models.Model):
 
 
 class Condition(models.Model):
-    name = models.CharField(max_length=200, blank=True)
-    dose = models.CharField(max_length=200, blank=True, default='unknown')
-    other_names = models.CharField(max_length=200, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
     type = models.ForeignKey(ConditionType, null=True, blank=True)
+    dose = models.CharField(max_length=200, blank=True, default='unknown')
     modified_on = models.DateField(auto_now=True, null=True)
 
     class Meta:
