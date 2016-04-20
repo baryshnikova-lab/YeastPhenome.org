@@ -9,7 +9,7 @@ class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     short_name = models.CharField(max_length=200, blank=True, null=True)
 
-    pubchem_id = models.CharField(max_length=200, blank=True, null=True)
+    pubchem_id = models.IntegerField(blank=True, null=True)
     pubchem_name = models.CharField(max_length=200, blank=True, null=True)
 
     CONDITION_GROUP_CHOICES = (
@@ -20,8 +20,8 @@ class ConditionType(models.Model):
     )
 
     group = models.CharField(max_length=200,
-                            choices=CONDITION_GROUP_CHOICES,
-                            blank=True, null=True)
+                             choices=CONDITION_GROUP_CHOICES,
+                             blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     def must_display_name(self):
