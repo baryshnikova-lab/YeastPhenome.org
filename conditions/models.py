@@ -52,7 +52,7 @@ class ConditionType(models.Model):
         return apps.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
     def papers(self):
-        """Returns a string contaiting HTML for all the papers."""
+        """Returns a string containing HTML for all the papers."""
         result = self.paper_list()
         l = ''
         for p in result:
@@ -101,7 +101,6 @@ class ConditionSet(models.Model):
             return conditions_list
         else:
             return u'%s (%s)' % (self.name, conditions_list)
-
 
     def papers(self):
         result = apps.get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
