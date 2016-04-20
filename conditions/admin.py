@@ -42,6 +42,8 @@ class ConditionTypeAdmin(admin.ModelAdmin):
         if form.cleaned_data['pubchem_id']:
             comp = Compound.from_cid(form.cleaned_data['pubchem_id'])
             obj.pubchem_name = comp.synonyms[0]
+        else:
+            obj.pubchem_name = None
         obj.save()
 
 
