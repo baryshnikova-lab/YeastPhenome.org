@@ -50,7 +50,7 @@ class PaperAdmin(admin.ModelAdmin):
     def save_related(self, request, form, formsets, change):
         paper = form.instance
 
-        # If creating a  new paper, just save the instance first
+        # If creating a new paper, just save the instance first
         if paper.pk is None:
             super(PaperAdmin, self).save_model(request, paper, form, change)
 

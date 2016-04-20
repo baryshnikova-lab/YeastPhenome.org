@@ -15,11 +15,17 @@ class DatasetInline(admin.TabularInline):
 
 
 class ConditionAdmin(admin.ModelAdmin):
-    list_display = ('id','name', 'type', 'dose', 'condition_sets')
+    list_display = ('id', 'type', 'dose', 'condition_sets')
     list_filter = ['type__name']
     ordering = ('type__short_name', 'dose')
-    fields = ['name', 'type', 'dose']
+    fields = ['type', 'dose']
     search_fields = ('type__name', 'type__short_name')
+    raw_id_fields = ('type',)
+
+
+class ConditionInline(admin.TabularInline):
+    model = Condition
+    extra = 0
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
@@ -30,10 +36,12 @@ class ConditionTypeAdmin(admin.ModelAdmin):
     search_fields = ('name', 'short_name')
     fields = ('name', 'short_name', 'group', 'description', 'pubchem_id', 'pubchem_name')
     readonly_fields = ('pubchem_name',)
+    inlines = (ConditionInline,)
 
     def save_model(self, request, obj, form, change):
-        comp = Compound.from_cid(form.cleaned_data['pubchem_id'])
-        obj.pubchem_name = comp.synonyms[0]
+        if form.cleaned_data['pubchem_id']:
+            comp = Compound.from_cid(form.cleaned_data['pubchem_id'])
+            obj.pubchem_name = comp.synonyms[0]
         obj.save()
 
 
