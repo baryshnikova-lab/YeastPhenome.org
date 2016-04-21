@@ -9,8 +9,13 @@ aside{
     background-color:whitesmoke;
 }
 
-a {
+a:not(.btn) {
+    /* All links should be underlined, except for buttons. */
     text-decoration: underline;
+}
+
+.table-no-border td, .table-no-border th {
+    border: none !important;
 }
 
 body {
@@ -42,7 +47,8 @@ hgroup h1{
 footer{
     border-top: none;
     padding-top: 10px;
-    margin-top: 5%;
+    margin-top: 20px;
+    margin-bottom: 30px;
 }
 
 .nothing{

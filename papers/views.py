@@ -176,12 +176,12 @@ class PaperDiploidHomozygousIndexView(PaperIndexView):
 
 class PaperDiploidHeterozygousIndexView(PaperIndexView):
     the_filter = Q(dataset__collection__shortname='het')
-    template_ref='diploid_heterozygous'
+    template_ref = 'diploid_heterozygous'
 
 
 class PaperQuantitativeIndexView(PaperIndexView):
     the_filter = Q(dataset__data_available='quantitative')
-    template_ref='quantitative'
+    template_ref = 'quantitative'
 
 
 class PaperDiscreteIndexView(PaperIndexView):
