@@ -13,7 +13,6 @@
 
         <div class="col-xs-12">
 
-            <div class="pull-right">{% include "zip.html" %}</div>
             <h1>{{ object }}</h1>
 
             {% if 0 != object.pmid %}
@@ -38,17 +37,22 @@
                     <th scope="row">Citation</th>
                     <td><span itemprop="SO">&#8987;</span></td>
                 </tr>
+                {% if object.notes %}
+                <tr>
+                    <th scope="row">Notes</th>
+                    <td>{{ object.notes }}</td>
+                </tr>
+                {% endif %}
             </table>
             {% endif %}
 
-            <div>{{ object.notes }}</div>
-
+            <div class="pull-right">{% include "zip.html" %}</div>
             <h3>Datasets</h3>
 
             {% if thanks %}
-                <div class="alert alert-warning" role="alert">
-                    {{ thanks|safe }}
-                </div>
+            <div class="alert alert-warning" role="alert">
+                {{ thanks|safe }}
+            </div>
             {% endif %}
 
             {% if object.dataset_set.all %}
@@ -97,6 +101,21 @@
             </table>
 
             {% endif %}
+
+            <h3>Curation history</h3>
+
+            <div class="row">
+                <div class="col-xs-4">
+                    <table class="table table-condensed table-no-border">
+                        {% for x in paper.history %}
+                        <tr>
+                            <td>{{ x.status_date }}</td>
+                            <td>{{ x.type|capfirst }} {{ x.status.status_name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
 
             {% include "footer.html" %}
 

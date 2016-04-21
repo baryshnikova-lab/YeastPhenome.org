@@ -1,9 +1,12 @@
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.db.models import Q
-
+from django.db.models import Q, Value, CharField
 from django.conf import settings
 from django.contrib.auth.models import User
+
+from itertools import chain
+from operator import attrgetter
+
 from phenotypes.models import Observable2
 from conditions.models import ConditionType, ConditionSet
 
@@ -142,6 +145,12 @@ class Paper(models.Model):
         out.sort(lambda a, b: cmp(a.sort_string(), b.sort_string()))
         return out
 
+    def history(self):
+        queryset1 = Statusdata.objects.filter(paper=self).all().annotate(type=Value('data', CharField()))
+        queryset2 = Statustested.objects.filter(paper=self).all().annotate(type=Value('tested strains', CharField()))
+        result_list = sorted(chain(queryset1, queryset2), key=attrgetter('status_date'))
+        return result_list
+
 
 class Statusdata(models.Model):
     paper = models.ForeignKey(Paper)
@@ -152,7 +161,7 @@ class Statusdata(models.Model):
         get_latest_by = 'id'
 
     def __unicode__(self):
-        return u'%s' % (self.status)
+        return u'%s' % self.status
 
 
 class Statustested(models.Model):
@@ -164,7 +173,7 @@ class Statustested(models.Model):
         get_latest_by = 'id'
 
     def __unicode__(self):
-        return u'%s' % (self.status)
+        return u'%s' % self.status
 
 
 class Collection(models.Model):
