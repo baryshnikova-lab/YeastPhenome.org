@@ -79,7 +79,8 @@ class PaperAdmin(admin.ModelAdmin):
 
 
 class StatusAdmin(admin.ModelAdmin):
-    inlines = (StatusdataInline, StatustestedInline)
+    list_display = ('status_name',)
+    ordering = ('status_name',)
 
 
 admin.site.register(Paper, PaperAdmin)
