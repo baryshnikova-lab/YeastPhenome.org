@@ -20,10 +20,9 @@
 
         <thead>
         <tr>
-            <th class="text-nowrap">FirstAuthor~LastAuthor, Year</th>
-            <th>PMID</th>
-            <th>Phenotypes</th>
-            <th>Conditions</th>
+            <th class="text-nowrap" width="30%">FirstAuthor~LastAuthor, Year</th>
+            <th width="35%">Phenotypes</th>
+            <th width="35%">Conditions</th>
         </tr>
         </thead>
 
@@ -32,7 +31,6 @@
         {% for paper in papers_list %}
         <tr>
             <td class="text-nowrap"><a href="{% url 'papers:detail' paper.pk  %}">{{ paper }}</a></td>
-            <td>{{ paper.pmid }}</td>
             <td>{{ paper.phenotypes }}</td>
             <td>{{ paper.conditions|join_and_more:7|safe }}</td>
         </tr>
