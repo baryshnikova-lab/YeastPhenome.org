@@ -22,6 +22,9 @@ class Status(models.Model):
     def __unicode__(self):
         return u'%s' % self.status_name
 
+    class Meta:
+        ordering = ['status_name']
+
 
 class Paper(models.Model):
     first_author = models.CharField(max_length=200)
@@ -144,6 +147,16 @@ class Paper(models.Model):
             out.append(ds)
         out.sort(lambda a, b: cmp(a.sort_string(), b.sort_string()))
         return out
+
+    def latest_data_status_name(self):
+        if self.latest_data_status:
+            return self.latest_data_status.status.status_name
+    latest_data_status_name.admin_order_field = 'latest_data_status__status__status_name'
+
+    def latest_tested_status_name(self):
+        if self.latest_tested_status:
+            return self.latest_tested_status.status.status_name
+    latest_tested_status_name.admin_order_field = 'latest_tested_status__status__status_name'
 
     def history(self):
         queryset1 = Statusdata.objects.filter(paper=self).all().annotate(type=Value('data', CharField()))
