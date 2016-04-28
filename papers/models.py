@@ -287,14 +287,6 @@ class Dataset(models.Model):
     def phenotypes(self):
         return self.observable2.name
 
-    def changetestedsource_link(self):
-        return self.tested_source.change_link()
-    changetestedsource_link.allow_tags = True
-
-    def changedatasource_link(self):
-        return self.data_source.change_link()
-    changedatasource_link.allow_tags = True
-
     def has_data(self):
         return self.data_set.exists()
     has_data.boolean = True

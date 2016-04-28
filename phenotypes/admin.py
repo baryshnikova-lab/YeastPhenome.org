@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from mptt.admin import MPTTModelAdmin
-from models import MutantType, Observable2, Phenotype
+from phenotypes.models import MutantType, Observable2, Phenotype
 
 
 class Observable2Admin(MPTTModelAdmin):

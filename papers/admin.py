@@ -1,6 +1,28 @@
 from django.contrib import admin
 
 from papers.models import Paper, Dataset, Collection, Source, Status, Statusdata, Statustested
+from common.admin_util import ImprovedTabularInline
+
+
+class DatasetInline(ImprovedTabularInline):
+    model = Dataset
+    fields = ('id', 'paper', 'conditionset', 'phenotype', 'collection', 'tested_num', 'tested_list_published', 'tested_source',
+              'data_measured', 'data_published', 'data_available', 'data_source', 'notes')
+    raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
+    readonly_fields = ('id',)
+    extra = 0
+
+
+class DatasetInlineTested(DatasetInline):
+    fk_name = 'tested_source'
+    verbose_name = 'Dataset'
+    verbose_name_plural = 'Datasets with tested strains provided by this source'
+
+
+class DatasetInlineData(DatasetInline):
+    fk_name = 'data_source'
+    verbose_name = 'Dataset'
+    verbose_name_plural = 'Datasets with data provided by this source'
 
 
 class StatusdataInline(admin.TabularInline):
@@ -17,21 +39,12 @@ class SourceAdmin(admin.ModelAdmin):
     model = Source
     list_display = ('__unicode__',)
     fields = ('sourcetype', 'link', 'person', 'date', 'release', 'acknowledge')
+    inlines = [DatasetInlineTested, DatasetInlineData]
 
 
 class CollectionAdmin(admin.ModelAdmin):
     model = Collection
     list_display = ('__unicode__',)
-
-
-class DatasetInline(admin.TabularInline):
-    model = Dataset
-    fields = ('id', 'conditionset', 'phenotype', 'collection', 'tested_num', 'tested_list_published', 'tested_source',
-              'changetestedsource_link', 'data_measured', 'data_published', 'data_available', 'data_source',
-              'changedatasource_link', 'notes')
-    raw_id_fields = ('conditionset', 'phenotype', 'tested_source', 'data_source')
-    readonly_fields = ('id', 'changetestedsource_link', 'changedatasource_link')
-    extra = 0
 
 
 class PaperAdmin(admin.ModelAdmin):

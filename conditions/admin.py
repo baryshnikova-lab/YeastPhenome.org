@@ -4,17 +4,19 @@ from pubchempy import Compound
 
 from conditions.models import ConditionSet, Condition, ConditionType
 from papers.models import Dataset
+from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
 
-class DatasetInline(admin.TabularInline):
+class DatasetInline(ImprovedTabularInline):
     model = Dataset
-    fields = ('conditionset', 'phenotype', 'collection','tested_num','tested_list_published','tested_source','changetestedsource_link','data_measured','data_published','data_available','data_source','changedatasource_link','notes')
-    raw_id_fields = ('conditionset', 'phenotype', 'tested_source', 'data_source')
-    readonly_fields = ('changetestedsource_link', 'changedatasource_link')
+    fields = ('paper', 'conditionset', 'phenotype', 'collection',
+              'tested_num', 'tested_list_published', 'tested_source',
+              'data_measured', 'data_published', 'data_available', 'data_source', 'notes')
+    raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
     extra = 0
 
 
-class ConditionAdmin(admin.ModelAdmin):
+class ConditionAdmin(ImprovedModelAdmin):
     list_display = ('id', 'type', 'dose', 'condition_sets')
     list_filter = ['type__name']
     ordering = ('type__short_name', 'dose')

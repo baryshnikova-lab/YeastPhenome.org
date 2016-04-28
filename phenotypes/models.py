@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.apps import apps
 from mptt.models import MPTTModel, TreeForeignKey
 
+
 class Observable2(MPTTModel):
     """Generally the way to fetch phenotypes."""
 
@@ -114,6 +115,7 @@ class Phenotype(models.Model):
             l += '%s, ' % (p.link_admin())
         return l
     paper_admin.allow_tags = True
+
 
 class MutantType(models.Model):
     name = models.CharField(max_length=200)
