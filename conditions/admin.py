@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from pubchempy import Compound
+from libchebipy import ChebiEntity
 
 from conditions.models import ConditionSet, Condition, ConditionType
 from papers.models import Dataset
@@ -36,11 +37,16 @@ class ConditionTypeAdmin(admin.ModelAdmin):
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
     search_fields = ('name', 'short_name')
-    fields = ('name', 'short_name', 'group', 'description', 'pubchem_id', 'pubchem_name')
-    readonly_fields = ('pubchem_name',)
+    fields = ('name', 'short_name', 'group', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
+    readonly_fields = ('chebi_name', 'pubchem_name',)
     inlines = (ConditionInline,)
 
     def save_model(self, request, obj, form, change):
+        if form.cleaned_data['chebi_id']:
+            chebi_comb = ChebiEntity('CHEBI:'+str(form.cleaned_data['chebi_id']))
+            obj.chebi_name = chebi_comb.get_name()
+        else:
+            obj.chebi_name = None
         if form.cleaned_data['pubchem_id']:
             comp = Compound.from_cid(form.cleaned_data['pubchem_id'])
             obj.pubchem_name = comp.synonyms[0]

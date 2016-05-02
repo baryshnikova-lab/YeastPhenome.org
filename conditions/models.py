@@ -11,6 +11,9 @@ class ConditionType(models.Model):
     pubchem_id = models.PositiveIntegerField(blank=True, null=True)
     pubchem_name = models.CharField(max_length=200, blank=True, null=True)
 
+    chebi_id = models.PositiveIntegerField(blank=True, null=True)
+    chebi_name = models.CharField(max_length=200, blank=True, null=True)
+
     CONDITION_GROUP_CHOICES = (
         ('chemical', 'chemical'),
         ('physical', 'physical'),
