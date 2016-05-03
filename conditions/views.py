@@ -15,9 +15,11 @@ class ConditionIndexView(generic.ListView):
     def get_queryset(self):
         return ConditionType.objects.order_by('name')
 
+
 class ConditionDetailView(generic.DetailView):
     model = ConditionType
     template_name = 'conditions/detail.html'
+
 
 class D3Packing(generic.ListView):
     model = ConditionType
@@ -29,7 +31,7 @@ class D3Packing(generic.ListView):
             paper_count=len(ct.paper_list())
             if 0<paper_count:
                 out['children'].append({
-                    'name':ct.must_display_name(),
+                    'name':ct.__unicode__(),
                     'size':paper_count,
                     'id':ct.id,
                 })
@@ -37,6 +39,6 @@ class D3Packing(generic.ListView):
 
     def get_context_data(self,**kwargs):
         context = super(generic.ListView,self).get_context_data(**kwargs)
-        # Luckly json is based on JavaScript so we just dump it out with this.
+        # Luckily json is based on JavaScript so we just dump it out with this.
         context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
         return context

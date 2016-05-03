@@ -26,14 +26,16 @@ class ConditionType(models.Model):
                              blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
-    def must_display_name(self):
-        # Displays name if we have no short name.
-        if '' == self.short_name:
-            return u'%s' % (self.name)
-        return u'%s' % (self.short_name)
-
     def __unicode__(self):
-        return u'%s' % (self.short_name)
+        if self.chebi_name:
+            type_name = self.chebi_name
+        elif self.pubchem_name:
+            type_name = self.pubchem_name
+        elif self.short_name:
+            type_name = self.short_name
+        else:
+            type_name = self.name
+        return u'%s' % type_name
 
     def conditions(self):
         result = Condition.objects.filter(type=self).order_by('dose')
@@ -115,9 +117,3 @@ class ConditionSet(models.Model):
     def conditionset_link(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)
     conditionset_link.allow_tags = True
-
-# We don't want to auto set names, but I don't want to forget how to
-# it so we keep this around for now.
-    # def save(self):
-    #     self.name = " + ".join([unicode(condition_type) for condition_type in ConditionType.objects.filter(condition__conditionset=self).distinct().order_by('short_name')])
-    #     super(ConditionSet, self).save()
