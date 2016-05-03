@@ -32,7 +32,7 @@ class ConditionInline(admin.TabularInline):
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_name', 'group', 'pubchem_id')
+    list_display = ('name', 'short_name', 'group', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
