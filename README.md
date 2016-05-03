@@ -1,5 +1,17 @@
 # YeastPhenome.org
 
+## Python Packages
+Both packages where installed using Python's pip(1) command.
+
+### `pubchempy`
+
+### `libChEBIpy`
+The user running YeastPhenome needs write acces to a `$HOME/libChEBI`
+directory.  When in production this is likely the Apache user.  On
+CentOS `mkdir /var/www/libChEBI; chown apache.apache
+/var/www/libChEBI` was needed.  As of this writing `libChEBIpy` didn't
+seem to have a way to alter this location.
+
 ## `yeastphenome/settings.py-template`
 
 `yeastphenome/settings.py-template` needs to be copied to
