@@ -1,15 +1,17 @@
 # YeastPhenome.org
 
 ## Python Packages
-Both packages where installed using Python's pip(1) command.
+Besides Django that is.  Both packages where installed using Python's
+pip(1) command.
 
 ### `pubchempy`
 
 ### `libChEBIpy`
+
 The user running YeastPhenome needs write acces to a `$HOME/libChEBI`
 directory.  When in production this is likely the Apache user.  On
 CentOS `mkdir /var/www/libChEBI; chown apache.apache
-/var/www/libChEBI` was needed.  As of this writing `libChEBIpy` didn't
+/var/www/libChEBI` is needed.  As of this writing `libChEBIpy` didn't
 seem to have a way to alter this location.
 
 ## `yeastphenome/settings.py-template`
@@ -35,10 +37,10 @@ Path to a readme file in be included in the downloaded zip file.
 
 #### `MEDLINE_DIR`
 
-Rather then staring in the database MEDLINE formatted information is
-stored it it's raw text format in the directory sepcified here.  This
-must alse me accessed via the url `.../static/MEDLINE/*pmid*.txt` URL.
-So the default is probably what you want.
+Rather then storing it in the database MEDLINE formatted information
+is stored it it's raw text format in the directory sepcified here.
+This must also be accessed via the url `.../static/MEDLINE/*pmid*.txt`
+URL.  So the default is probably what you want.
 
 ### PostgreSQL
 
