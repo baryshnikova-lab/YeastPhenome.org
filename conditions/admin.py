@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 
 from pubchempy import Compound
 from libchebipy import ChebiEntity
@@ -6,6 +7,15 @@ from libchebipy import ChebiEntity
 from conditions.models import ConditionSet, Condition, ConditionType
 from papers.models import Dataset
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
+
+
+class ConditionAdminForm(forms.ModelForm):
+    def clean(self):
+        cleaned_data = super(ConditionAdminForm, self).clean()
+        dose = cleaned_data.get('dose')
+        if dose is None or dose == '':
+            self.add_error('dose', "If unsure about the value, insert <unknown>.")
+        super(ConditionAdminForm, self).clean()
 
 
 class DatasetInline(ImprovedTabularInline):
@@ -18,6 +28,7 @@ class DatasetInline(ImprovedTabularInline):
 
 
 class ConditionAdmin(ImprovedModelAdmin):
+    form = ConditionAdminForm
     list_display = ('id', 'type', 'dose', 'condition_sets')
     list_filter = ['type__name']
     ordering = ('type__short_name', 'dose')
@@ -28,15 +39,16 @@ class ConditionAdmin(ImprovedModelAdmin):
 
 class ConditionInline(admin.TabularInline):
     model = Condition
+    ordering = ('dose',)
     extra = 0
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_name', 'group', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
+    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions')
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
-    search_fields = ('name', 'short_name')
+    search_fields = ('name', 'short_name', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     fields = ('name', 'short_name', 'group', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     readonly_fields = ('chebi_name', 'pubchem_name',)
     inlines = (ConditionInline,)

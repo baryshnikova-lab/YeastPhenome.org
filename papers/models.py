@@ -250,25 +250,25 @@ class Dataset(models.Model):
         ('quantitative', 'quantitative'),
         ('quantitative only for hits', 'quantitative only for hits'),
         ('discrete', 'discrete'),
-        ('no data released', 'no data released'),
+        ('none', 'none'),
         ('unknown', 'unknown'),
     )
 
     data_measured = models.CharField(max_length=200,
                                      choices=DATA_CHOICES,
-                                     default='UNK', null=True, blank=True)
+                                     null=True, blank=True)
     data_published = models.CharField(max_length=200,
                                       choices=DATA_CHOICES,
-                                      default='UNK', null=True, blank=True)
+                                      null=True, blank=True)
     data_available = models.CharField(max_length=200,
                                       choices=DATA_CHOICES,
-                                      default='UNK', null=True, blank=True)
+                                      null=True, blank=True)
 
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
     data_can_release = models.NullBooleanField()
 
     def __unicode__(self):
-        return u'(%s, %s, %s)' % (self.collection, self.phenotype, self.conditionset)
+        return u'%s, %s, %s' % (self.collection, self.phenotype, self.conditionset)
 
     def sort_string(self):
         # Just to make things easier to sort

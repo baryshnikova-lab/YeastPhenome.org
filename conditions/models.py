@@ -8,10 +8,10 @@ class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     short_name = models.CharField(max_length=200, blank=True, null=True)
 
-    pubchem_id = models.PositiveIntegerField(blank=True, null=True)
+    pubchem_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
     pubchem_name = models.CharField(max_length=200, blank=True, null=True)
 
-    chebi_id = models.PositiveIntegerField(blank=True, null=True)
+    chebi_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
     chebi_name = models.CharField(max_length=200, blank=True, null=True)
 
     CONDITION_GROUP_CHOICES = (
@@ -38,11 +38,7 @@ class ConditionType(models.Model):
         return u'%s' % type_name
 
     def conditions(self):
-        result = Condition.objects.filter(type=self).order_by('dose')
-        list = ''
-        for p in result:
-            list += '%s, ' % (p.dose)
-        return list
+        return ', '.join([p.dose for p in Condition.objects.filter(type=self).order_by('dose')])
 
     def phenotypes(self):
         result = Phenotype.objects.filter(dataset__conditionset__conditions__type=self).distinct()
@@ -72,8 +68,8 @@ class ConditionType(models.Model):
 
 
 class Condition(models.Model):
-    type = models.ForeignKey(ConditionType, null=True, blank=True)
-    dose = models.CharField(max_length=200, blank=True, default='unknown')
+    type = models.ForeignKey(ConditionType)
+    dose = models.CharField(max_length=200, null=False, blank=False)
     modified_on = models.DateField(auto_now=True, null=True)
 
     class Meta:
@@ -111,8 +107,8 @@ class ConditionSet(models.Model):
         return papers_list
     papers.allow_tags = True
 
-    def datasets(self):
-        return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+    # def datasets(self):
+    #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
     def conditionset_link(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)

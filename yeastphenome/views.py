@@ -4,7 +4,7 @@ from django.db.models import Q
 from yeastphenome.forms import SearchForm
 
 from papers.models import Paper
-from conditions.models import Condition
+from conditions.models import ConditionSet
 from phenotypes.models import Observable2
 
 
@@ -21,8 +21,8 @@ def index(request):
 
     context = {
         'paper_num_total': queryset.count(),
-        'phenotype_num_total': Observable2.objects.exclude(phenotype__dataset = None).count(),
-        'condition_num': Condition.objects.all().count(),
+        'phenotype_num_total': Observable2.objects.exclude(phenotype__dataset=None).count(),
+        'condition_num': ConditionSet.objects.all().count(),
         'updated': latest_paper,
         'form': form,
     }
