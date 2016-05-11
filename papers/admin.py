@@ -106,7 +106,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ('pmid', 'user', '__unicode__', 'DatasetList',
+    list_display = ('pmid', 'user', '__unicode__', 'datasets_summary',
                     'latest_data_status_name', 'latest_tested_status_name')
     list_filter = ['pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author',)
@@ -142,13 +142,6 @@ class PaperAdmin(admin.ModelAdmin):
         else:
             paper.latest_tested_status = None
         super(PaperAdmin, self).save_model(request, paper, form, change)
-
-
-    def DatasetList(self, obj):
-        list = ""
-        for d in Dataset.objects.filter(paper=obj.id):
-            list += '%s  ' % (unicode(d))
-        return list
 
 
 class StatusAdmin(admin.ModelAdmin):

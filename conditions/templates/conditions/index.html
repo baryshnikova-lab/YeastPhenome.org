@@ -1,51 +1,42 @@
+{% load my_filters %}
 <!DOCTYPE html>
-<html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ SITE_NAME }} / Experimental conditions</title>
-</head><body>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' %}
+    <title>{{ SITE_NAME }} / Experimental conditions</title>
+</head>
+
+<body>
 {% include "navbar.html" with active='conditions' %}
+
 <div class="container-fluid">
-<h1>Experimental conditions</h1>
-{% include "d3menu.html" with namespace='conditions' %}
-{% if conditiontype_list %}
-<table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% comment %}
-  <caption>
-    <nav>
-      <span class="active">As a list</span>
-      <span class="inactive" title="Not Implemented"><a href="/conditions/stats/">Graphically</a></span>
-    </nav>
-  </caption>
-  {% endcomment %}
-  <thead>
-    <tr>
-      <th width="20%">Short name</th>
-      <th width="20%">Full name</th>
-      <th width="20%">Doses</th>
-      <th width="20%">Phenotypes</th>
-      <th width="20%">Papers</th>
-    </tr>
-  </thead><tbody>
-    {% for conditiontype in conditiontype_list %}
-    <tr>
-      <td>{{ conditiontype.link_detail|safe }}</td>
-      <td>
-        {% if not conditiontype.name = conditiontype.short_name %}
-        {{ conditiontype.name }}
-        {% endif %}
-      </td>
-      <td>{{ conditiontype.conditions|slice:":-2" }}</td>
-      <td>{{ conditiontype.phenotypes|slice:":-2"|safe }}</td>
-      <td>{{ conditiontype.papers|slice:":-2"|safe }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<aside class="bg-warning">No papers are available.</aside>
-{% endif %}
-{% include "footer.html" %}
-</div{# container-fluid #}>
+    <h1>Experimental conditions</h1>
+    {% if conditiontype_list %}
+    <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+        <thead>
+        <tr>
+            <th width="25%">Name</th>
+            <th width="25%">Doses</th>
+            <th width="25%">Phenotypes</th>
+            <th width="25%">Papers</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for conditiontype in conditiontype_list %}
+        <tr>
+            <td>{{ conditiontype.link_detail|safe }}</td>
+            <td>{{ conditiontype.conditions_str_list }}</td>
+            <td>{{ conditiontype.phenotypes|join_and_more:7 }}</td>
+            <td>{{ conditiontype.papers|join_and_more:7 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <aside class="bg-warning">No papers are available.</aside>
+    {% endif %}
+    {% include "footer.html" %}
+</div>
 
 <script>$(document).ready(function(){
  $("#papersTable").tablesorter();

@@ -29,11 +29,11 @@ class DatasetInline(ImprovedTabularInline):
 
 class ConditionAdmin(ImprovedModelAdmin):
     form = ConditionAdminForm
-    list_display = ('id', 'type', 'dose', 'condition_sets')
+    list_display = ('id', 'type', 'dose', 'conditionsets_str_list')
     list_filter = ['type__name']
     ordering = ('type__short_name', 'dose')
     fields = ['type', 'dose']
-    search_fields = ('type__name', 'type__short_name')
+    search_fields = ('type__name', 'type__short_name', 'type__pubchem_name', 'type__chebi_name')
     raw_id_fields = ('type',)
 
 
@@ -44,7 +44,7 @@ class ConditionInline(admin.TabularInline):
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions')
+    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_str_list')
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
@@ -67,16 +67,13 @@ class ConditionTypeAdmin(admin.ModelAdmin):
         obj.save()
 
 
-class ConditionSetAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'papers',)
-    list_filter = ['conditions__type__short_name']
-    filter_horizontal = ['conditions']
-    search_fields = ('name', 'conditions__type__name', 'conditions__type__short_name',)
+class ConditionSetAdmin(ImprovedModelAdmin):
+    list_display = ('__unicode__', 'papers_edit_link_list',)
+    raw_id_fields = ('conditions',)
+    search_fields = ('name', 'conditions__type__name', 'conditions__type__short_name', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('conditions__type__short_name',)
     inlines = (DatasetInline,)
 
-    class Media:
-        js = ('conditionset.js',)
 
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)

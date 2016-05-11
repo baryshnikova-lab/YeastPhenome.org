@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include "head.html" with JavaScript='pubmed' %}
+    {% include "head.html" with JavaScript='pubmed,tablesorter' %}
     <title>{{ object }} / Papers / {{ SITE_NAME }}</title>
 </head>
 
@@ -78,23 +78,13 @@
                 </ul></th>{% endif %}
                 </tr>
                 </thead><tbody>
-            {% for dataset in object.dataset_list %}
+            {% for dataset in object.dataset_set.all %}
             <tr>
                 <td>{{ dataset.phenotype.link_detail|safe }}</td>
-                <td>{{ dataset.conditionset }}</td>
+                <td>{{ dataset.conditionset.link_detail|safe }}</td>
                 <td>{{ dataset.collection }}</td>
                 <td>{{ dataset.tested_num }}</td>
-                {% if request.GET.verbose >= 1 %}<td><ul>
-                <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
-                <li>{{ dataset.tested_source|safe }}</li>
-                <li>{{ paper.latest_tested_status|capfirst }}</li>
-            </ul></td>{% endif %}
                 <td>{{ dataset.data_available|capfirst }}</td>
-                {% if request.GET.verbose >= 1 %}<td><ul>
-                <li>{{ dataset.data_measured|capfirst }}</li>
-                <li>{{ dataset.data_published|capfirst }}</li>
-                <li>{{ dataset.has_data }}</li>
-            </ul></td>{% endif %}
             </tr>
             {% endfor %}
             </tbody>

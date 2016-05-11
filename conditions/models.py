@@ -26,6 +26,9 @@ class ConditionType(models.Model):
                              blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
+    class Meta:
+        ordering = ['group', 'chebi_name', 'pubchem_name', 'short_name', 'name']
+
     def __unicode__(self):
         if self.chebi_name:
             type_name = self.chebi_name
@@ -38,26 +41,24 @@ class ConditionType(models.Model):
         return u'%s' % type_name
 
     def conditions(self):
-        return ', '.join([p.dose for p in Condition.objects.filter(type=self).order_by('dose')])
+        return Condition.objects.filter(type=self).order_by('dose')
+
+    def conditions_str_list(self):
+        return ', '.join([p.dose for p in self.conditions()])
 
     def phenotypes(self):
-        result = Phenotype.objects.filter(dataset__conditionset__conditions__type=self).distinct()
-        list = ''
-        for p in result:
-            list += '%s, ' % (p.link_detail())
-        return list
+        return Phenotype.objects.filter(dataset__conditionset__conditions__type=self).distinct()
 
-    def paper_list(self):
-        # Returns a QuerySet of Papers with this ConditionType.
-        return apps.get_model('papers','Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+    def phenotypes_link_list(self):
+        return ', '.join([p.link_detail() for p in self.phenotypes()])
+    phenotypes_link_list.allow_tags = True
 
     def papers(self):
-        # Returns a string containing HTML for all the papers.
-        result = self.paper_list()
-        l = ''
-        for p in result:
-            l += '%s, ' % (p.link_detail())
-        return l
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+
+    def papers_link_list(self):
+        return ', '.join([(u'%s' % p.link_detail()) for p in self.papers()])
+    papers_link_list.allow_tags = True
 
     def datasets(self):
         return apps.get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self).distinct()
@@ -78,13 +79,16 @@ class Condition(models.Model):
     def __unicode__(self):
         return u'%s [%s]' % (self.type, self.dose)
 
-    def condition_sets(self):
-        result = ConditionSet.objects.filter(conditions=self).all()
-        l = ''
-        for p in result:
-            l += '%s, ' % (p.conditionset_link())
-        return l
-    condition_sets.allow_tags = True
+    def conditionsets(self):
+        return ConditionSet.objects.filter(conditions=self).all()
+
+    def conditionsets_str_list(self):
+        return ", ".join([p.conditionset_edit_link() for p in self.conditionsets()])
+    conditionsets_str_list.allow_tags = True
+
+    def link_detail(self):
+        return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.type.id,)), self)
+    link_detail.allow_tags = True
 
 
 class ConditionSet(models.Model):
@@ -93,23 +97,30 @@ class ConditionSet(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        conditions_list = ", ".join([unicode(condition) for condition in self.conditions.all()])
+        conditions_list = ", ".join([(u'%s' % condition) for condition in self.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
         if self.name == '':
-            return conditions_list
+            return u'%s' % conditions_list
         else:
             return u'%s (%s)' % (self.name, conditions_list)
 
     def papers(self):
-        result = apps.get_model('papers','Paper').objects.filter(dataset__conditionset=self).all()
-        papers_list = ''
-        for p in result:
-            papers_list += '%s, ' % (p.link_detail())
-        return papers_list
-    papers.allow_tags = True
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()
+
+    def papers_link_list(self):
+        return ', '.join([p.link_detail() for p in self.papers()])
+    papers_link_list.allow_tags = True
+
+    def papers_edit_link_list(self):
+        return ', '.join([p.link_edit() for p in self.papers()])
+    papers_edit_link_list.allow_tags = True
 
     # def datasets(self):
     #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
-    def conditionset_link(self):
+    def link_detail(self):
+        return ', '.join([c.link_detail() for c in self.conditions.all()])
+    link_detail.allow_tags = True
+
+    def link_edit(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)
-    conditionset_link.allow_tags = True
+    link_edit.allow_tags = True

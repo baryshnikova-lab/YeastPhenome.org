@@ -1,73 +1,62 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-{% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ SITE_NAME }} / Experimental conditions / {{ object|capfirst }}</title>
+    {% include "head.html" with JavaScript='tablesorter' %}
+    <title>{{ SITE_NAME }} / Experimental conditions / {{ object|capfirst }}</title>
 </head><body>
 {% include "navbar.html" with active='conditions' %}
 <div class="container-fluid">
-<h1>{{ object|capfirst }}</h1>
+    <h1>{{ object|capfirst }}</h1>
 
-{% if object.descripton %}
-<dl class="dl-horizontal">
-  <dt>Description</dt>
-  <dd>{{ object.description }}</dd>
-</dl>
-{% endif %}
+    {% if object.descripton %}
+    <dl class="dl-horizontal">
+        <dt>Description</dt>
+        <dd>{{ object.description }}</dd>
+    </dl>
+    {% endif %}
 
-{% if object.datasets %}
-<table id="papersTable" class="tablesorter table table-condensed" width="100%">
-  {% if request.GET.verbose >= 1 %}
-  <col/>
-  <col class="bg-info"/>
-  <col/>
-  <col/>
-  <col/>
-  <col class="bg-info"/>
-  <col/>
-  <col class="bg-info"/>
-  {% endif %}
-  <thead>
-    <th>Papers</th>
-    {% if request.GET.verbose >= 1 %}<th>Condition set</th>{% endif %}
-    <th>Phenotype</th>
-    <th>Collection</th>
-    <th>Tested genes</th>
-    {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
-	<li>published</li>
-	<li>available</li>
-    </ul></th>{% endif %}
-    <th>Data type</th>
-    {% if request.GET.verbose >= 1 %}<th>Data: <ul>
-	<li>measured</li>
-	<li>published</li>
-	<li>source</li>
-    </ul></th>{% endif %}
-  </thead><tbody>
+    {% if object.datasets %}
+    <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+        <thead>
+        <th>Papers</th>
+        <th>Phenotype</th>
+        <th>Collection</th>
+        <th>Tested genes</th>
+        {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
+            <li>published</li>
+            <li>available</li>
+        </ul></th>{% endif %}
+        <th>Data type</th>
+        {% if request.GET.verbose >= 1 %}<th>Data: <ul>
+            <li>measured</li>
+            <li>published</li>
+            <li>source</li>
+        </ul></th>{% endif %}
+        </thead><tbody>
     {% for dataset in object.datasets %}
     <tr>
-      <td>{{ dataset.paper.link_detail|safe }}</td>
-      {% if request.GET.verbose >= 1 %}<td>{{ dataset.conditionset }}</td>{% endif %}
-      <td>{{ dataset.phenotype.link_detail|safe }}</td>
-      <td>{{ dataset.collection }}</td>
-      <td>{{ dataset.tested_num }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
-	  <li>{{ dataset.tested_source|safe }}</li>
-      </ul></td>{% endif %}
-      <td>{{ dataset.data_available|capfirst }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.data_measured|capfirst }}</li>
-	  <li>{{ dataset.data_published|capfirst }}</li>
-	  <li>{{ dataset.data_source|safe }}</li>
-      </li></td>{% endif %}
+        <td>{{ dataset.paper.link_detail|safe }}</td>
+        {% if request.GET.verbose >= 1 %}<td>{{ dataset.conditionset }}</td>{% endif %}
+        <td>{{ dataset.phenotype.link_detail|safe }}</td>
+        <td>{{ dataset.collection }}</td>
+        <td>{{ dataset.tested_num }}</td>
+        {% if request.GET.verbose >= 1 %}<td><ul>
+        <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
+        <li>{{ dataset.tested_source|safe }}</li>
+    </ul></td>{% endif %}
+        <td>{{ dataset.data_available|capfirst }}</td>
+        {% if request.GET.verbose >= 1 %}<td><ul>
+        <li>{{ dataset.data_measured|capfirst }}</li>
+        <li>{{ dataset.data_published|capfirst }}</li>
+        <li>{{ dataset.data_source|safe }}</li>
+        </li></td>{% endif %}
     </tr>
     {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<aside class="bg-warning">No papers associated.</aside>
-{% endif %}
-{% include "footer.html" %}
+    </tbody>
+    </table>
+    {% else %}
+    <aside class="bg-warning">No papers associated.</aside>
+    {% endif %}
+    {% include "footer.html" %}
 </div{# container-fluid #}>
 
 <script>$(document).ready(function(){

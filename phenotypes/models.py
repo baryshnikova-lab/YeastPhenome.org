@@ -15,6 +15,12 @@ class Observable2(MPTTModel):
     modified_on = models.DateField(auto_now=True, null=True)
     ancestry = models.CharField(max_length=200, blank=True, null=True, unique=True)
 
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    class Meta:
+        get_latest_by = 'modified_on'
+
     def __unicode__(self):
         return u'%s' % self.name
 
@@ -36,37 +42,26 @@ class Observable2(MPTTModel):
             a += '%d.' % r.id
         return a
 
-    def paper_list(self):
-        # Returns a list of papers associated with this Observable
-        return apps.get_model('papers','Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
-
     def papers(self):
-        # Return HTML list of papers
-        result = self.paper_list()
-        l = ''
-        for p in result:
-            l += '%s, ' % (p.link_detail())
-        return l
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
 
-    def condition_types(self):
-        result = apps.get_model('conditions','ConditionType').objects.filter(condition__conditionset__dataset__phenotype__observable2=self).distinct()
-        l = ''
-        for r in result:
-            l += '%s, ' % (r.link_detail())
-        return l
+    def papers_link_list(self):
+        return ', '.join([p.link_detail() for p in self.papers()])
+    papers_link_list.allow_tags = True
+
+    def conditiontypes(self):
+        return apps.get_model('conditions','ConditionType').objects.filter(condition__conditionset__dataset__phenotype__observable2=self).distinct()
+
+    def conditiontypes_link_list(self):
+        return ', '.join([r.link_detail() for r in self.conditiontypes()])
+    conditiontypes_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('papers','Dataset').objects.filter(phenotype__observable2=self).distinct()
+        return apps.get_model('papers', 'Dataset').objects.filter(phenotype__observable2=self).distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.id,)), self)
     link_detail.allow_tags = True
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
-
-    class Meta:
-        get_latest_by = 'modified_on'
 
 
 class Phenotype(models.Model):
@@ -97,24 +92,16 @@ class Phenotype(models.Model):
         return '<span style="white-space: nowrap;">%s %s</span>' % (self.ancestry(), self.observable2.name)
     observable2_name.allow_tags = True
 
-    def paper_list(self):
-        return apps.get_model('papers','Paper').objects.filter(dataset__phenotype=self).distinct()
-
     def papers(self):
-        result = self.paper_list()
-        l = ''
-        for p in result:
-            l += '%s, ' % (p.link_detail())
-        return l
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self).distinct()
+
+    def papers_link_list(self):
+        return ', '.join([p.link_detail() for p in self.papers()])
     papers.allow_tags = True
 
-    def paper_admin(self):
-        result = self.paper_list()
-        l = ''
-        for p in result:
-            l += '%s, ' % (p.link_admin())
-        return l
-    paper_admin.allow_tags = True
+    def papers_edit_link_list(self):
+        return ', '.join([p.link_edit() for p in self.papers()])
+    papers_edit_link_list.allow_tags = True
 
 
 class MutantType(models.Model):

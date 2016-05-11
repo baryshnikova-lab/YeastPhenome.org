@@ -55,7 +55,7 @@
     <tr>
       <td class="text-nowrap">{{ dataset.paper.link_detail|safe }}</td>
       {% if request.GET.verbose >= 1 %}<td>{{ dataset.phenotype }}</td>{% endif %}
-      <td>{{ dataset.conditionset }}</td>
+      <td>{{ dataset.conditionset.link_detail|safe }}</td>
       <td>{{ dataset.collection }}</td>
       <td>{{ dataset.tested_num }}</td>
       {% if request.GET.verbose >= 1 %}<td><ul>

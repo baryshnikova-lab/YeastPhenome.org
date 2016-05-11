@@ -27,6 +27,7 @@ class Observable2Admin(MPTTModelAdmin):
     class Media:
         js={'ancestor.js'};
 
+
 class MutantTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']
     list_display = ['id', 'name', 'definition']
@@ -35,7 +36,7 @@ class MutantTypeAdmin(admin.ModelAdmin):
 
 class PhenotypeAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ['observable2_name', 'name', 'reporter', 'paper_admin']
+    list_display = ['observable2_name', 'name', 'reporter', 'papers_edit_link_list']
     ordering = ['observable2__ancestry']
     search_fields = ['name', ]
 

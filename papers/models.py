@@ -8,10 +8,9 @@ from itertools import chain
 from operator import attrgetter
 
 from phenotypes.models import Observable2
-from conditions.models import ConditionType, ConditionSet
+from conditions.models import ConditionType
 
 import os
-import warnings
 
 
 class Status(models.Model):
@@ -48,41 +47,36 @@ class Paper(models.Model):
 
     class Meta:
         get_latest_by = 'modified_on'
+        ordering =['pmid', 'first_author', 'last_author']
 
-    @property
+    def __unicode__(self):
+        return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
+
     def collections(self):
-        return list(map(str, self.dataset_set.values_list('collection', flat=True).distinct()))
+        return Collection.objects.filter(dataset__paper=self).distinct()
 
-    def phenotype_list(self):
-        # Returns a list of Observable2 objects that this paper is in
+    def collections_str_list(self):
+        return ', '.join([(u'%s' % i) for i in self.collections()])
+
+    def phenotypes(self):
         return Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
 
-    @property
-    def phenotypes(self):
-        # Returns a string containing the list of phenotypes for this paper
-        return ', '.join([unicode(i) for i in self.phenotype_list()])
+    def phenotypes_str_list(self):
+        return ', '.join([(u'%s' % i) for i in self.phenotypes()])
 
-    @property
-    def phenotypes_links(self):
-        # Returns a string containing the list of phenotypes (with links) for this paper
-        result = self.phenotype_list()
-        phenotype_list = ''
-        for p in result:
-            phenotype_list += '%s, ' % (p.link_detail())
-        return phenotype_list
+    def phenotypes_link_list(self):
+        return ', '.join([p.link_detail() for p in self.phenotypes()])
+    phenotypes_link_list.allow_tags = True
 
-    def condition_list(self):
-        # Returns a QuerySet of conditions associated with this paper
-        return ConditionType.objects.filter(condition__conditionset__dataset__paper=self)
+    def conditiontypes(self):
+        return ConditionType.objects.filter(condition__conditionset__dataset__paper=self).distinct()
 
-    @property
-    def conditions(self):
-        return list(map(str, self.condition_list().values_list(
-            'short_name', flat=True).distinct()))
+    def conditiontypes_str_list(self):
+        return ', '.join([(u'%s' % i) for i in self.conditiontypes()])
 
-    @property
-    def condition_sets(self):
-        return list(set([condition_set.by_conditiontype() for condition_set in ConditionSet.objects.filter(dataset__paper=self).distinct()]))
+    def datasets_summary(self):
+        return self.collections_str_list() + '<br>' + self.phenotypes_str_list() + '<br>' + self.conditiontypes_str_list()
+    datasets_summary.allow_tags = True
 
     @property
     def data_published(self):
@@ -110,19 +104,7 @@ class Paper(models.Model):
         return os.path.isdir(self.download_path())
 
     def static_dir_name(self):
-        return "%s_%s~%s" % (self.pub_date,self.first_author.split(' ')[0],self.last_author.split(' ')[0])
-
-    def __unicode__(self):
-        return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
-
-    def link_admin(self):
-        return '<a href="%s">%s</a>' % (reverse("admin:papers_paper_change", args=(self.id,)), self)
-    link_admin.allow_tags = True
-
-    def link_detail(self):
-        warnings.warn("link_detail", DeprecationWarning)
-        return '<a href="%s">%s</a>' % (reverse("papers:detail", args=(self.id,)), self)
-    link_detail.allow_tags = True
+        return "%s_%s~%s" % (self.pub_date, self.first_author.split(' ')[0],self.last_author.split(' ')[0])
 
     def sources_to_acknowledge(self):
         result = Source.objects.filter(Q(acknowledge=True) & (Q(data_source__paper=self) | Q(tested_source__paper=self))).values_list('person', flat=True).distinct()
@@ -139,15 +121,6 @@ class Paper(models.Model):
         result = self.dataset_set.filter(tested_source__acknowledge = True).distinct()
         return len(result) > 0
 
-    def dataset_list(self):
-        # Like dataset_set.all() but returns a sorted list
-        dss = self.dataset_set.all()
-        out = []
-        for ds in dss:
-            out.append(ds)
-        out.sort(lambda a, b: cmp(a.sort_string(), b.sort_string()))
-        return out
-
     def latest_data_status_name(self):
         if self.latest_data_status:
             return self.latest_data_status.status.status_name
@@ -163,6 +136,14 @@ class Paper(models.Model):
         queryset2 = Statustested.objects.filter(paper=self).all().annotate(type=Value('tested strains', CharField()))
         result_list = sorted(chain(queryset1, queryset2), key=attrgetter('status_date'))
         return result_list
+
+    def link_detail(self):
+        return '<a href="%s">%s</a>' % (reverse("papers:detail", args=(self.id,)), self)
+    link_detail.allow_tags = True
+
+    def link_edit(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:papers_paper_change", args=(self.id,)), self)
+    link_edit.allow_tags = True
 
 
 class Statusdata(models.Model):
@@ -196,7 +177,7 @@ class Collection(models.Model):
     ploidy = models.IntegerField(null=True, blank=True)
 
     def __unicode__(self):
-        return u'%s' % (self.shortname)
+        return u'%s' % self.shortname
 
 
 class Sourcetype(models.Model):
@@ -204,7 +185,7 @@ class Sourcetype(models.Model):
     shortname = models.CharField(max_length=200, null=True, blank=True)
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return u'%s' % self.name
 
 
 class Source(models.Model):
@@ -215,22 +196,17 @@ class Source(models.Model):
     acknowledge = models.NullBooleanField()
     release = models.NullBooleanField()
 
-    def papers(self):
-        result = Paper.objects.filter(dataset__tested_source=self).distinct()
-        list = ''
-        for p in result:
-            list += '%s, ' % (p)
-        return list
-
     def __unicode__(self):
         if self.person == '':
             return u'%s' % self.sourcetype
         else:
             return u'%s' % self.person
 
-    def change_link(self):
-        return '<a href="%s" target="_blank">Edit</a>' % (reverse("admin:papers_source_change", args=(self.id,)))
-    change_link.allow_tags = True
+    def papers(self):
+        return Paper.objects.filter(dataset__tested_source=self).distinct()
+
+    def papers_str_list(self):
+        return ', '.join([(u'%s' % p) for p in self.papers()])
 
 
 class Dataset(models.Model):
@@ -269,15 +245,6 @@ class Dataset(models.Model):
 
     def __unicode__(self):
         return u'%s, %s, %s' % (self.collection, self.phenotype, self.conditionset)
-
-    def sort_string(self):
-        # Just to make things easier to sort
-        out = u"%s %s %s %d %s" % (self.phenotype,
-                                   self.conditionset,
-                                   self.collection,
-                                   self.tested_num,
-                                   self.data_available)
-        return out.lower()
 
     def tested_genes_published(self):
         return self.tested_list_published
