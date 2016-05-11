@@ -83,7 +83,7 @@ class Condition(models.Model):
         return ConditionSet.objects.filter(conditions=self).all()
 
     def conditionsets_str_list(self):
-        return ", ".join([p.conditionset_edit_link() for p in self.conditionsets()])
+        return ", ".join([p.link_edit() for p in self.conditionsets()])
     conditionsets_str_list.allow_tags = True
 
     def link_detail(self):
