@@ -106,20 +106,16 @@ class Paper(models.Model):
     def static_dir_name(self):
         return "%s_%s~%s" % (self.pub_date, self.first_author.split(' ')[0],self.last_author.split(' ')[0])
 
-    def sources_to_acknowledge(self):
-        result = Source.objects.filter(Q(acknowledge=True) & (Q(data_source__paper=self) | Q(tested_source__paper=self))).values_list('person', flat=True).distinct()
-        result_list = ''
-        for r in result:
-            result_list += u'%s ' % (r)
-        return result_list
+    def acknowledgements_str_list(self):
+        return ', '.join([(u'%s' % i) for i in Source.objects.filter(acknowledge=True)\
+            .filter(Q(data_source__paper=self) | Q(tested_source__paper=self))\
+            .distinct()])
 
-    def got_data(self):
-        result = self.dataset_set.filter(data_source__acknowledge = True).distinct()
-        return len(result) > 0
+    def acknowledge_data(self):
+        return self.dataset_set.filter(data_source__acknowledge = True).exists()
 
-    def got_tested(self):
-        result = self.dataset_set.filter(tested_source__acknowledge = True).distinct()
-        return len(result) > 0
+    def acknowledge_tested(self):
+        return self.dataset_set.filter(tested_source__acknowledge = True).exists()
 
     def latest_data_status_name(self):
         if self.latest_data_status:
@@ -244,7 +240,10 @@ class Dataset(models.Model):
     data_can_release = models.NullBooleanField()
 
     def __unicode__(self):
-        return u'%s, %s, %s' % (self.collection, self.phenotype, self.conditionset)
+        return u'%s | %s | %s' % (self.collection, self.phenotype, self.conditionset)
+
+    class Meta:
+        ordering = ['id']
 
     def tested_genes_published(self):
         return self.tested_list_published

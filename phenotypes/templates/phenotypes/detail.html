@@ -1,8 +1,12 @@
-{% load staticfiles %}{% load string_multiply %}<!DOCTYPE html>
-<html lang="en"><head>
+{% load staticfiles %}{% load string_multiply %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
 {% include "head.html" with JavaScript='tablesorter' %}
 <title>{{ SITE_NAME }} / Phenotypes / {{ object|capfirst }}</title>
-</head><body>
+</head>
+
+<body>
 {% include "navbar.html" with active='phenotypes' %}
 <div class="container-fluid">
 <hgroup><p>

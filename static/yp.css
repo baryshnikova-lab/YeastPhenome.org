@@ -83,21 +83,6 @@ thead td{
  * For futzing with stuff of the paper/details page.
  */
 
-[itemscope=paper] #abstract{
-    cursor:pointer;
-}
-
-[itemscope=paper] ol{
-    margin-bottom:0;
-}
-
-[itemscope=paper] li:after{
-    content:'\00A0\00A0\2022';
-}
-[itemscope=paper] li:last-child:after{
-    content:'';
-}
-
 .table>tbody>tr>th.first, .table>tbody>tr>td.first {
     border-top: none;
 }

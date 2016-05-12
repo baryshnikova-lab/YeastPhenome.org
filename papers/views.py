@@ -3,7 +3,8 @@ from django.views import generic
 from django.shortcuts import render
 
 from papers.models import Paper
-import urllib2, re
+from Bio.Entrez import efetch, read
+
 
 # These only needed for zipo
 import os
@@ -47,42 +48,34 @@ class PaperDetailView(generic.DetailView):
         context = super(PaperDetailView, self).get_context_data(**kwargs)
         obj = context['object']
 
-        # Give credit if where credit is due.
-        names = obj.sources_to_acknowledge()
+        context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+
+        # Give credit if credit is due.
+        names = obj.acknowledgements_str_list()
+        to_acknowledge = []
+        if obj.acknowledge_data():
+            to_acknowledge.append('the data')
+        if obj.acknowledge_tested():
+            to_acknowledge.append('the list of tested strains')
+
         if names:
-            gd = obj.got_data()
-            gt = obj.got_tested()
+            thanks = ' and '.join(to_acknowledge) + ' for this paper were kindly provided by ' + names + '.'
+            context['thanks'] = thanks
 
-            thanks = False
-            if gd:
-                if gt:
-                    thanks = 'The data and the list of tested genes for this publication were kindly provided by <b>%s</b>.'
-                else:
-                    thanks = 'The data for this publication was kindly provided by <b>%s</b>.'
-                thanks = thanks + '<br>The data contains unpublished values and is more complete than its published version. However, it may contain false positives and thus should be handled with care.'
-            elif gt:
-                thanks = 'The list of tested genes for this publication was kindly provided by <b>%s</b>.'
-            if thanks:
-                context['thanks'] = thanks % names
-        # Credit now given
+        # Fetch article info from Pubmed
+        if obj.pmid != 0:
+            handle = efetch(db='pubmed', id=[str(obj.pmid)], retmode='xml')
+            xml_data = read(handle)[0]
+            article = xml_data['MedlineCitation']['Article']
+            authors_list = [(u'%s %s' % (author['ForeName'], author['LastName'])) for author in article['AuthorList']]
 
-        # Fetch PMID info if we have to
-        pmid = obj.pmid
-        if pmid == 0:
-            # If we have no PMID just bail
-            return context
-        ml = os.path.join(settings.MEDLINE_DIR, "%s.txt" % (pmid))
-        if os.path.isfile(ml):
-            pass
-        else:
-            try:
-                out = open(ml, 'w')
-                url = "https://www.ncbi.nlm.nih.gov/pubmed/%s?report=medline&format=text" % (pmid)
-                r = urllib2.urlopen(url)
-                out.write(re.sub('<[^<]+?>', '', r.read()).strip())
-                out.close()
-            except IOError:
-                pass
+            context['title'] = article['ArticleTitle']
+            context['authors'] = authors_list
+            context['abstract'] = article['Abstract']['AbstractText'][0]
+            context['citation'] = u'%s. %s; %s:%s' % (article['Journal']['ISOAbbreviation'],
+                                                      article['Journal']['JournalIssue']['PubDate']['Year'],
+                                                      article['Journal']['JournalIssue']['Volume'],
+                                                      article['Pagination']['MedlinePgn'])
 
         return context
 
@@ -97,12 +90,12 @@ class ContributorsListView(generic.ListView):
             Q(dataset__data_source__acknowledge=True) | Q(dataset__tested_source__acknowledge=True)).distinct()
 
 
-def zipo(request,pk):
+def zipo(request, pk):
     """Constructs a zip file in memory for users to download."""
 
-    p = get_object_or_404(Paper,pk=pk)
+    p = get_object_or_404(Paper, pk=pk)
     if not(p.should_have_data()):
-        raise Http404("Paper has no data.");
+        raise Http404("Paper has no data.")
 
     zip_buff=StringIO()
     zip_file=ZipFile(zip_buff,'w')
@@ -120,5 +113,16 @@ def zipo(request,pk):
     zip_file.close()
 
     out=HttpResponse(zip_buff.getvalue(),content_type="application/zip")
-    out['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX,p.pmid)
+    out['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
     return out
+
+
+def datasets_list(request, pk):
+    p = get_object_or_404(Paper, pk=pk)
+
+    txt = '\n'.join([(u'%s\t%s' % (d.id, d)) for d in p.dataset_set.all()])
+
+    response = HttpResponse(txt, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename="%s_%d_datasets_list.txt"' % (settings.DOWNLOAD_PREFIX, p.pmid)
+
+    return response

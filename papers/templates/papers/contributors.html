@@ -23,10 +23,10 @@
   </thead><tbody>
     {% for paper in papers_list %}
     <tr>
-      <td>{{ paper.sources_to_acknowledge }}</td>
+      <td>{{ paper.acknowledgements_str_list }}</td>
       <td>{{ paper.link_detail|safe }}</td>
-      <td>{{ paper.got_data|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
-      <td>{{ paper.got_tested|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
+      <td>{{ paper.acknowledge_data|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
+      <td>{{ paper.acknowledge_tested|yesno:'<span class="yes">yes</span>,<span class="no">no</span>,'|safe }}</td>
     </tr>
     {% endfor %}
   </tbody>

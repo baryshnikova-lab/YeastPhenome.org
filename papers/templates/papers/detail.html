@@ -1,7 +1,8 @@
+{% load my_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% include "head.html" with JavaScript='pubmed,tablesorter' %}
+    {% include "head.html" with JavaScript='tablesorter' %}
     <title>{{ object }} / Papers / {{ SITE_NAME }}</title>
 </head>
 
@@ -15,27 +16,27 @@
 
             <h1>{{ object }}</h1>
 
-            {% if 0 != object.pmid %}
-            <table class="table" itemscope="paper">
+            {% if object.pmid != 0 %}
+            <table class="table">
                 <tr>
                     <th width="20%" scope="row" class="first">Pubmed ID</th>
                     <td class="first"><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></td>
                 </tr>
-                <tr class="remove_on_error">
+                <tr>
                     <th scope="row">Title</th>
-                    <td><span itemprop="TI">&#8987;</span></td>
+                    <td>{{ title }}</td>
                 </tr>
-                <tr class="remove_on_error">
+                <tr>
                     <th scope="row">Authors</th>
-                    <td><span itemprop="FAU">&#8987;</span></td>
+                    <td>{{ authors|join_and_more:20 }}</td>
                 </tr>
-                <tr class="remove_on_error">
+                <tr>
                     <th scope="row">Abstract</th>
-                    <td><span itemprop="AB">&#8987;</span></td>
+                    <td>{{ abstract }}</td>
                 </tr>
-                <tr class="remove_on_error">
+                <tr>
                     <th scope="row">Citation</th>
-                    <td><span itemprop="SO">&#8987;</span></td>
+                    <td>{{ citation }}</td>
                 </tr>
                 {% if object.notes %}
                 <tr>
@@ -50,12 +51,23 @@
             <h3>Datasets</h3>
 
             {% if thanks %}
-            <div class="alert alert-warning" role="alert">
-                {{ thanks|safe }}
-            </div>
+            <p>
+                {{ thanks|capfirst }}
+            </p>
             {% endif %}
 
+            <div class="alert alert-warning" role="alert">
+                <strong>Warning:</strong> These data may contain errors.
+                <p>YeastPhenome.org is currently running in beta version.
+                    The data are available for download, but we cannot guarantee that no errors or code bugs have been introduced by the processing pipeline.
+                    This warning will be removed after all cross-checks and validations have been completed.
+                    In the meantime, please, be careful when using the data.
+                </p>
+            </div>
+
             {% if object.dataset_set.all %}
+
+            {% include "datasets_list.html" %}
 
             <table id="papersTable" class="tablesorter table table-condensed" width="100%">
                 {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/><col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
@@ -93,7 +105,6 @@
             {% endif %}
 
             <h3>Curation history</h3>
-
             <div class="row">
                 <div class="col-xs-4">
                     <table class="table table-condensed table-no-border">
