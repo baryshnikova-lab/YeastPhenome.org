@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django.db import models
 from mptt.admin import MPTTModelAdmin
 from phenotypes.models import MutantType, Observable2, Phenotype
+from django.http import HttpResponse
 
 
 class Observable2Admin(MPTTModelAdmin):
@@ -39,6 +39,12 @@ class PhenotypeAdmin(admin.ModelAdmin):
     list_display = ['observable2_name', 'name', 'reporter', 'papers_edit_link_list']
     ordering = ['observable2__ancestry']
     search_fields = ['name', ]
+
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(PhenotypeAdmin, self).response_change(request, obj)
 
 
 admin.site.register(Phenotype, PhenotypeAdmin)

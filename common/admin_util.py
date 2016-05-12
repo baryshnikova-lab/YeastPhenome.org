@@ -14,7 +14,7 @@ class VerboseForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
                 "admin:%s_%s_change" % (obj._meta.app_label, obj._meta.object_name.lower()),
                 args=(obj.pk,)
             )
-            return '&nbsp;<strong><a href="%s">%s</a></strong>' % (change_url, escape(obj))
+            return '&nbsp;<strong><a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);"">%s</a></strong>' % (change_url, escape(obj))
         except (ValueError, self.rel.to.DoesNotExist):
             return '???'
 
@@ -33,7 +33,7 @@ class VerboseManyToManyRawIdWidget(ManyToManyRawIdWidget):
                     "admin:%s_%s_change" % (obj._meta.app_label, obj._meta.object_name.lower()),
                     args=(obj.pk,)
                 )
-                str_values += ['<strong><a href="%s">%s</a></strong>' % (change_url, escape(x))]
+                str_values += ['<strong><a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a></strong>' % (change_url, escape(x))]
             except self.rel.to.DoesNotExist:
                 str_values += [u'???']
         return u', '.join(str_values)

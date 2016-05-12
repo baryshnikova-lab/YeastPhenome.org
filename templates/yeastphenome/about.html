@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     {% include "head.html" %}
-    <title>{{ SITE_NAME }}</title>
+    <title>About / {{ SITE_NAME }}</title>
 </head>
 
 <body>
@@ -14,12 +14,6 @@
     <div class="row">
         <div class="col-xs-12">
             <h1>About</h1>
-        </div>
-    </div>
-
-    <div class="row">
-
-        <div class="col-xs-12">
 
             <p>YeastPhenome.org is a collaborative project focused on compiling a comprehensive compendium of systematic phenotypic data for budding yeast <em>Saccharomyces cerevisiae</em>.</p>
 
@@ -29,7 +23,7 @@
 
             <p>Our primary source of data are the supplementary materials of the relevant <a href="{% url 'papers:all' %}">publications</a>. On top of that, <a href="{% url 'contributors' %}">many authors</a> have contributed more complete and previously unpublished versions of their datasets (e.g., raw quantitative values from which the published hit list was derived). These datasets are specifically flagged to emphasize their special status.</p>
 
-            <p>The individual datasets are available for download as soon as they are curated (e.g., see the green "Download data" button for <a href="http://www.yeastphenome.org/papers/125/">Bleackley MR~MacGillivray RT, 2011</a>). The full compendium of all datasets will be accessible later on, as soon as we finalize the standardized nomenclature of phenotypes and experimental conditions.</p>
+            <p>The individual datasets are available for download as soon as they are curated (e.g., see the green "Download all data" button for <a href="http://www.yeastphenome.org/papers/125/">Bleackley MR~MacGillivray RT, 2011</a>). The full compendium of all datasets will be accessible later on, as soon as we finalize the standardized nomenclature of phenotypes and experimental conditions.</p>
 
             <p>Yeastphenome.org was created and is being maintained at <a class="external" href="http://www.princeton.edu/">Princeton University</a> by:</p>
 
@@ -43,6 +37,16 @@
                 <li>Fan Kang (database support)</li>
                 <li>Mark Schroeder (server support)</li>
             </ul>
+
+            <h2>Frequenty Asked Questions (FAQ)</h2>
+
+            <h3>Why is the drug name on this dataset different from the drug name in the paper?</h3>
+            <p>
+                What you see on this website is the ChEBI or the PubChem name of the drugs.
+                Whenever possible, we associate chemical compounds with a ChEBI ID (preferentially) or a PubChem ID (if ChEBI ID was not available) and display, by default, their ChEBI or PubChem names, respectively.
+                This sometimes results in an unusual name (e.g., the ChEBI name of rapamycin is <a href="http://www.yeastphenome.org/conditions/3/">sirolimus</a>), but it greatly facilitates the consistency of the data.
+                The original drug names (those used in the paper) are still available through search and will soon be displayed on the condition page.
+            </p>
 
         </div>
 

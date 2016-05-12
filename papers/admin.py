@@ -38,9 +38,8 @@ class DatasetAdmin(ImprovedModelAdmin):
 
 class DatasetInline(ImprovedTabularInline):
     model = Dataset
-    fields = ('id', 'admin_change_link', 'make_a_copy_link')
-    raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
-    readonly_fields = ('id', 'admin_change_link', 'make_a_copy_link')
+    fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
+    readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     extra = 0
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -98,6 +97,12 @@ class SourceAdmin(admin.ModelAdmin):
     fields = ('sourcetype', 'link', 'person', 'date', 'release', 'acknowledge')
     inlines = [DatasetInlineTested, DatasetInlineData]
 
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(SourceAdmin, self).response_change(request, obj)
+
 
 class CollectionAdmin(admin.ModelAdmin):
     model = Collection
@@ -142,6 +147,12 @@ class PaperAdmin(admin.ModelAdmin):
         else:
             paper.latest_tested_status = None
         super(PaperAdmin, self).save_model(request, paper, form, change)
+
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(PaperAdmin, self).response_change(request, obj)
 
 
 class StatusAdmin(admin.ModelAdmin):

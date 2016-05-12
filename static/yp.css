@@ -26,13 +26,18 @@ h1 {
     margin-bottom: 30px;
 }
 
+h1 small:before{
+    content:'\2014\00A0';
+}
+
+h2 {
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
 h3 {
     margin-top: 40px;
     margin-bottom: 20px;
-}
-
-h1 small:before{
-    content:'\2014\00A0';
 }
 
 hgroup{

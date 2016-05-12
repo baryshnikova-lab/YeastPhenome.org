@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+from django.http import HttpResponse
 
 from pubchempy import Compound
 from libchebipy import ChebiEntity
@@ -36,6 +37,12 @@ class ConditionAdmin(ImprovedModelAdmin):
     search_fields = ('type__name', 'type__short_name', 'type__pubchem_name', 'type__chebi_name')
     raw_id_fields = ('type',)
 
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(ConditionAdmin, self).response_change(request, obj)
+
 
 class ConditionInline(admin.TabularInline):
     model = Condition
@@ -66,6 +73,12 @@ class ConditionTypeAdmin(admin.ModelAdmin):
             obj.pubchem_name = None
         obj.save()
 
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(ConditionTypeAdmin, self).response_change(request, obj)
+
 
 class ConditionSetAdmin(ImprovedModelAdmin):
     list_display = ('__unicode__', 'papers_edit_link_list',)
@@ -73,6 +86,12 @@ class ConditionSetAdmin(ImprovedModelAdmin):
     search_fields = ('name', 'conditions__type__name', 'conditions__type__short_name', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('conditions__type__short_name',)
     inlines = (DatasetInline,)
+
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.close();</script>')
+        return super(ConditionSetAdmin, self).response_change(request, obj)
 
 
 admin.site.register(Condition, ConditionAdmin)

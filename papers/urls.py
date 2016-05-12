@@ -9,5 +9,6 @@ urlpatterns = [
 
     # To get a zip file of data
     url(r'^(?P<pk>\d+).zip$', views.zipo, name='zipo'),
-    url(r'^(?P<pk>\d+)/YeastPhenome_(\d+)_datasets_list.txt$', views.datasets_list, name='datasets_list'),
+    url(r'^(?P<paper_id>\d+)/YeastPhenome_(\d+)_datasets_list.txt$', views.paper_datasets, name='paper_datasets'),
+    url(r'^(?P<paper_id>\d+)/YeastPhenome_(\d+)_(?P<dataset_id>\d+)_data.txt$', views.dataset_data, name='dataset_data'),
 ]

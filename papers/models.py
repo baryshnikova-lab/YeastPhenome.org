@@ -253,16 +253,16 @@ class Dataset(models.Model):
     def phenotypes(self):
         return self.observable2.name
 
-    def has_data(self):
+    def has_data_in_db(self):
         return self.data_set.exists()
-    has_data.boolean = True
+    has_data_in_db.boolean = True
 
 
 class Data(models.Model):
-    dataset = models.ForeignKey(Dataset, null=True, blank=True)
+    dataset = models.ForeignKey(Dataset)
     value = models.DecimalField(max_digits=10, decimal_places=3)
-    orf = models.CharField(max_length=50, null=True, blank=True)
+    orf = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return u'%s - %f' % (self.orf, self.value)
+        return u'%s - %s' % (self.orf, self.value)
 

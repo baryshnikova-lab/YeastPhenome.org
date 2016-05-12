@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <th scope="row">Authors</th>
-                    <td>{{ authors|join_and_more:20 }}</td>
+                    <td>{{ authors|join_and_more:1000 }}</td>
                 </tr>
                 <tr>
                     <th scope="row">Abstract</th>
@@ -69,25 +69,15 @@
 
             {% include "datasets_list.html" %}
 
-            <table id="papersTable" class="tablesorter table table-condensed" width="100%">
-                {% if request.GET.verbose >= 1 %}<col/><col/><col/><col/><col class="bg-info"/><col/><col class="bg-info"/><col class="bg-info"/>{% endif %}
+            <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
                 <thead>
                 <tr>
                     <th>Phenotypes</th>
                     <th>Conditions</th>
                     <th>Collection</th>
                     <th>Tested genes</th>
-                    {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
-                    <li>published</li>
-                    <li>available</li>
-                    <li>status</li>
-                </ul></th>{% endif %}
                     <th>Data type</th>
-                    {% if request.GET.verbose >= 1 %}<th>Data: <ul>
-                    <li>measured</li>
-                    <li>published</li>
-                    <li>data</li>
-                </ul></th>{% endif %}
+                    <th>Data</th>
                 </tr>
                 </thead><tbody>
             {% for dataset in object.dataset_set.all %}
@@ -97,6 +87,13 @@
                 <td>{{ dataset.collection }}</td>
                 <td>{{ dataset.tested_num }}</td>
                 <td>{{ dataset.data_available|capfirst }}</td>
+                <td>
+                    {% if dataset.has_data_in_db %}
+                    <a href="/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_{{ dataset.id }}_data.txt">Download</a>
+                    {% else %}
+                    <span class="text-muted">Not available yet</span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
             </tbody>
