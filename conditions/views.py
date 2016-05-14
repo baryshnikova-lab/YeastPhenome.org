@@ -2,6 +2,7 @@ from django.views import generic
 from django.views.generic.base import TemplateView
 from django.db.models import Count
 from django.http import HttpResponse
+from django.conf import settings
 import json
 
 from .models import ConditionType
@@ -19,6 +20,11 @@ class ConditionIndexView(generic.ListView):
 class ConditionDetailView(generic.DetailView):
     model = ConditionType
     template_name = 'conditions/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConditionDetailView, self).get_context_data(**kwargs)
+        context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+        return context
 
 
 class D3Packing(generic.ListView):

@@ -14,6 +14,17 @@ a:not(.btn) {
     text-decoration: underline;
 }
 
+.external:after{
+    white-space:nowrap;
+    padding-left:.3ex;
+    content:url("images/external-link-blue-medium.png");
+}
+
+.download:after {
+    font-family: FontAwesome;
+    content: '\2002\f019';
+}
+
 .table-no-border td, .table-no-border th {
     border: none !important;
 }
@@ -61,11 +72,7 @@ footer{
     font-style:italic;
 }
 
-.external:after{
-    white-space:nowrap;
-    padding-left:.3ex;
-    content:url("images/external-link-blue-medium.png");
-}
+
 
 thead td{
     text-align:center;

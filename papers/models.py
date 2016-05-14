@@ -216,7 +216,6 @@ class Dataset(models.Model):
     tested_num = models.IntegerField(default=0, null=True)
     tested_list_published = models.NullBooleanField()
     tested_source = models.ForeignKey(Source, null=True, blank=True, related_name='tested_source')
-    tested_can_release = models.NullBooleanField()
 
     DATA_CHOICES = (
         ('quantitative', 'quantitative'),
@@ -237,7 +236,6 @@ class Dataset(models.Model):
                                       null=True, blank=True)
 
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
-    data_can_release = models.NullBooleanField()
 
     def __unicode__(self):
         return u'%s | %s | %s' % (self.collection, self.phenotype, self.conditionset)
@@ -248,7 +246,15 @@ class Dataset(models.Model):
     def tested_genes_published(self):
         return self.tested_list_published
     tested_genes_published.boolean = True
-    tested_genes_published.allow_tags = True
+
+    def tested_space(self):
+        if self.tested_source and self.data_set.exists():
+            tested_space = self.data_set.count()
+        elif self.tested_num > 0:
+            tested_space = '~%s' % self.tested_num
+        else:
+            tested_space = 'N/A'
+        return tested_space
 
     def phenotypes(self):
         return self.observable2.name

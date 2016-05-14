@@ -72,10 +72,10 @@ class Phenotype(models.Model):
     modified_on = models.DateField(auto_now=True, null=True)
 
     def __unicode__(self):
-        if self.reporter == '':
-            return u'%s' % self.observable2
-        else:
+        if self.reporter:
             return u'%s (%s)' % (self.observable2, self.reporter)
+        else:
+            return u'%s' % self.observable2
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.observable2.id,)), self)

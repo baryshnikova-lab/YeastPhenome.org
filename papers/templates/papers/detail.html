@@ -20,7 +20,7 @@
             <table class="table">
                 <tr>
                     <th width="20%" scope="row" class="first">Pubmed ID</th>
-                    <td class="first"><a itemprop="PMID" class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></td>
+                    <td class="first"><a class="external" href="http://www.ncbi.nlm.nih.gov/pubmed/{{ object.pmid }}/">{{ object.pmid }}</a></td>
                 </tr>
                 <tr>
                     <th scope="row">Title</th>
@@ -58,8 +58,9 @@
 
             <div class="alert alert-warning" role="alert">
                 <strong>Warning:</strong> These data may contain errors.
-                <p>YeastPhenome.org is currently running in beta version.
-                    The data are available for download, but we cannot guarantee that no errors or code bugs have been introduced by the processing pipeline.
+                <p>
+                    YeastPhenome.org is running in beta version.
+                    The data are available for download, but, as of today, we cannot guarantee the absence of errors or code bugs introduced during processing.
                     This warning will be removed after all cross-checks and validations have been completed.
                     In the meantime, please, be careful when using the data.
                 </p>
@@ -75,23 +76,23 @@
                     <th>Phenotypes</th>
                     <th>Conditions</th>
                     <th>Collection</th>
-                    <th>Tested genes</th>
-                    <th>Data type</th>
+                    <th>Tested mutants</th>
                     <th>Data</th>
                 </tr>
-                </thead><tbody>
+                </thead>
+
+                <tbody>
             {% for dataset in object.dataset_set.all %}
             <tr>
                 <td>{{ dataset.phenotype.link_detail|safe }}</td>
                 <td>{{ dataset.conditionset.link_detail|safe }}</td>
                 <td>{{ dataset.collection }}</td>
-                <td>{{ dataset.tested_num }}</td>
-                <td>{{ dataset.data_available|capfirst }}</td>
+                <td>{{ dataset.tested_space }}</td>
                 <td>
                     {% if dataset.has_data_in_db %}
-                    <a href="/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_{{ dataset.id }}_data.txt">Download</a>
+                    <a class="download" href="/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_{{ dataset.id }}_data.txt">{{ dataset.data_available|capfirst }}</a>
                     {% else %}
-                    <span class="text-muted">Not available yet</span>
+                    <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
                     {% endif %}
                 </td>
             </tr>

@@ -68,12 +68,18 @@ class PaperDetailView(generic.DetailView):
             xml_data = read(handle)[0]
             article = xml_data['MedlineCitation']['Article']
             authors_list = [(u'%s %s' % (author['ForeName'], author['LastName'])) for author in article['AuthorList']]
+            if 'Year' in article['Journal']['JournalIssue']['PubDate']:
+                pubdate = article['Journal']['JournalIssue']['PubDate']['Year']
+            elif 'MedlineDate' in article['Journal']['JournalIssue']['PubDate']:
+                pubdate = article['Journal']['JournalIssue']['PubDate']['MedlineDate']
+            else:
+                pubdate = ''
 
             context['title'] = article['ArticleTitle']
             context['authors'] = authors_list
             context['abstract'] = article['Abstract']['AbstractText'][0]
             context['citation'] = u'%s %s; %s:%s' % (article['Journal']['ISOAbbreviation'],
-                                                      article['Journal']['JournalIssue']['PubDate']['Year'],
+                                                      pubdate,
                                                       article['Journal']['JournalIssue']['Volume'],
                                                       article['Pagination']['MedlinePgn'])
 
