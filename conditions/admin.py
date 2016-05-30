@@ -34,7 +34,7 @@ class ConditionAdmin(ImprovedModelAdmin):
     list_filter = ['type__name']
     ordering = ('type__short_name', 'dose')
     fields = ['type', 'dose']
-    search_fields = ('type__name', 'type__short_name', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id')
+    search_fields = ('type__name', 'type__short_name', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id', 'dose')
     raw_id_fields = ('type',)
 
     def response_change(self, request, obj):

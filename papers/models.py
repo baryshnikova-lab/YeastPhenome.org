@@ -238,7 +238,8 @@ class Dataset(models.Model):
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
 
     def __unicode__(self):
-        return u'%s | %s | %s' % (self.collection, self.phenotype, self.conditionset)
+        return u'%s | %s | %s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset,
+                                                 self.data_measured, self.data_published, self.data_available)
 
     class Meta:
         ordering = ['id']
