@@ -54,7 +54,8 @@ class ConditionType(models.Model):
     phenotypes_link_list.allow_tags = True
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset__conditions__type=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset__conditions__type=self)\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([(u'%s' % p.link_detail()) for p in self.papers()])
