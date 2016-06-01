@@ -252,10 +252,11 @@ class Dataset(models.Model):
         if self.tested_source and self.data_set.exists():
             tested_space = self.data_set.count()
         elif self.tested_num > 0:
-            tested_space = '~%s' % self.tested_num
+            tested_space = '<abbr title="Estimated number of tested mutants. The exact list of tested mutants is not available.">~%s</abbr>' % self.tested_num
         else:
             tested_space = 'N/A'
         return tested_space
+    tested_space.allow_tags = True
 
     def phenotypes(self):
         return self.observable2.name
