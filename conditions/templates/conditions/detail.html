@@ -78,7 +78,7 @@
                 <td>{{ dataset.phenotype.link_detail|safe }}</td>
                 <td>{{ dataset.conditionset.link_detail|safe }}</td>
                 <td>{{ dataset.collection }}</td>
-                <td>{{ dataset.tested_space }}</td>
+                <td>{{ dataset.tested_space|safe }}</td>
                 <td>
                     {% if dataset.has_data_in_db %}
                     <a class="download" href="/papers/{{ dataset.paper.id }}/{{ DOWNLOAD_PREFIX }}_{{ dataset.paper.pmid }}_{{ dataset.id }}_data.txt">{{ dataset.data_available|capfirst }}</a>
