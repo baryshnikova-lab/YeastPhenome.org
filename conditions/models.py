@@ -100,7 +100,7 @@ class ConditionSet(models.Model):
 
     def __unicode__(self):
         conditions_list = ", ".join([(u'%s' % condition) for condition in self.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
-        if self.name == '':
+        if not self.name or self.name == '':
             return u'%s' % conditions_list
         else:
             return u'%s (%s)' % (self.name, conditions_list)
