@@ -79,7 +79,7 @@ class Paper(models.Model):
             return ', '.join([(u'%s' % i) for i in self.conditiontypes()])
         else:
             num_remaining = num-20
-            return ', '.join([(u'%s' % i) for i in self.conditiontypes()[:num]]) + '... and ' + str(num_remaining) + ' more'
+            return ', '.join([(u'%s' % i) for i in self.conditiontypes()[:20]]) + '... and ' + str(num_remaining) + ' more'
 
     def datasets_summary(self):
         return self.collections_str_list() + '<br>' + self.phenotypes_str_list() + '<br>' + self.conditiontypes_str_list()
