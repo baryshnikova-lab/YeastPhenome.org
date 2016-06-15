@@ -72,7 +72,14 @@ class Paper(models.Model):
         return ConditionType.objects.filter(condition__conditionset__dataset__paper=self).distinct()
 
     def conditiontypes_str_list(self):
-        return ', '.join([(u'%s' % i) for i in self.conditiontypes()])
+        num = len(self.conditiontypes())
+        if num == 0:
+            return ''
+        elif num <= 20:
+            return ', '.join([(u'%s' % i) for i in self.conditiontypes()])
+        else:
+            num_remaining = num-20
+            return ', '.join([(u'%s' % i) for i in self.conditiontypes()[:num]]) + '... and ' + str(num_remaining) + ' more'
 
     def datasets_summary(self):
         return self.collections_str_list() + '<br>' + self.phenotypes_str_list() + '<br>' + self.conditiontypes_str_list()
@@ -171,6 +178,7 @@ class Collection(models.Model):
     shortname = models.CharField(max_length=200, null=True, blank=True)
     matingtype = models.CharField(max_length=200, null=True, blank=True)
     ploidy = models.IntegerField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return u'%s' % self.shortname
