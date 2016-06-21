@@ -5,16 +5,33 @@ from django.http import HttpResponse
 from django.conf import settings
 import json
 
+from django.shortcuts import render
+from django.db.models import Q
+
 from .models import ConditionType
+from conditions.forms import SearchForm
 
 
-class ConditionIndexView(generic.ListView):
-    model = ConditionType
-    template_name = 'conditions/index.html'
-    context_object_name = 'conditiontype_list'
+def index(request):
 
-    def get_queryset(self):
-        return ConditionType.objects.order_by('name')
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        queryset = ConditionType.objects.order_by('name')
+        q = request.GET['q']
+        f = Q(name__icontains=q) | Q(short_name__icontains=q) | Q(chebi_name__contains=q) | Q(pubchem_name__contains=q)
+        queryset = queryset.filter(f)
+
+        return render(request, 'conditions/index.html', {
+            'conditiontype_list': queryset,
+            'form': form,
+            'q': q,
+        })
+    else:
+        form = SearchForm()
+
+        return render(request, 'conditions/index.html', {
+            'form': form,
+        })
 
 
 class ConditionDetailView(generic.DetailView):

@@ -10,9 +10,25 @@
 {% include "navbar.html" with active='conditions' %}
 
 <div class="container-fluid">
+
     <h1>Experimental conditions</h1>
-    {% if conditiontype_list %}
-    <table id="papersTable" class="tablesorter table table-condensed" width="100%">
+
+    <div class="well">
+    <form class="form-horizontal" action="/conditions/" method="GET">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Search:</label>
+            <div class="col-sm-6">
+                <input type="search" name="q" value="{{ q }}" class="form-control" placeholder="Condition name, PubChem ID, ChEBI ID, etc.">
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+    </form>
+    </div>
+
+    {% if q and conditiontype_list %}
+    <table id="papersTable" class="tablesorter table table-striped" width="100%">
         <thead>
         <tr>
             <th width="25%">Name</th>
@@ -32,10 +48,12 @@
         {% endfor %}
         </tbody>
     </table>
-    {% else %}
-    <aside class="bg-warning">No papers are available.</aside>
+    {% elif q %}
+    <aside class="bg-warning">No conditions match these search criteria.</aside>
     {% endif %}
+
     {% include "footer.html" %}
+
 </div>
 
 <script>$(document).ready(function(){

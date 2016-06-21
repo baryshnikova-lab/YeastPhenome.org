@@ -65,6 +65,7 @@ footer{
     padding-top: 10px;
     margin-top: 20px;
     margin-bottom: 30px;
+    clear: left;
 }
 
 .nothing{
