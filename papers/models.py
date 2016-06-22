@@ -194,7 +194,7 @@ class Sourcetype(models.Model):
 
 class Source(models.Model):
     sourcetype = models.ForeignKey(Sourcetype, null=True, blank=True, related_name='sourcetype')
-    link = models.CharField(max_length=200, null=True, blank=True)
+    link = models.TextField(max_length=200, null=True, blank=True)
     person = models.CharField(max_length=200, null=True, blank=True)
     date = models.DateField(null=True)
     acknowledge = models.NullBooleanField()
