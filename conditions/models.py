@@ -29,17 +29,17 @@ class ConditionType(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        ordering = ['group', 'chebi_name', 'pubchem_name', 'short_name', 'name']
+        ordering = ['group', 'chebi_name', 'pubchem_name', 'name', 'other_names']
 
     def __unicode__(self):
         if self.chebi_name:
             type_name = self.chebi_name
         elif self.pubchem_name:
             type_name = self.pubchem_name
-        elif self.short_name:
-            type_name = self.short_name
-        else:
+        elif self.name:
             type_name = self.name
+        else:
+            type_name = self.other_names
         return u'%s' % type_name
 
     def definition(self):

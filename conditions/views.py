@@ -18,7 +18,7 @@ def index(request):
         form = SearchForm(request.GET)
         queryset = ConditionType.objects.order_by('name')
         q = request.GET['q']
-        f = Q(name__icontains=q) | Q(short_name__icontains=q) | Q(chebi_name__contains=q) | Q(pubchem_name__contains=q)
+        f = Q(name__icontains=q) | Q(other_names__icontains=q) | Q(chebi_name__contains=q) | Q(pubchem_name__contains=q)
         queryset = queryset.filter(f)
 
         return render(request, 'conditions/index.html', {
