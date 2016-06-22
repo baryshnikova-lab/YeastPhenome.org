@@ -34,8 +34,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th width="20%" scope="row">Published names</th>
-                    <td>{{ object.name }}</td>
+                    <th width="20%" scope="row">Other names used in publications</th>
+                    <td>
+                        {{ object.name }}{% if object.other_names %}, {{ object.other_names }}{% endif %}
+                    </td>
                 </tr>
 
             {% if object.definition %}

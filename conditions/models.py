@@ -8,7 +8,7 @@ from libchebipy import ChebiEntity
 
 class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
-    short_name = models.CharField(max_length=200, blank=True, null=True)
+    other_names = models.TextField(blank=True, null=True)
 
     pubchem_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
     pubchem_name = models.CharField(max_length=200, blank=True, null=True)

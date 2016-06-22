@@ -32,9 +32,9 @@ class ConditionAdmin(ImprovedModelAdmin):
     form = ConditionAdminForm
     list_display = ('id', 'type', 'dose', 'conditionsets_str_list')
     list_filter = ['type__name']
-    ordering = ('type__short_name', 'dose')
+    ordering = ('type__name', 'dose')
     fields = ['type', 'dose']
-    search_fields = ('type__name', 'type__short_name', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id', 'dose')
+    search_fields = ('type__name', 'type__other_names', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id', 'dose')
     raw_id_fields = ('type',)
 
     def response_change(self, request, obj):
@@ -55,8 +55,8 @@ class ConditionTypeAdmin(admin.ModelAdmin):
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}
-    search_fields = ('name', 'short_name', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
-    fields = ('name', 'short_name', 'group', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
+    search_fields = ('name', 'other_names', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
+    fields = ('name', 'other_names', 'group', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     readonly_fields = ('chebi_name', 'pubchem_name',)
     inlines = (ConditionInline,)
 
@@ -83,8 +83,8 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 class ConditionSetAdmin(ImprovedModelAdmin):
     list_display = ('__unicode__', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
-    search_fields = ('name', 'conditions__type__name', 'conditions__type__short_name', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
-    ordering = ('conditions__type__short_name',)
+    search_fields = ('name', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
+    ordering = ('conditions__type__name',)
     inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
