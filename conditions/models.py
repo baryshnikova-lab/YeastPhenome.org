@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from django.apps import apps
 from phenotypes.models import Phenotype
 
+from libchebipy import ChebiEntity
+
 
 class ConditionType(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
@@ -39,6 +41,13 @@ class ConditionType(models.Model):
         else:
             type_name = self.name
         return u'%s' % type_name
+
+    def definition(self):
+        if self.chebi_id:
+            entity = ChebiEntity('CHEBI:' + str(self.chebi_id))
+            return entity.get_definition()
+        else:
+            return ''
 
     def conditions(self):
         return Condition.objects.filter(type=self).order_by('dose')
