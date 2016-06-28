@@ -246,6 +246,9 @@ class Dataset(models.Model):
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
 
     def __unicode__(self):
+        return u'%s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset, self.paper)
+
+    def admin_name(self):
         return u'%s | %s | %s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset,
                                                  self.data_measured, self.data_published, self.data_available)
 
@@ -260,7 +263,7 @@ class Dataset(models.Model):
         if self.tested_source and self.data_set.exists():
             tested_space = self.data_set.count()
         elif self.tested_num > 0:
-            tested_space = '<abbr title="Estimated number of tested mutants. The exact list of tested mutants is not available.">~%s</abbr>' % self.tested_num
+            tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % self.tested_num
         else:
             tested_space = 'N/A'
         return tested_space

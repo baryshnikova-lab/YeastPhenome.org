@@ -50,7 +50,7 @@ class DatasetInline(ImprovedTabularInline):
     def admin_change_link(self, obj):
         if obj.id:
             return '<a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a>' \
-                   % (reverse("admin:papers_dataset_change", args=(obj.id,)), obj)
+                   % (reverse("admin:papers_dataset_change", args=(obj.id,)), obj.admin_name())
         else:
             return '<a href="%s?_popup=1&paper=%s" onclick="return showAddAnotherPopup(this);">Create new</a>' \
                    % (reverse("admin:papers_dataset_add"), self.parent_obj_id)
