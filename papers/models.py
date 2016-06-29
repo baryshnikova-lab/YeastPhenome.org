@@ -137,7 +137,7 @@ class Paper(models.Model):
     def history(self):
         queryset1 = Statusdata.objects.filter(paper=self).all().annotate(type=Value('data', CharField()))
         queryset2 = Statustested.objects.filter(paper=self).all().annotate(type=Value('tested strains', CharField()))
-        result_list = sorted(chain(queryset1, queryset2), key=attrgetter('status_date'))
+        result_list = sorted(chain(queryset1, queryset2), key=attrgetter('status_date','id'))
         return result_list
 
     def link_detail(self):
