@@ -13,6 +13,8 @@ from papers.models import Data, Dataset
 
 from conditions.forms import SearchForm
 
+from libchebipy import ChebiEntity
+
 
 def index(request):
 
@@ -46,27 +48,22 @@ class ConditionDetailView(generic.DetailView):
         return context
 
 
-class D3Packing(generic.ListView):
-    model = ConditionType
-    template_name = 'conditions/d3.html'
+def conditionclass(request, class_id):
+    class_entity = ChebiEntity('CHEBI:' + str(class_id))
+    class_name = class_entity.get_name()
+    children = []
+    for relation in class_entity.get_incomings():
+        if relation.get_type() == 'has_role':
+            tid = relation.get_target_chebi_id()
+            tid = int(filter(str.isdigit, tid))
+            children.append(tid)
 
-    def flare(self,ctl):
-        out={'name':'conditions','children':[]}
-        for ct in ctl:
-            paper_count=len(ct.paper_list())
-            if 0<paper_count:
-                out['children'].append({
-                    'name':ct.__unicode__(),
-                    'size':paper_count,
-                    'id':ct.id,
-                })
-        return out
-
-    def get_context_data(self,**kwargs):
-        context = super(generic.ListView,self).get_context_data(**kwargs)
-        # Luckily json is based on JavaScript so we just dump it out with this.
-        context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
-        return context
+    conditiontypes = ConditionType.objects.filter(chebi_id__in=children)
+    return render(request, 'conditions/class.html', {
+        'class_id': class_id,
+        'class_name': class_name,
+        'conditiontypes': conditiontypes,
+    })
 
 
 def data(request, conditiontype_id):
@@ -98,3 +95,26 @@ def data(request, conditiontype_id):
     response['Content-Disposition'] = 'attachment; filename="%s_condition_%d_data.txt"' % (settings.DOWNLOAD_PREFIX, conditiontype.id)
 
     return response
+
+
+class D3Packing(generic.ListView):
+    model = ConditionType
+    template_name = 'conditions/d3.html'
+
+    def flare(self,ctl):
+        out={'name':'conditions','children':[]}
+        for ct in ctl:
+            paper_count=len(ct.paper_list())
+            if 0<paper_count:
+                out['children'].append({
+                    'name':ct.__unicode__(),
+                    'size':paper_count,
+                    'id':ct.id,
+                })
+        return out
+
+    def get_context_data(self,**kwargs):
+        context = super(generic.ListView,self).get_context_data(**kwargs)
+        # Luckily json is based on JavaScript so we just dump it out with this.
+        context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
+        return context

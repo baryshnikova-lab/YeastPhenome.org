@@ -260,7 +260,7 @@ class Dataset(models.Model):
     tested_genes_published.boolean = True
 
     def tested_space(self):
-        if self.data_set.exists():
+        if self.tested_source and self.data_set.exists():
             tested_space = self.data_set.count()
         elif self.tested_num > 0:
             tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % self.tested_num

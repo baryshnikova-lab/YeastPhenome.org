@@ -49,6 +49,19 @@ class ConditionType(models.Model):
         else:
             return ''
 
+    def has_roles(self):
+        if self.chebi_id:
+            entity = ChebiEntity('CHEBI:' + str(self.chebi_id))
+            outdict = dict()
+            for relation in entity.get_outgoings():
+                if relation.get_type() == 'has_role':
+                    tid = relation.get_target_chebi_id()
+                    t = ChebiEntity(tid)
+                    outdict[t.get_name()] = tid
+            return outdict
+        else:
+            return ''
+
     def conditions(self):
         return Condition.objects.filter(type=self).order_by('dose')
 
