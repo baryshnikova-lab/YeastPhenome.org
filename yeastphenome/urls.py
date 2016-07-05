@@ -13,5 +13,6 @@ urlpatterns = [
     url(r'^papers/', include('papers.urls', namespace="papers")),
     url(r'^phenotypes/', include('phenotypes.urls', namespace="phenotypes")),
     url(r'^conditions/', include('conditions.urls', namespace="conditions")),
+    url(r'^data/', include('datasets.urls', namespace="datasets")),
     url(r'^contributors/', papers.views.ContributorsListView.as_view(), name="contributors")
 ]

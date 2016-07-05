@@ -9,6 +9,7 @@ from operator import attrgetter
 
 from phenotypes.models import Observable2
 from conditions.models import ConditionType
+from datasets.models import Collection, Source
 
 import os
 
@@ -172,116 +173,4 @@ class Statustested(models.Model):
     def __unicode__(self):
         return u'%s' % self.status
 
-
-class Collection(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    shortname = models.CharField(max_length=200, null=True, blank=True)
-    matingtype = models.CharField(max_length=200, null=True, blank=True)
-    ploidy = models.IntegerField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-
-    def __unicode__(self):
-        return u'%s' % self.shortname
-
-
-class Sourcetype(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    shortname = models.CharField(max_length=200, null=True, blank=True)
-
-    def __unicode__(self):
-        return u'%s' % self.name
-
-
-class Source(models.Model):
-    sourcetype = models.ForeignKey(Sourcetype, null=True, blank=True, related_name='sourcetype')
-    link = models.TextField(max_length=200, null=True, blank=True)
-    person = models.CharField(max_length=200, null=True, blank=True)
-    date = models.DateField(null=True)
-    acknowledge = models.NullBooleanField()
-    release = models.NullBooleanField()
-
-    def __unicode__(self):
-        if self.person == '':
-            return u'%s' % self.sourcetype
-        else:
-            return u'%s' % self.person
-
-    def papers(self):
-        return Paper.objects.filter(dataset__tested_source=self).distinct()
-
-    def papers_str_list(self):
-        return ', '.join([(u'%s' % p) for p in self.papers()])
-
-
-class Dataset(models.Model):
-    paper = models.ForeignKey(Paper)
-    conditionset = models.ForeignKey('conditions.ConditionSet', null=True, blank=True)
-    phenotype = models.ForeignKey('phenotypes.Phenotype', null=True, blank=True)
-    collection = models.ForeignKey(Collection, null=True, blank=True)
-
-    notes = models.TextField(null=True, blank=True)
-
-    tested_num = models.IntegerField(default=0, null=True)
-    tested_list_published = models.NullBooleanField()
-    tested_source = models.ForeignKey(Source, null=True, blank=True, related_name='tested_source')
-
-    DATA_CHOICES = (
-        ('quantitative', 'quantitative'),
-        ('quantitative only for hits', 'quantitative only for hits'),
-        ('discrete', 'discrete'),
-        ('none', 'none'),
-        ('unknown', 'unknown'),
-    )
-
-    data_measured = models.CharField(max_length=200,
-                                     choices=DATA_CHOICES,
-                                     null=True, blank=True)
-    data_published = models.CharField(max_length=200,
-                                      choices=DATA_CHOICES,
-                                      null=True, blank=True)
-    data_available = models.CharField(max_length=200,
-                                      choices=DATA_CHOICES,
-                                      null=True, blank=True)
-
-    data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
-
-    def __unicode__(self):
-        return u'%s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset, self.paper)
-
-    def admin_name(self):
-        return u'%s | %s | %s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset,
-                                                 self.data_measured, self.data_published, self.data_available)
-
-    class Meta:
-        ordering = ['id']
-
-    def tested_genes_published(self):
-        return self.tested_list_published
-    tested_genes_published.boolean = True
-
-    def tested_space(self):
-        if self.tested_source and self.data_set.exists():
-            tested_space = self.data_set.count()
-        elif self.tested_num > 0:
-            tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % self.tested_num
-        else:
-            tested_space = 'N/A'
-        return tested_space
-    tested_space.allow_tags = True
-
-    def phenotypes(self):
-        return self.observable2.name
-
-    def has_data_in_db(self):
-        return self.data_set.exists()
-    has_data_in_db.boolean = True
-
-
-class Data(models.Model):
-    dataset = models.ForeignKey(Dataset)
-    value = models.DecimalField(max_digits=10, decimal_places=3)
-    orf = models.CharField(max_length=50)
-
-    def __unicode__(self):
-        return u'%s - %s' % (self.orf, self.value)
 

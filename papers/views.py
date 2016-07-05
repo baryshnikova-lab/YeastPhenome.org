@@ -2,7 +2,8 @@ from django.db.models import Q
 from django.views import generic
 from django.shortcuts import render
 
-from papers.models import Paper, Dataset
+from papers.models import Paper
+
 from Bio.Entrez import efetch, read
 
 
@@ -136,14 +137,4 @@ def paper_datasets(request, paper_id):
     return response
 
 
-def dataset_data(request, paper_id, dataset_id):
-    dataset = get_object_or_404(Dataset, pk=dataset_id)
 
-    txt1 = u'# Paper: %s (PMID %s)\n' % (dataset.paper, dataset.paper.pmid)
-    txt2 = u'# Dataset: %s\n' % dataset
-    txt3 = '\n'.join([(u'%s\t%s' % (datapoint.orf, datapoint.value)) for datapoint in dataset.data_set.all()])
-
-    response = HttpResponse(txt1+txt2+txt3, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="%s_%d_%d_data.txt"' % (settings.DOWNLOAD_PREFIX, dataset.paper.pmid, dataset.id)
-
-    return response

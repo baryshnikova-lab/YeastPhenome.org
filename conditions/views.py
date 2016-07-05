@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 
 from conditions.models import ConditionType
-from papers.models import Data, Dataset
+from datasets.models import Dataset, Data
 
 from conditions.forms import SearchForm
 
@@ -63,38 +63,8 @@ def conditionclass(request, class_id):
         'class_id': class_id,
         'class_name': class_name,
         'conditiontypes': conditiontypes,
+        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX
     })
-
-
-def data(request, conditiontype_id):
-    conditiontype = get_object_or_404(ConditionType, pk=conditiontype_id)
-    datasets = conditiontype.datasets()
-    data = Data.objects.filter(dataset_id__in=datasets.values('id')).all()
-
-    orfs = list(data.values_list('orf', flat=True).distinct())
-    datasets_ids = list(data.values_list('dataset_id', flat=True).order_by('dataset__paper').distinct())
-    matrix = [[None] * len(datasets_ids) for i in orfs]
-
-    for datapoint in data:
-        i = orfs.index(datapoint.orf)
-        j = datasets_ids.index(datapoint.dataset_id)
-        matrix[i][j] = datapoint.value
-
-    txt1 = u'# Condition: %s (ID %s)\n' % (conditiontype, conditiontype.id)
-    txt2 = '\t' + '\t'.join([u'%s' % str(get_object_or_404(Dataset, pk=dataset_id)) for dataset_id in datasets_ids]) + '\n'
-
-    data_row = []
-    for i, orf in enumerate(orfs):
-        new_row = orf + '\t' + '\t'.join([str(val) for val in matrix[i]])
-        print(new_row)
-        data_row.append(new_row)
-
-    txt3 = '\n'.join(data_row)
-
-    response = HttpResponse(txt1+txt2+txt3, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="%s_condition_%d_data.txt"' % (settings.DOWNLOAD_PREFIX, conditiontype.id)
-
-    return response
 
 
 class D3Packing(generic.ListView):

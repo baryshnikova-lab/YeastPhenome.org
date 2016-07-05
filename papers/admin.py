@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import ForeignKey
 from django.http import HttpResponse
 
-from papers.models import Paper, Dataset, Collection, Source, Status, Statusdata, Statustested
+from papers.models import Paper, Status, Statusdata, Statustested
+from datasets.models import Dataset, Collection, Source
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
 
@@ -50,10 +51,10 @@ class DatasetInline(ImprovedTabularInline):
     def admin_change_link(self, obj):
         if obj.id:
             return '<a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a>' \
-                   % (reverse("admin:papers_dataset_change", args=(obj.id,)), obj.admin_name())
+                   % (reverse("admin:datasets_dataset_change", args=(obj.id,)), obj.admin_name())
         else:
             return '<a href="%s?_popup=1&paper=%s" onclick="return showAddAnotherPopup(this);">Create new</a>' \
-                   % (reverse("admin:papers_dataset_add"), self.parent_obj_id)
+                   % (reverse("admin:datasets_dataset_add"), self.parent_obj_id)
     admin_change_link.allow_tags = True
 
     def make_a_copy_link(self, obj):
@@ -65,7 +66,7 @@ class DatasetInline(ImprovedTabularInline):
             f_value = str(getattr(obj, f_name))
             if f.name != 'id' and f_value != 'None':
                 query_string += "&" + f.name + "=" + f_value
-        return '<a id="id_user" href="%s?_popup=1%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:papers_dataset_add"), query_string)
+        return '<a id="id_user" href="%s?_popup=1%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
     make_a_copy_link.allow_tags = True
 
 
