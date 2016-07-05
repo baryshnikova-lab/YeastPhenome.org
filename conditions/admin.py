@@ -6,7 +6,7 @@ from pubchempy import Compound
 from libchebipy import ChebiEntity
 
 from conditions.models import ConditionSet, Condition, ConditionType
-from papers.models import Dataset
+from datasets.models import Dataset
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
 

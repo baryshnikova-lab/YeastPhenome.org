@@ -68,7 +68,7 @@
 
             {% if object.dataset_set.all %}
 
-            {% include "datasets_list.html" %}
+            <a href="/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_datasets_list.txt">Download the list of datasets</a>
 
             <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
                 <thead>
@@ -90,7 +90,7 @@
                 <td>{{ dataset.tested_space|safe }}</td>
                 <td>
                     {% if dataset.has_data_in_db %}
-                    <a class="download" href="/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_{{ dataset.id }}_data.txt">{{ dataset.data_available|capfirst }}</a>
+                    <a class="download" href="/data/datasets/{{ dataset.id }}/{{ DOWNLOAD_PREFIX }}_dataset:{{ dataset.id}}_data.txt">{{ dataset.data_available|capfirst }}</a>
                     {% else %}
                     <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
                     {% endif %}
@@ -99,6 +99,8 @@
             {% endfor %}
             </tbody>
             </table>
+
+            <a href="/data/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_pmid:{{ object.pmid }}_data.txt">Download data matrix</a>
 
             {% endif %}
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.apps import apps
+
 from phenotypes.models import Phenotype
 
 from libchebipy import ChebiEntity
@@ -84,7 +85,7 @@ class ConditionType(models.Model):
     papers_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('papers', 'Dataset').objects.filter(conditionset__conditions__type=self)\
+        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset__conditions__type=self)\
             .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
 
     def link_detail(self):
