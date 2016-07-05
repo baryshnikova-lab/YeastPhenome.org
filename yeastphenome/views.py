@@ -21,7 +21,7 @@ def index(request):
 
     context = {
         'paper_num_total': queryset.count(),
-        'phenotype_num_total': Observable2.objects.exclude(phenotype__dataset=None).count(),
+        'phenotype_num_total': Observable2.objects.exclude(phenotype__dataset__isnull=True).count(),
         'condition_num': ConditionSet.objects.all().count(),
         'updated': latest_paper,
         'form': form,

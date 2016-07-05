@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.apps import apps
 
 
 class Collection(models.Model):
@@ -37,7 +38,7 @@ class Source(models.Model):
             return u'%s' % self.person
 
     def papers(self):
-        return Paper.objects.filter(dataset__tested_source=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__tested_source=self).distinct()
 
     def papers_str_list(self):
         return ', '.join([(u'%s' % p) for p in self.papers()])
