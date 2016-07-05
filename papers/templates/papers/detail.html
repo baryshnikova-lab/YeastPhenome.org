@@ -100,7 +100,9 @@
             </tbody>
             </table>
 
+            {% if USER_AUTH %}
             <a href="/data/papers/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_pmid:{{ object.pmid }}_data.txt">Download data matrix</a>
+            {% endif %}
 
             {% endif %}
 

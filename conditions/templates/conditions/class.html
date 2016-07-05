@@ -81,7 +81,9 @@
                 </tbody>
             </table>
 
+            {% if USER_AUTH %}
             <a href="/data/chebi/{{ class_id }}/{{ DOWNLOAD_PREFIX }}_chebi:{{ class_id }}_data.txt">Download data matrix</a>
+            {% endif %}
 
             {% endif %}
 

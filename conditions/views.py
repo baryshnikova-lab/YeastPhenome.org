@@ -45,6 +45,7 @@ class ConditionDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConditionDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+        context['USER_AUTH'] = self.request.user.is_authenticated()
         return context
 
 
@@ -63,7 +64,8 @@ def conditionclass(request, class_id):
         'class_id': class_id,
         'class_name': class_name,
         'conditiontypes': conditiontypes,
-        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX
+        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
+        'USER_AUTH': request.user.is_authenticated()
     })
 
 

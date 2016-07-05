@@ -98,7 +98,9 @@
             </tbody>
             </table>
 
+            {% if USER_AUTH %}
             <a href="/data/conditions/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_condition:{{ object.id }}_data.txt">Download data matrix</a>
+            {% endif %}
 
             {% endif %}
 

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 from papers.models import Paper
 from datasets.models import Dataset, Data
@@ -10,6 +11,7 @@ from conditions.models import ConditionType
 from libchebipy import ChebiEntity
 
 
+@login_required
 def data(request, domain, id):
 
     file_header = ''
