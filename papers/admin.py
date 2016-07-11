@@ -42,6 +42,7 @@ class DatasetInline(ImprovedTabularInline):
     fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     extra = 0
+    max_num = 5000
 
     def get_formset(self, request, obj=None, **kwargs):
         if obj:
