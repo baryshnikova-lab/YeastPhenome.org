@@ -55,7 +55,7 @@ def data(request, domain, id):
         matrix[i][j] = datapoint.value
 
     column_headers = '\t' + '\t'.join(
-        [u'%s' % str(get_object_or_404(Dataset, pk=dataset_id)) for dataset_id in datasets_ids]) + '\n'
+        [u'%s' % get_object_or_404(Dataset, pk=dataset_id) for dataset_id in datasets_ids]) + '\n'
 
     data_row = []
     for i, orf in enumerate(orfs):
