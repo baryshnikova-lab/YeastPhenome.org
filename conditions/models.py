@@ -143,7 +143,7 @@ class ConditionSet(models.Model):
     #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
     def link_detail(self):
-        return ', '.join([c.link_detail() for c in self.conditions.all()])
+        return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
     link_detail.allow_tags = True
 
     def link_edit(self):
