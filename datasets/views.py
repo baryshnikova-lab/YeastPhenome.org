@@ -41,7 +41,7 @@ def data(request, domain, id):
                 tid = int(filter(str.isdigit, tid))
                 children.append(tid)
         datasets = Dataset.objects.filter(conditionset__conditions__type__chebi_id__in=children)
-        file_header = u'# ChEBI: %s\n' % id
+        file_header = u'# Data for conditions annotated as %s (ChEBI:%s)\n' % (chebi_entity.get_name(), id)
 
     data = Data.objects.filter(dataset_id__in=datasets.values('id')).all()
 
