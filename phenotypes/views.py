@@ -1,14 +1,8 @@
 import json
-from django.shortcuts import render
 
-from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.core import serializers
 from django.views import generic
-from django.views.generic.base import TemplateView
-from django.db.models import Count
-from django.http import HttpResponse
+from django.conf import settings
+
 
 from phenotypes.models import Observable2
 
@@ -33,6 +27,12 @@ class ObservableIndexView(generic.ListView):
 class ObservableDetailView(generic.DetailView):
     model = Observable2
     template_name = 'phenotypes/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ObservableDetailView, self).get_context_data(**kwargs)
+        context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+        context['USER_AUTH'] = self.request.user.is_authenticated()
+        return context
 
 
 class D3Packing(generic.ListView):

@@ -2,86 +2,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-{% include "head.html" with JavaScript='tablesorter' %}
-<title>{{ object|capfirst }} / Phenotypes / {{ SITE_NAME }}</title>
+    {% include "head.html" with JavaScript='tablesorter' %}
+    <title>{{ object|capfirst }} / Phenotypes / {{ SITE_NAME }}</title>
 </head>
 
 <body>
+
 {% include "navbar.html" with active='phenotypes' %}
+
 <div class="container-fluid">
-<hgroup><p>
-{% for ancestor in object.get_ancestors %}
-{% filter multiply:ancestor.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} {{ ancestor.link_detail|safe|capfirst }}</br>
-{% endfor %}
-</p><h1>{{ object|capfirst }}</h1>
-</hgroup>
 
-{% comment %}
-<!-- I can't find an example of output from this, so for now lets
-     comment out. -->
+    <hgroup>
+        <h1>{{ object|capfirst }}</h1>
+        <p>
+            {% for ancestor in object.get_ancestors %}
+            {% filter multiply:ancestor.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} {{ ancestor.link_detail|safe|capfirst }}</br>
+            {% endfor %}
+        </p>
+    </hgroup>
 
-<p><strong>Description.</strong> {{ object.description }}</p>
-<p><strong>Datasets.</strong></p>
-{% endcomment %}
 
-{% if object.datasets %}
-<table id="papersTable" class="tablesorter table table-condensed" width="100%">
-    {% if request.GET.verbose >= 1 %}
-    <col/>
-    <col class="bg-info"/>
-    <col/>
-    <col/>
-    <col/>
-    <col class="bg-info"/>
-    <col/>
-    <col class="bg-info"/>
+    <h3>Datasets</h3>
+
+    <div class="alert alert-warning" role="alert">
+        <strong>Warning:</strong> These data may contain errors.
+        <p>
+            YeastPhenome.org is running in beta version.
+            The data are available for download, but, as of today, we cannot guarantee the absence of errors or code bugs introduced during processing.
+            This warning will be removed after all cross-checks and validations have been completed.
+            In the meantime, please, be careful when using the data.
+        </p>
+    </div>
+
+    {% if object.datasets %}
+    <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
+
+        <thead>
+        <th>Papers</th>
+        <th>Phenotype</th>
+        <th>Conditions</th>
+        <th>Collection</th>
+        <th>Tested mutants</th>
+        <th>Data</th>
+        </thead>
+
+        <tbody>
+        {% for dataset in object.datasets %}
+        <tr>
+            <td>{{ dataset.paper.link_detail|safe }}</td>
+            <td>{{ dataset.phenotype.link_detail|safe }}</td>
+            <td>{{ dataset.conditionset.link_detail|safe }}</td>
+            <td>{{ dataset.collection }}</td>
+            <td>{{ dataset.tested_space|safe }}</td>
+            <td>
+                {% if dataset.has_data_in_db %}
+                <a class="download" href="/data/datasets/{{ dataset.id }}/{{ DOWNLOAD_PREFIX }}_dataset:{{dataset.id}}_data.txt">{{ dataset.data_available|capfirst }}</a>
+                {% else %}
+                <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if USER_AUTH %}
+    <a href="/data/phenotypes/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_phenotype:{{ object.id }}_data.txt">Download data matrix</a>
     {% endif %}
-  <thead>
-    <tr>
-      <th>Paper</th>
-      {% if request.GET.verbose >= 1 %}<th>Phenotype (varient)</th>{% endif %}
-      <th>Conditions</th>
-      <th>Collection</th>
-      <th>Tested genes</th>
-      {% if request.GET.verbose >= 1 %}<th>Tested genes: <ul>
-	  <li>published</li>
-	  <li>available</li>
-      </ul></th>{% endif %}
-      <th>Data type</th>
-      {% if request.GET.verbose >= 1 %}<th>Data: <ul>
-	  <li>measured</li>
-	  <li>published</li>
-	  <li>source</li>
-      </ul></th>{% endif %}
-    </tr>
-  </thead><tbody>
-    {% for dataset in object.datasets %}
-    <tr>
-      <td class="text-nowrap">{{ dataset.paper.link_detail|safe }}</td>
-      {% if request.GET.verbose >= 1 %}<td>{{ dataset.phenotype }}</td>{% endif %}
-      <td>{{ dataset.conditionset.link_detail|safe }}</td>
-      <td>{{ dataset.collection }}</td>
-      <td>{{ dataset.tested_num }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.tested_genes_published|yesno|capfirst }}</li>
-	  <li>dataset.tested_source|safe</li>
-      </ul></td>
-      {% endif %}
-      <td>{{ dataset.data_available|capfirst }}</td>
-      {% if request.GET.verbose >= 1 %}<td><ul>
-	  <li>{{ dataset.data_measured|capfirst }}</li>
-	  <li>{{ dataset.data_published|capfirst }}</li>
-	  <li>{{ dataset.data_source|safe }}</li>
-      </ul></td>{% endif %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<aside class="bg-warning">No datasets are available.</aside>
-{% endif %}
-{% include "footer.html" %}
-</div{# container-fluid #}>
+
+    {% endif %}
+
+    {% include "footer.html" %}
+
+</div>
 
 <script>$(document).ready(function(){
  $("#papersTable").tablesorter();

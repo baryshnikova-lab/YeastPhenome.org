@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^(?P<domain>datasets)/(?P<id>\d+)/', views.data, name='data'),
     url(r'^(?P<domain>conditions)/(?P<id>\d+)/', views.data, name='data'),
     url(r'^(?P<domain>chebi)/(?P<id>\d+)/', views.data, name='data'),
+    url(r'^(?P<domain>phenotypes)/(?P<id>\d+)/', views.data, name='data'),
 ]

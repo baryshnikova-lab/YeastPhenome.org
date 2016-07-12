@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from papers.models import Paper
 from datasets.models import Dataset, Data
 from conditions.models import ConditionType
+from phenotypes.models import Observable2
 
 from libchebipy import ChebiEntity
 
@@ -42,6 +43,11 @@ def data(request, domain, id):
                 children.append(tid)
         datasets = Dataset.objects.filter(conditionset__conditions__type__chebi_id__in=children)
         file_header = u'# Data for conditions annotated as %s (ChEBI:%s)\n' % (chebi_entity.get_name(), id)
+
+    if domain == 'phenotypes':
+        phenotype = get_object_or_404(Observable2, pk=id)
+        datasets = phenotype.datasets()
+        file_header = u'# Phenotype: %s (ID %s)\n' % (phenotype, phenotype.id)
 
     data = Data.objects.filter(dataset_id__in=datasets.values('id')).all()
 
