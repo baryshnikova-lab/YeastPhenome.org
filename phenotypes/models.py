@@ -43,21 +43,27 @@ class Observable2(MPTTModel):
         return a
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype__observable2=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype__observable2=self)\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
     papers_link_list.allow_tags = True
 
     def conditiontypes(self):
-        return apps.get_model('conditions','ConditionType').objects.filter(condition__conditionset__dataset__phenotype__observable2=self).distinct()
+        return apps.get_model('conditions','ConditionType').objects\
+            .filter(condition__conditionset__dataset__phenotype__observable2=self)\
+            .exclude(condition__conditionset__dataset__paper__latest_data_status__status__status_name='not relevant')\
+            .distinct()
 
     def conditiontypes_link_list(self):
         return ', '.join([r.link_detail() for r in self.conditiontypes()])
     conditiontypes_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(phenotype__observable2=self).distinct()
+        return apps.get_model('datasets', 'Dataset').objects.filter(phenotype__observable2=self) \
+            .exclude(paper__latest_data_status__status__status_name='not relevant')\
+            .distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.id,)), self)
@@ -93,7 +99,8 @@ class Phenotype(models.Model):
     observable2_name.allow_tags = True
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
