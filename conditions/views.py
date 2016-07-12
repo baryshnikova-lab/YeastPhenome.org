@@ -59,7 +59,8 @@ def conditionclass(request, class_id):
             tid = int(filter(str.isdigit, tid))
             children.append(tid)
 
-    conditiontypes = ConditionType.objects.filter(chebi_id__in=children)
+    conditiontypes = ConditionType.objects.filter(chebi_id__in=children)\
+        .exclude(condition__conditionset__dataset__paper__latest_data_status__status__status_name='not relevant')
     return render(request, 'conditions/class.html', {
         'class_id': class_id,
         'class_name': class_name,
