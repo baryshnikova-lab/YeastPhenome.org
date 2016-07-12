@@ -2,6 +2,8 @@ from django.contrib import admin
 from django import forms
 from django.http import HttpResponse
 
+import re
+
 from pubchempy import Compound
 from libchebipy import ChebiEntity
 
@@ -62,7 +64,14 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if form.cleaned_data['chebi_id']:
-            chebi_comb = ChebiEntity('CHEBI:'+str(form.cleaned_data['chebi_id']))
+            chebi_id = form.cleaned_data['chebi_id']
+            chebi_comb = ChebiEntity('CHEBI:'+str(chebi_id))
+            parent_id = chebi_comb.get_parent_id()
+            if parent_id:
+                s = re.findall(r'\d+', parent_id)
+                chebi_id = int(s[0])
+                chebi_comb = ChebiEntity('CHEBI:'+str(chebi_id))
+            obj.chebi_id = chebi_id
             obj.chebi_name = chebi_comb.get_name()
         else:
             obj.chebi_name = None
