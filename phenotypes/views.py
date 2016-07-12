@@ -31,9 +31,9 @@ class ObservableIndexView(generic.ListView):
 
 
 class ObservableDetailView(generic.DetailView):
+    model = Observable2
+    template_name = 'phenotypes/detail.html'
 
-	model = Observable2
-	template_name = 'phenotypes/detail.html'
 
 class D3Packing(generic.ListView):
     model = Observable2

@@ -57,7 +57,7 @@ class Observable2(MPTTModel):
     conditiontypes_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('papers', 'Dataset').objects.filter(phenotype__observable2=self).distinct()
+        return apps.get_model('datasets', 'Dataset').objects.filter(phenotype__observable2=self).distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.id,)), self)
