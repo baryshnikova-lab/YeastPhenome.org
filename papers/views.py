@@ -54,6 +54,9 @@ class PaperDetailView(generic.DetailView):
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
 
+        context['datasets'] = obj.dataset_set.all
+        context['id'] = obj.id
+
         # Give credit if credit is due.
         names = obj.acknowledgements_str_list()
         to_acknowledge = []

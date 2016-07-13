@@ -32,6 +32,8 @@ class ObservableDetailView(generic.DetailView):
         context = super(ObservableDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
+        context['datasets'] = context['object'].datasets
+        context['id'] = context['object'].id
         return context
 
 

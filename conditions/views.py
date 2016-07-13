@@ -46,6 +46,8 @@ class ConditionDetailView(generic.DetailView):
         context = super(ConditionDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
+        context['datasets'] = context['object'].datasets
+        context['id'] = context['object'].id
         return context
 
 
@@ -61,10 +63,13 @@ def conditionclass(request, class_id):
 
     conditiontypes = ConditionType.objects.filter(chebi_id__in=children)\
         .exclude(condition__conditionset__dataset__paper__latest_data_status__status__status_name='not relevant')
+    datasets = Dataset.objects.filter(conditionset__conditions__type__in=conditiontypes)\
+        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
     return render(request, 'conditions/class.html', {
-        'class_id': class_id,
+        'id': class_id,
         'class_name': class_name,
         'conditiontypes': conditiontypes,
+        'datasets': datasets,
         'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
         'USER_AUTH': request.user.is_authenticated()
     })

@@ -100,3 +100,6 @@ thead td{
     border-top: none;
 }
 
+.dataset-details {
+    padding-top: 10px;
+}

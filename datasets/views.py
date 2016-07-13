@@ -72,6 +72,6 @@ def data(request, domain, id):
     txt3 = '\n'.join(data_row)
 
     response = HttpResponse(file_header+column_headers+txt3, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="%s_%s:%s_data.txt"' % (settings.DOWNLOAD_PREFIX, domain, id)
+    response['Content-Disposition'] = 'attachment; filename="%s_%s_%s_data.txt"' % (settings.DOWNLOAD_PREFIX, domain, id)
 
     return response

@@ -20,7 +20,7 @@
                 <tr>
                     <th width="20%" scope="row" class="first">ChEBI</th>
                     <td class="first">
-                        <a class="external" href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:{{ class_id }}">CHEBI:{{ class_id }}</a>
+                        <a class="external" href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:{{ class_id }}">CHEBI:{{ id }}</a>
                     </td>
                 </tr>
                 <tr>
@@ -35,55 +35,9 @@
                 </tr>
             </table>
 
-            <h3>Datasets</h3>
-
-            <div class="alert alert-warning" role="alert">
-                <strong>Warning:</strong> These data may contain errors.
-                <p>
-                    YeastPhenome.org is running in beta version.
-                    The data are available for download, but, as of today, we cannot guarantee the absence of errors or code bugs introduced during processing.
-                    This warning will be removed after all cross-checks and validations have been completed.
-                    In the meantime, please, be careful when using the data.
-                </p>
-            </div>
-
             {% if conditiontypes %}
-            <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
 
-                <thead>
-                <th>Papers</th>
-                <th>Phenotype</th>
-                <th>Conditions</th>
-                <th>Collection</th>
-                <th>Tested mutants</th>
-                <th>Data</th>
-                </thead>
-
-                <tbody>
-                {% for conditiontype in conditiontypes %}
-                {% for dataset in conditiontype.datasets %}
-                <tr>
-                    <td>{{ dataset.paper.link_detail|safe }}</td>
-                    <td>{{ dataset.phenotype.link_detail|safe }}</td>
-                    <td>{{ dataset.conditionset.link_detail|safe }}</td>
-                    <td>{{ dataset.collection }}</td>
-                    <td>{{ dataset.tested_space|safe }}</td>
-                    <td>
-                        {% if dataset.has_data_in_db %}
-                        <a class="download" href="/data/datasets/{{ dataset.id }}/{{ DOWNLOAD_PREFIX }}_dataset:{{ dataset.id}}_data.txt">{{ dataset.data_available|capfirst }}</a>
-                        {% else %}
-                        <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                {% endfor %}
-                </tbody>
-            </table>
-
-            {% if USER_AUTH %}
-            <a href="/data/chebi/{{ class_id }}/{{ DOWNLOAD_PREFIX }}_chebi:{{ class_id }}_data.txt">Download data matrix</a>
-            {% endif %}
+            {% include "datasets/datasets_table.html" with template='chebi' %}
 
             {% endif %}
 

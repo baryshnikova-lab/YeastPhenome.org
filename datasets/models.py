@@ -32,10 +32,20 @@ class Source(models.Model):
     release = models.NullBooleanField()
 
     def __unicode__(self):
-        if self.person == '':
-            return u'%s' % self.sourcetype
-        else:
+        if self.person:
             return u'%s' % self.person
+        else:
+            return u'%s' % self.sourcetype
+
+    def html(self):
+        if self.person:
+            return u'%s' % self.person
+        else:
+            if self.link:
+                return u'<a class="external" href="%s">%s</a>' % (self.link, self.sourcetype)
+            else:
+                return u'%s' % self.sourcetype
+    html.allow_tags = True
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__tested_source=self).distinct()
