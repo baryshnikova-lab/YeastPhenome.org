@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.apps import apps
+import re
 
 from phenotypes.models import Phenotype
 
@@ -58,7 +59,8 @@ class ConditionType(models.Model):
                 if relation.get_type() == 'has_role':
                     tid = relation.get_target_chebi_id()
                     t = ChebiEntity(tid)
-                    outdict[t.get_name()] = tid
+                    s = re.findall(r'\d+', tid)
+                    outdict[t.get_name()] = int(s[0])
             return outdict
         else:
             return ''
