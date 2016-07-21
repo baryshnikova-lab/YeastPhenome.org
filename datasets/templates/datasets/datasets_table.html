@@ -25,6 +25,7 @@
     <th>Collection</th>
     <th>Tested mutants</th>
     <th>Data</th>
+    <th>Details</th>
     </thead>
 
     <tbody>
@@ -61,9 +62,23 @@
             </div>
         </td>
         <td class="col-md-1">
-            <a href="#{{ dataset.id }}" data-target=".{{ dataset.id }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ dataset.id }}">Details...</a>
+            <a class="collapsible-{{ dataset.id }}" href="#{{ dataset.id }}" data-target=".{{ dataset.id }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ dataset.id }}">
+                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            </a>
         </td>
     </tr>
+
+    <script>
+        $(document).ready(function(){
+            $(".{{ dataset.id }}").on("hide.bs.collapse", function(){
+                $(".collapsible-{{ dataset.id }}").html('<span class="glyphicon glyphicon-eye-open"></span>');
+            });
+            $(".{{ dataset.id }}").on("show.bs.collapse", function(){
+                $(".collapsible-{{ dataset.id }}").html('<span class="glyphicon glyphicon-eye-close"></span>');
+            });
+        });
+    </script>
+
     {% endfor %}
     </tbody>
 </table>
