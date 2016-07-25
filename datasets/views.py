@@ -12,7 +12,6 @@ from phenotypes.models import Observable2
 from libchebipy import ChebiEntity
 
 
-@login_required
 def data(request, domain, id):
 
     file_header = ''
