@@ -72,11 +72,9 @@
             </a>
             {% endspaceless %}
 
-            {% if dataset.has_data_in_db %}
+            {% if dataset.has_data_in_db and USER_AUTH %}
             {% spaceless %}
-            <a href="#a{{ dataset.id }}" name="a{{ dataset.id }}" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')">
-                <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-            </a>
+                <span class="glyphicon glyphicon-picture pointer" aria-hidden="true" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')"></span>
             {% endspaceless %}
             {% endif %}
         </td>

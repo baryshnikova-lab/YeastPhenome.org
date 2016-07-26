@@ -104,3 +104,13 @@ thead td{
     padding-top: 10px;
     padding-bottom: 5px;
 }
+
+.pointer {
+    cursor: pointer;
+    color: #337ab7;
+}
+
+.pointer:hover {
+    cursor: pointer;
+    color: #23527c;
+}
