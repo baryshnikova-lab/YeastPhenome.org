@@ -37,13 +37,15 @@
         <td class="col-md-1">{{ dataset.collection }}</td>
         <td class="col-md-2">
             {{ dataset.tested_space|safe }}
-            <div class="collapse {{ dataset.id }} dataset-details">
-                <strong>Source:</strong>
-                {% if dataset.tested_source.html %}
-                {{ dataset.tested_source.html|safe }}
-                {% else %}
-                unavailable
-                {% endif %}
+            <div class="collapse {{ dataset.id }}">
+                <div class="dataset-details">
+                    <strong>Source:</strong>
+                    {% if dataset.tested_source.html %}
+                    {{ dataset.tested_source.html|safe }}
+                    {% else %}
+                    unavailable
+                    {% endif %}
+                </div>
             </div>
         </td>
         <td class="col-md-2">
@@ -52,19 +54,31 @@
             {% else %}
             <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
             {% endif %}
-            <div class="collapse {{ dataset.id }} dataset-details">
-                <strong>Source:</strong>
-                {% if dataset.data_source.html %}
-                {{ dataset.data_source.html|safe }}
-                {% else %}
-                unavailable
-                {% endif %}
+            <div class="collapse {{ dataset.id }}">
+                <div class="dataset-details">
+                    <strong>Source:</strong>
+                    {% if dataset.data_source.html %}
+                    {{ dataset.data_source.html|safe }}
+                    {% else %}
+                    unavailable
+                    {% endif %}
+                </div>
             </div>
         </td>
         <td class="col-md-1">
+            {% spaceless %}
             <a class="collapsible-{{ dataset.id }}" href="#{{ dataset.id }}" data-target=".{{ dataset.id }}" data-toggle="collapse" aria-expanded="false" aria-controls="{{ dataset.id }}">
                 <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
             </a>
+            {% endspaceless %}
+
+            {% if dataset.has_data_in_db %}
+            {% spaceless %}
+            <a href="#a{{ dataset.id }}" name="a{{ dataset.id }}" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')">
+                <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+            </a>
+            {% endspaceless %}
+            {% endif %}
         </td>
     </tr>
 
