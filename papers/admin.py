@@ -3,6 +3,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import ForeignKey
 from django.http import HttpResponse
 
+import urllib
+
 from papers.models import Paper, Status, Statusdata, Statustested
 from datasets.models import Dataset, Collection, Source
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
@@ -60,6 +62,7 @@ class DatasetInline(ImprovedTabularInline):
 
     def make_a_copy_link(self, obj):
         query_string = ''
+        query_dict = {'_popup': 1}
         for f in obj._meta.fields:
             f_name = f.name
             if isinstance(f, ForeignKey):
@@ -67,7 +70,9 @@ class DatasetInline(ImprovedTabularInline):
             f_value = str(getattr(obj, f_name))
             if f.name != 'id' and f_value != 'None':
                 query_string += "&" + f.name + "=" + f_value
-        return '<a id="id_user" href="%s?_popup=1%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
+                query_dict[f.name] = f_value
+        query_string = urllib.urlencode(query_dict)
+        return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
     make_a_copy_link.allow_tags = True
 
 
