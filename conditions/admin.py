@@ -90,10 +90,10 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 
 
 class ConditionSetAdmin(ImprovedModelAdmin):
-    list_display = ('__unicode__', 'papers_edit_link_list',)
+    list_display = ('id', '__unicode__', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
     search_fields = ('name', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
-    ordering = ('conditions__type__name',)
+    ordering = ('id', 'conditions__type__name',)
     inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
