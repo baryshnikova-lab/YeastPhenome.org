@@ -43,17 +43,21 @@ class Observable2(MPTTModel):
         return a
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype__observable2=self)\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+        return apps.get_model('papers', 'Paper').objects\
+            .filter(dataset__phenotype__observable2=self)\
+            .exclude(latest_data_status__status__status_name='not relevant')\
+            .distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
     papers_link_list.allow_tags = True
 
     def conditiontypes(self):
+        # Unusual specification of "not relevant" papers because, in the other way,
+        # conditiontypes were being filtered out if they were associated with a "not relevant" paper at least once
         return apps.get_model('conditions','ConditionType').objects\
-            .filter(condition__conditionset__dataset__phenotype__observable2=self)\
-            .exclude(condition__conditionset__dataset__paper__latest_data_status__status__status_name='not relevant')\
+            .filter(condition__conditionset__dataset__phenotype__observable2=self,
+                    condition__conditionset__dataset__paper__latest_data_status__status__lt=10)\
             .distinct()
 
     def conditiontypes_link_list(self):
@@ -61,7 +65,8 @@ class Observable2(MPTTModel):
     conditiontypes_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(phenotype__observable2=self) \
+        return apps.get_model('datasets', 'Dataset').objects\
+            .filter(phenotype__observable2=self) \
             .exclude(paper__latest_data_status__status__status_name='not relevant')\
             .distinct()
 
