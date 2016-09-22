@@ -47,6 +47,15 @@ class Source(models.Model):
                 return u'%s' % self.sourcetype
     html.allow_tags = True
 
+    def link_or_person(self):
+        if self.person:
+            return u'%s' % self.person
+        else:
+            if self.link:
+                return u'%s...' % self.link[:min(60, len(self.link))]
+            else:
+                return u'unknown'
+
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__tested_source=self).distinct()
 

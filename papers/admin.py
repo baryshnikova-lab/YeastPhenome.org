@@ -100,7 +100,7 @@ class StatustestedInline(admin.TabularInline):
 
 class SourceAdmin(admin.ModelAdmin):
     model = Source
-    list_display = ('__unicode__',)
+    list_display = ('id', 'sourcetype', 'link_or_person')
     fields = ('sourcetype', 'link', 'person', 'date', 'release', 'acknowledge')
     inlines = [DatasetInlineTested, DatasetInlineData]
 
