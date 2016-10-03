@@ -16,9 +16,11 @@
 <a href="/{{ template }}s/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_datasets_list.txt">Download the list of datasets</a>
 {% endif %}
 
+<form action="/data/download/" method="get">
 <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
 
     <thead>
+    <td><input type="checkbox" onClick="toggle(this)"></td>
     <th>Papers</th>
     <th>Phenotype</th>
     <th>Conditions</th>
@@ -31,6 +33,7 @@
     <tbody>
     {% for dataset in datasets %}
     <tr>
+        <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset"></td>
         <td class="col-md-2">{{ dataset.paper.link_detail|safe }}</td>
         <td class="col-md-2">{{ dataset.phenotype.link_detail|safe }}</td>
         <td class="col-md-2">{{ dataset.conditionset.link_detail|safe }}</td>
@@ -95,6 +98,10 @@
     </tbody>
 </table>
 
+    <button id="dataset_download" type="submit" class="btn btn-default" disabled="true">Download selected datasets</button>
+
+</form>
+
 {% if USER_AUTH %}
 {% if template == 'chebi' %}
 <a href="/data/conditions/chebi/{{ id }}/{{ DOWNLOAD_PREFIX }}_chebi_{{ id }}_data.txt">Download data matrix</a>
@@ -104,3 +111,23 @@
 {% endif %}
 
 {% endif %}
+
+
+<script language="JavaScript">
+function toggle(source) {
+  checkboxes = document.getElementsByClassName('dataset');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+  btn = document.getElementById('dataset_download');
+  btn.disabled = !source.checked;
+}
+</script>
+
+<script language="JavaScript">
+var chkbxs = $('tbody .dataset');
+chkbxs.change(function () {
+    $('#dataset_download').prop('disabled', chkbxs.filter(':checked').length < 1);
+});
+chkbxs.change();
+</script>

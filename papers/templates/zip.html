@@ -1,7 +1,7 @@
 {% if paper.raw_available_data %}
-<a class="btn btn-success" role="button" href="{% url 'papers:zipo' pk=paper.pk %}">Download all data</a>
+<a class="btn btn-success" role="button" href="{% url 'papers:zipo' pk=paper.pk %}">Download paper package</a>
 {% else %}
 <div title="{% if paper.should_have_data %}Unable to locate data files{% else %}No data loaded{% endif %}">
-  <a class="btn btn-default disabled" href="{% url 'papers:zipo' pk=paper.pk %}">Data not available</a>
+  <a class="btn btn-default disabled" href="{% url 'papers:zipo' pk=paper.pk %}">Paper package not available</a>
 </div>
 {% endif %}
