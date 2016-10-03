@@ -25,6 +25,11 @@ a:not(.btn) {
     content: '\2002\f019';
 }
 
+.available:after {
+    font-family: FontAwesome;
+    content: '\2002\f00c';
+}
+
 .table-no-border td, .table-no-border th {
     border: none !important;
 }
