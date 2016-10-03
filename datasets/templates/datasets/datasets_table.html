@@ -97,16 +97,6 @@
 
 </form>
 
-{% if USER_AUTH %}
-{% if template == 'chebi' %}
-<a href="/data/conditions/chebi/{{ id }}/{{ DOWNLOAD_PREFIX }}_chebi_{{ id }}_data.txt">Download data matrix</a>
-{% else %}
-<a href="/data/{{ template }}s/{{ id }}/{{ DOWNLOAD_PREFIX }}_{{ template }}_{{ id }}_data.txt">Download data matrix</a>
-{% endif %}
-{% endif %}
-
-{% endif %}
-
 
 <script language="JavaScript">
 function toggle(source) {
