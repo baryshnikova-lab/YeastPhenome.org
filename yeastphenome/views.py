@@ -16,7 +16,8 @@ def index(request):
     form = SearchForm()
 
     # Exclude the papers marked as "not relevant"
-    f = Q(data_statuses__status_name__exact='not relevant') | Q(tested_statuses__status_name__exact='not relevant')
+    f = Q(latest_data_status__status__status_name__exact='not relevant') | \
+        Q(latest_tested_status__status__status_name__exact='not relevant')
     queryset = queryset.exclude(f)
 
     context = {
