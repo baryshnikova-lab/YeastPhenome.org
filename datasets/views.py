@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
+from django.views import generic
 from django.contrib.auth.decorators import login_required
 
 from papers.models import Paper
@@ -10,6 +11,12 @@ from conditions.models import ConditionType
 from phenotypes.models import Observable2
 
 from libchebipy import ChebiEntity
+
+
+class DatasetDetailView(generic.DetailView):
+    model = Dataset
+    template_name = 'datasets/detail.html'
+    context_object_name = 'dataset'
 
 
 def download(request):

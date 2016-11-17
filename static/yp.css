@@ -66,19 +66,18 @@ hgroup h1{
 }
 
 footer{
-    border-top: none;
+    border-top: 1px dashed #dcdcdc;
     padding-top: 10px;
-    margin-top: 20px;
+    margin-top: 60px;
     margin-bottom: 30px;
     clear: left;
+    font-style: italic;
 }
 
 .nothing{
     opacity:0.25;
     font-style:italic;
 }
-
-
 
 thead td{
     text-align:center;

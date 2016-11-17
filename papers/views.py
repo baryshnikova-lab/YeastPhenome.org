@@ -4,8 +4,7 @@ from django.shortcuts import render
 
 from papers.models import Paper
 
-from Bio.Entrez import efetch, read
-
+from Bio import Entrez
 
 # These only needed for zipo
 import os
@@ -71,8 +70,9 @@ class PaperDetailView(generic.DetailView):
 
         # Fetch article info from Pubmed
         if obj.pmid != 0:
-            handle = efetch(db='pubmed', id=[str(obj.pmid)], retmode='xml')
-            xml_data = read(handle)[0]
+            Entrez.email = 'abarysh@princeton.edu'
+            handle = Entrez.efetch(db='pubmed', id=[str(obj.pmid)], retmode='xml')
+            xml_data = Entrez.read(handle)[0]
             article = xml_data['MedlineCitation']['Article']
             authors_list = [(u'%s %s' % (author['ForeName'], author['LastName'])) for author in article['AuthorList']]
             if 'Year' in article['Journal']['JournalIssue']['PubDate']:

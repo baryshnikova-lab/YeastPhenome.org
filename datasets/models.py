@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.apps import apps
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 
 class Collection(models.Model):
@@ -109,11 +110,15 @@ class Dataset(models.Model):
         return self.tested_list_published
     tested_genes_published.boolean = True
 
+    def tested_genes_available(self):
+        return self.tested_source > 0
+    tested_genes_available.boolean = True
+
     def tested_space(self):
         if self.tested_source and self.data_set.exists():
-            tested_space = self.data_set.count()
+            tested_space = intcomma(self.data_set.count())
         elif self.tested_num > 0:
-            tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % self.tested_num
+            tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % intcomma(self.tested_num)
         else:
             tested_space = 'N/A'
         return tested_space

@@ -16,7 +16,7 @@
 <a href="/{{ template }}s/{{ object.id }}/{{ DOWNLOAD_PREFIX }}_{{ object.pmid }}_datasets_list.txt">Download the list of datasets</a>
 {% endif %}
 
-<form action="/data/download/" method="get">
+<form action="/datasets/download/" method="get">
 <table id="papersTable" class="tablesorter table table-condensed table-hover" width="100%">
 
     <thead>
@@ -34,47 +34,25 @@
     {% for dataset in datasets %}
     <tr>
         <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset" {% if not dataset.has_data_in_db %}disabled{% endif %}></td>
-        <td class="col-md-2">{{ dataset.paper.link_detail|safe }}</td>
-        <td class="col-md-2">{{ dataset.phenotype.link_detail|safe }}</td>
-        <td class="col-md-2">{{ dataset.conditionset.link_detail|safe }}</td>
+        <td class="col-md-2"><a href="{% url 'papers:detail' dataset.id %}">{{ dataset.paper }}</a></td>
+        <td class="col-md-3">{{ dataset.phenotype.link_detail|safe }}</td>
+        <td class="col-md-3">{{ dataset.conditionset.link_detail|safe }}</td>
         <td class="col-md-1">{{ dataset.collection }}</td>
 
-        <td class="col-md-2">
+        <td class="col-md-1">
             {{ dataset.tested_space|safe }}
-            <br><small>
-                    {% if dataset.tested_source.html %}
-                    {{ dataset.tested_source.html|safe }}
-                    {% else %}
-                    unavailable
-                    {% endif %}
-            </small>
         </td>
 
-        <td class="col-md-2">
+        <td class="col-md-1">
             {% if dataset.has_data_in_db %}
             <span class="text-success available">{{ dataset.data_available|capfirst }}</span>
-                <br><small>
-                    {% if dataset.data_source.html %}
-                    {{ dataset.data_source.html|safe }}
-                    {% else %}
-                    unavailable
-                    {% endif %}
-                </small>
             {% else %}
             <span class="text-muted">{{ dataset.data_available|capfirst }}</span>
             {% endif %}
         </td>
 
         <td>
-            {% spaceless %}
-            ~
-            {% endspaceless %}
-
-            {% if dataset.has_data_in_db and USER_AUTH %}
-            {% spaceless %}
-                <span class="glyphicon glyphicon-picture pointer" aria-hidden="true" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')"></span>
-            {% endspaceless %}
-            {% endif %}
+            <a href="/datasets/{{ dataset.id }}/"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
         </td>
     </tr>
 

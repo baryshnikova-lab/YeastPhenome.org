@@ -1,0 +1,90 @@
+{% load my_filters %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' script_popup=1 %}
+    <title>{{ object }} / Datasets / Papers / {{ SITE_NAME }}</title>
+</head>
+
+<body>
+{% include "navbar.html" with active='papers' %}
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <h1>Dataset #{{ dataset.id }}</h1>
+
+            <table class="table">
+                <tr>
+                    <th width="20%" scope="row" class="first">Name</th>
+                    <td class="first">{{ dataset }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Paper</th>
+                    <td><a href="{% url 'papers:detail' dataset.paper.id %}">{{ dataset.paper }}</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Phenotype</th>
+                    <td>{{ dataset.phenotype.link_detail|safe }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Conditions</th>
+                    <td>{{ dataset.conditionset.link_detail|safe }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Collection</th>
+                    <td>{{ dataset.collection.name }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Tested mutants</th>
+                    <td>
+                        Number reported in the paper: {{ dataset.tested_num|intcomma }}
+                        <br>List reported in the paper: {{ dataset.tested_genes_published|yesno:"yes,no,unknown" }}
+                        <br>List available: {{ dataset.tested_genes_available|yesno:"yes,no,unknown" }}
+                            {% if dataset.tested_genes_available %}
+                                &mdash; {{ dataset.tested_space|intcomma }} from {{ dataset.tested_source.html|safe }}
+                            {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Data</th>
+                    <td>
+                        Measured: {{ dataset.data_measured }}
+                        <br>Published: {{ dataset.data_published }}
+                        <br>Available: {{ dataset.data_available }}
+                            {% if dataset.data_source > 0 %}
+                                &mdash; from {{ dataset.data_source.html|safe }}
+                            {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Visualization</th>
+                    <td>
+                        {% if dataset.has_data_in_db and USER_AUTH %}
+                            <span class="glyphicon glyphicon-picture pointer" aria-hidden="true" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-picture text-muted"></span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+
+            <a class="btn btn-success" role="button" href="/datasets/download/id={{ dataset.id }}">Download</a>
+
+            {% include "footer.html" %}
+
+        </div>
+    </div>
+</div>
+
+<script>$(document).ready(function(){
+    $("#papersTable").tablesorter();
+});</script>
+
+{% include "ga.html" %}
+
+</body>
+</html>
