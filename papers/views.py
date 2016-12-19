@@ -72,8 +72,8 @@ class PaperDetailView(generic.DetailView):
         if obj.pmid != 0:
             Entrez.email = 'abarysh@princeton.edu'
             handle = Entrez.efetch(db='pubmed', id=[str(obj.pmid)], retmode='xml')
-            xml_data = Entrez.read(handle)[0]
-            article = xml_data['MedlineCitation']['Article']
+            xml_data = Entrez.read(handle)
+            article = xml_data.get('PubmedArticle')[0].get('MedlineCitation').get('Article')
             authors_list = [(u'%s %s' % (author['ForeName'], author['LastName'])) for author in article['AuthorList']]
             if 'Year' in article['Journal']['JournalIssue']['PubDate']:
                 pubdate = article['Journal']['JournalIssue']['PubDate']['Year']
