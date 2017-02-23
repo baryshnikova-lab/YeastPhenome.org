@@ -3,24 +3,18 @@
 <html lang="en"><head>
     {% include "head.html" with JavaScript='tablesorter' %}
     <title>Phenotypes / {{ SITE_NAME }}</title>
-</head><body>
+</head>
+
+<body>
+
 {% include "navbar.html" with active='phenotypes' %}
+
 <div class="container-fluid">
+
     <h1>Phenotypes</h1>
-    {% include "d3menu.html" with namespace='phenotypes' %}
+
     <table id="papersTable" class="tablesorter table table-condensed" width="100%">
-        {% comment %}
 
-        <!-- The graphics parts arn't implemented yet, so lets not link to
-             them.  Their other issues with this page, but I don't know what
-             they are. -->
-
-        <caption>
-            <nav>
-                <span class="active">As a list</span>
-                <span class="inactive" title="Not Implemented"><a href="/phenotypes/stats/">Graphically</a></span>
-            </nav>
-        </caption>{% endcomment %}
         <thead>
         <tr>
             <th>Name</th>
@@ -41,8 +35,10 @@
     {% endrecursetree %}
     </tbody>
     </table>
+
     {% include "footer.html" %}
-</div{# container-fluid #}>
+
+</div>
 
 <script>$(document).ready(function(){
  $("#papersTable").tablesorter();
