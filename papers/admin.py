@@ -62,9 +62,10 @@ class DatasetInline(ImprovedTabularInline):
     admin_change_link.allow_tags = True
 
     def make_a_copy_link(self, obj):
-        query_string = 'test'
-        # query_dict = {'_popup': 1}
-        # flds = obj._meta.get_fields()
+        query_string = ''
+        query_dict = {'_popup': 1}
+        flds = obj._meta.get_fields()
+        query_string = len(flds)
         # for f in flds:
         #     f_name = f.name
         #     if isinstance(f, ForeignKey):
