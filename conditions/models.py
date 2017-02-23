@@ -33,7 +33,7 @@ class ConditionType(models.Model):
     class Meta:
         ordering = ['group', 'chebi_name', 'pubchem_name', 'name', 'other_names']
 
-    def __unicode__(self):
+    def __str__(self):
         if self.chebi_name:
             type_name = self.chebi_name
         elif self.pubchem_name:
@@ -103,7 +103,7 @@ class Condition(models.Model):
     class Meta:
         get_latest_by = 'modified_on'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s [%s]' % (self.type, self.dose)
 
     def conditionsets(self):
@@ -123,7 +123,7 @@ class ConditionSet(models.Model):
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         conditions_list = ", ".join([(u'%s' % condition) for condition in self.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
         if not self.name or self.name == '':
             return u'%s' % conditions_list

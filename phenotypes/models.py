@@ -21,7 +21,7 @@ class Observable2(MPTTModel):
     class Meta:
         get_latest_by = 'modified_on'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
     def has_annotated_descendants(self):
@@ -82,7 +82,7 @@ class Phenotype(models.Model):
     reporter = models.CharField(max_length=200, null=True, blank=True)
     modified_on = models.DateField(auto_now=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.reporter:
             return u'%s (%s)' % (self.observable2, self.reporter)
         else:
@@ -120,7 +120,7 @@ class MutantType(models.Model):
     name = models.CharField(max_length=200)
     definition = models.TextField(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
 

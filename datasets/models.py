@@ -20,7 +20,7 @@ class Sourcetype(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     shortname = models.CharField(max_length=200, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.name
 
 
@@ -32,7 +32,7 @@ class Source(models.Model):
     acknowledge = models.NullBooleanField()
     release = models.NullBooleanField()
 
-    def __unicode__(self):
+    def __str__(self):
         if self.person:
             return u'%s' % self.person
         else:
@@ -96,7 +96,7 @@ class Dataset(models.Model):
 
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset, self.paper)
 
     def admin_name(self):
@@ -137,5 +137,5 @@ class Data(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=3)
     orf = models.CharField(max_length=50)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s - %s' % (self.orf, self.value)

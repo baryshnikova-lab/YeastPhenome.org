@@ -19,7 +19,7 @@ class Status(models.Model):
                                    default='undefined', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.status_name
 
     class Meta:
@@ -50,7 +50,7 @@ class Paper(models.Model):
         get_latest_by = 'modified_on'
         ordering =['pmid', 'first_author', 'last_author']
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
 
     def collections(self):
@@ -158,7 +158,7 @@ class Statusdata(models.Model):
     class Meta:
         get_latest_by = 'id'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.status
 
 
@@ -170,7 +170,7 @@ class Statustested(models.Model):
     class Meta:
         get_latest_by = 'id'
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.status
 
 
