@@ -11,8 +11,9 @@ import os
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.conf import settings
-from cStringIO import StringIO
+# from cStringIO import StringIO
 from zipfile import ZipFile
+import io
 
 
 def paper_list_view(request):
@@ -110,7 +111,7 @@ def zipo(request, pk):
     if not(p.should_have_data()):
         raise Http404("Paper has no data.")
 
-    zip_buff=StringIO()
+    zip_buff=io.StringIO()
     zip_file=ZipFile(zip_buff,'w')
 
     rm=settings.README
