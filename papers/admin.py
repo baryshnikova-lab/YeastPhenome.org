@@ -113,12 +113,12 @@ class SourceAdmin(admin.ModelAdmin):
 
 class CollectionAdmin(admin.ModelAdmin):
     model = Collection
-    list_display = ('__unicode__',)
+    list_display = ('__str__',)
 
 
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 1000
-    list_display = ('pmid', 'user', '__unicode__', 'datasets_summary',
+    list_display = ('pmid', 'user', '__str__', 'datasets_summary',
                     'latest_data_status_name', 'latest_tested_status_name')
     list_filter = ['pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author',)
