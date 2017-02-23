@@ -14,11 +14,11 @@
         </div>
 
         <ul class="collapse navbar-collapse nav navbar-nav" id="nb-sections">
-            <li {% if 'papers' = active %} class="active" {% endif %} ><a href="{% url 'papers:all' %}">Papers</a></li>
-            <li {% if 'phenotypes' = active %} class="active" {% endif %} ><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
-            <li {% if 'conditions' = active %} class="active" {% endif %} ><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
-            <li {% if 'about' = active %} class="active" {% endif %} ><a href="{% url 'about' %}">About</a></li>
-            <li {% if 'contributors' = active %} class="active" {% endif %} ><a href="{% url 'contributors' %}">Contributors</a></li>
+            <li {% if 'papers' == active %} class="active" {% endif %} ><a href="{% url 'papers:all' %}">Papers</a></li>
+            <li {% if 'phenotypes' == active %} class="active" {% endif %} ><a href="{% url 'phenotypes:index' %}">Phenotypes</a></li>
+            <li {% if 'conditions' == active %} class="active" {% endif %} ><a href="{% url 'conditions:index' %}">Experimental conditions</a></li>
+            <li {% if 'about' == active %} class="active" {% endif %} ><a href="{% url 'about' %}">About</a></li>
+            <li {% if 'contributors' == active %} class="active" {% endif %} ><a href="{% url 'contributors' %}">Contributors</a></li>
         </ul>
 
         <div class="collapse navbar-collapse" id="nb-search">
