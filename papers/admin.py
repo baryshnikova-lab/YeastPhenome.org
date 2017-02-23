@@ -63,7 +63,8 @@ class DatasetInline(ImprovedTabularInline):
     def make_a_copy_link(self, obj):
         query_string = ''
         query_dict = {'_popup': 1}
-        for f in obj._meta.fields:
+        flds = obj._meta.get_fields()
+        for f in flds:
             f_name = f.name
             if isinstance(f, ForeignKey):
                 f_name += "_id"
