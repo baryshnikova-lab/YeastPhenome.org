@@ -5,6 +5,7 @@ from django.http import HttpResponse
 
 # import urllib
 from django.utils.http import urlencode
+from itertools import chain
 
 from papers.models import Paper, Status, Statusdata, Statustested
 from datasets.models import Dataset, Collection, Source
@@ -64,16 +65,20 @@ class DatasetInline(ImprovedTabularInline):
     def make_a_copy_link(self, obj):
         query_string = ''
         query_dict = {'_popup': 1}
-        flds = obj._meta.get_fields()
-        for f in flds:
+        # flds = list(set(chain.from_iterable(
+        #     (field.name, field.attname) if hasattr(field, 'attrname') else (field.name,)
+        #     for field in obj._meta.get_fields()
+        #     if not (field.many_to_one and field.related_model is None)
+        # )))
+        for f in obj._meta.get_fields():
             f_name = f.name
-            query_string += "&" + f_name
-            if isinstance(f, ForeignKey):
-                f_name += "_id"
-            f_value = str(getattr(obj, f_name))
-            if f.name != 'id' and f_value != 'None':
-                query_string += "&" + f.name + "=" + f_value
-                query_dict[f.name] = f_value
+            query_string += f_name
+            # if isinstance(f, ForeignKey):
+            #     f_name += "_id"
+            # f_value = str(getattr(obj, f_name))
+            # if f.name != 'id' and f_value != 'None':
+            #     query_string += "&" + f.name + "=" + f_value
+            #     query_dict[f.name] = f_value
         # query_string = urlencode(query_dict)
         # return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
         return query_string
