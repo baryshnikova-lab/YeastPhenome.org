@@ -12,7 +12,7 @@ class Collection(models.Model):
     ploidy = models.IntegerField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'%s' % self.shortname
 
 
