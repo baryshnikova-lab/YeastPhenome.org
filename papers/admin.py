@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.db.models import ForeignKey
 from django.http import HttpResponse
 
-import urllib
+# import urllib
+from django.utils.http import urlencode
 
 from papers.models import Paper, Status, Statusdata, Statustested
 from datasets.models import Dataset, Collection, Source
@@ -72,7 +73,7 @@ class DatasetInline(ImprovedTabularInline):
             if f.name != 'id' and f_value != 'None':
                 query_string += "&" + f.name + "=" + f_value
                 query_dict[f.name] = f_value
-        query_string = urllib.urlencode(query_dict)
+        query_string = urlencode(query_dict)
         return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
     make_a_copy_link.allow_tags = True
 
