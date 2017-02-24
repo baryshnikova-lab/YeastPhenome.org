@@ -63,13 +63,7 @@ class DatasetInline(ImprovedTabularInline):
     admin_change_link.allow_tags = True
 
     def make_a_copy_link(self, obj):
-        query_string = ''
         query_dict = {'_popup': 1}
-        # flds = list(set(chain.from_iterable(
-        #     (field.name, field.attname) if hasattr(field, 'attname') else (field.name,)
-        #     for field in obj._meta.get_fields()
-        #     if not (field.many_to_one and field.related_model is None)
-        # )))
         flds = obj._meta.get_fields()
         for f in flds:
             if not (f.many_to_one and f.related_model is None):
@@ -78,7 +72,6 @@ class DatasetInline(ImprovedTabularInline):
                     f_name += "_id"
                 f_value = str(getattr(obj, f_name, 'None'))
                 if f.name != 'id' and f_value != 'None':
-                    query_string += "&" + f_name + "=" + f_value
                     query_dict[f.name] = f_value
         query_string = urlencode(query_dict)
         return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
