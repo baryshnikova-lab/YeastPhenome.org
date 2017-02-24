@@ -66,7 +66,7 @@ class DatasetInline(ImprovedTabularInline):
         query_string = ''
         query_dict = {'_popup': 1}
         flds = list(set(chain.from_iterable(
-            (field.name, field.attname) if hasattr(field, 'attrname') else (field.name,)
+            (field.name, field.attname) if hasattr(field, 'attname') else (field.name,)
             for field in obj._meta.get_fields()
             if not (field.many_to_one and field.related_model is None)
         )))
@@ -75,7 +75,6 @@ class DatasetInline(ImprovedTabularInline):
             if isinstance(f, ForeignKey):
                 f_name += "_id"
             f_value = str(getattr(obj, f_name))
-            # f_value = obj._meta.get_field(f.name)
             query_string += f_value
             # if f.name != 'id' and f_value != 'None':
             #     query_string += "&" + f.name + "=" + f_value
