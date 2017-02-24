@@ -71,8 +71,8 @@ class DatasetInline(ImprovedTabularInline):
         #     if not (field.many_to_one and field.related_model is None)
         # )))
         flds = obj._meta.get_fields()
-        query_string = str(len(flds))
-        # for f in flds:
+        for f in flds:
+            query_string += f.name
         #     f_name = f.name
         #     if isinstance(f, ForeignKey):
         #         f_name += "_id"
