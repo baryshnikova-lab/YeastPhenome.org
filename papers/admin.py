@@ -70,20 +70,19 @@ class DatasetInline(ImprovedTabularInline):
             for field in obj._meta.get_fields()
             if not (field.many_to_one and field.related_model is None)
         )))
-        return flds
         # # flds = obj._meta.get_fields()
-        # for f in flds:
-        #     #     f_name = f.name
-        #     #     if isinstance(f, ForeignKey):
-        #     #         f_name += "_id"
-        #     return f.name + str(getattr(obj, f))
-        #     # query_string += f.name
+        for f in flds:
+            #     #     f_name = f.name
+            #     #     if isinstance(f, ForeignKey):
+            #     #         f_name += "_id"
+            #     return f.name + str(getattr(obj, f))
+            query_string += f + str(getattr(obj, f))
         # #     # if f.name != 'id' and f_value != 'None':
         # #     #     query_string += "&" + f.name + "=" + f_value
         # #     #     query_dict[f.name] = f_value
         # # # query_string = urlencode(query_dict)
         # # # return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
-        # # return query_string
+        return query_string
     make_a_copy_link.allow_tags = True
 
 
