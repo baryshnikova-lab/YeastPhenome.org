@@ -79,7 +79,7 @@ class DatasetInline(ImprovedTabularInline):
                 f_value = str(getattr(obj, f_name, 'None'))
                 if f.name != 'id' and f_value != 'None':
                     query_string += "&" + f_name + "=" + f_value
-                    query_dict[f_name] = f_value
+                    query_dict[f.name] = f_value
         query_string = urlencode(query_dict)
         return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
     make_a_copy_link.allow_tags = True
