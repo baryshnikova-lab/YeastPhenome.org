@@ -72,12 +72,11 @@ class DatasetInline(ImprovedTabularInline):
         # )))
         flds = obj._meta.get_fields()
         for f in flds:
-            query_string += f.name
-        #     f_name = f.name
-        #     if isinstance(f, ForeignKey):
-        #         f_name += "_id"
-        #     f_value = str(getattr(obj, f_name))
-        #     query_string += f_name + f_value
+            #     f_name = f.name
+            #     if isinstance(f, ForeignKey):
+            #         f_name += "_id"
+            f_value = str(getattr(obj, f.name))
+            query_string += f.name + f_value
         #     # if f.name != 'id' and f_value != 'None':
         #     #     query_string += "&" + f.name + "=" + f_value
         #     #     query_dict[f.name] = f_value
