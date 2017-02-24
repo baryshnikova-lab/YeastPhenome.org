@@ -65,17 +65,17 @@ class DatasetInline(ImprovedTabularInline):
     def make_a_copy_link(self, obj):
         query_string = ''
         query_dict = {'_popup': 1}
-        # flds = list(set(chain.from_iterable(
-        #     (field.name, field.attname) if hasattr(field, 'attrname') else (field.name,)
-        #     for field in obj._meta.get_fields()
-        #     if not (field.many_to_one and field.related_model is None)
-        # )))
-        for f in obj._meta.get_fields():
+        flds = list(set(chain.from_iterable(
+            (field.name, field.attname) if hasattr(field, 'attrname') else (field.name,)
+            for field in obj._meta.get_fields()
+            if not (field.many_to_one and field.related_model is None)
+        )))
+        for f in flds:
             f_name = f.name
             if isinstance(f, ForeignKey):
                 f_name += "_id"
-            # f_value = getattr(obj, f_name)
-            f_value = obj._meta.get_field(f.name)
+            f_value = getattr(obj, f_name)
+            # f_value = obj._meta.get_field(f.name)
             query_string += f_value
             # if f.name != 'id' and f_value != 'None':
             #     query_string += "&" + f.name + "=" + f_value
