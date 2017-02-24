@@ -23,9 +23,10 @@ def download(request):
 
     file_header = ''
 
-    datasets = []
-    for key, value in request.GET.iteritems():
-        datasets.append(key)
+    # datasets = []
+    # for key, value in request.GET.iteritems():
+    #     datasets.append(key)
+    datasets = sorted(request.GET)
 
     data = Data.objects.filter(dataset_id__in=datasets).all()
 
