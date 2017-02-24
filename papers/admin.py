@@ -75,8 +75,8 @@ class DatasetInline(ImprovedTabularInline):
             #     f_name = f.name
             #     if isinstance(f, ForeignKey):
             #         f_name += "_id"
-            f_value = str(getattr(obj, f.name))
-            query_string += f.name + f_value
+            # f_value = str(getattr(obj, f.name))
+            query_string += f.name
         #     # if f.name != 'id' and f_value != 'None':
         #     #     query_string += "&" + f.name + "=" + f_value
         #     #     query_dict[f.name] = f_value
