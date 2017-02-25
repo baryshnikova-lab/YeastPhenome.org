@@ -90,7 +90,7 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 
 
 class ConditionSetAdmin(ImprovedModelAdmin):
-    list_display = ('id', '__unicode__', 'papers_edit_link_list',)
+    list_display = ('id', '__str__', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
     search_fields = ('name', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('id', 'conditions__type__name',)
