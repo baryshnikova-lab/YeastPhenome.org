@@ -111,7 +111,7 @@ class Dataset(models.Model):
     tested_genes_published.boolean = True
 
     def tested_genes_available(self):
-        return self.tested_source > 0
+        return self.tested_source is not None
     tested_genes_available.boolean = True
 
     def tested_space(self):
