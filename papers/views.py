@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.views import generic
 from django.shortcuts import render
+from django.views.static import serve
 
 from papers.models import Paper
 
@@ -134,9 +135,11 @@ class ContributorsListView(generic.ListView):
 def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
+    filename = u'%d.zip' % p.pmid
+    filepath = os.path.join(settings.DATA_DIR, filename)
 
-    response = HttpResponse(content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="%s/%s_%d.zip"' % (settings.DATA_DIR, settings.DOWNLOAD_PREFIX, p.pmid)
+    response = HttpResponse(open(filepath, 'r'), content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
     return response
 
 
