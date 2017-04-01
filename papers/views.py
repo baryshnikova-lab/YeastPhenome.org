@@ -131,9 +131,12 @@ class ContributorsListView(generic.ListView):
 #     return out
 
 
-def download_zip(request, pk):
+def download_zip(request, paper_id):
+
+    p = get_object_or_404(Paper, pk=paper_id)
+
     response = HttpResponse(content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="%s/%s_%d.zip"' % (settings.DATA_DIR, settings.DOWNLOAD_PREFIX, pk)
+    response['Content-Disposition'] = 'attachment; filename="%s/%s_%d.zip"' % (settings.DATA_DIR, settings.DOWNLOAD_PREFIX, p.pmid)
     return response
 
 
