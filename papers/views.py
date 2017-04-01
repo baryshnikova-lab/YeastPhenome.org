@@ -131,7 +131,7 @@ class ContributorsListView(generic.ListView):
 #     return out
 
 
-def download_zip(request, paper_id):
+def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
 
