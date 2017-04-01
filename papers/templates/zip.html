@@ -1,3 +1,1 @@
-<a class="btn btn-success"
-   role="button"
-   href="{% url 'papers:download_zip' pk = paper.pk paper_pmid = paper.pmid %}">Download paper package</a>
+<a class="btn btn-success" role="button" href="{% url 'papers:download_zip' pk = object.pk paper_pmid = object.pmid %}">Download paper package</a>
