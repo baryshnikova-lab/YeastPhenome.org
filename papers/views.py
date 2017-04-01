@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.views import generic
 from django.shortcuts import render
-from django.views.static import serve
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 from papers.models import Paper
 
@@ -136,7 +136,7 @@ def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
     filename = u'%d.zip' % p.pmid
-    filepath = os.path.join(settings.STATIC_ROOT, settings.DATA_DIR, filename)
+    filepath = static(filename)
 
     response = HttpResponse(open(filepath, 'r'), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
