@@ -135,10 +135,10 @@ class ContributorsListView(generic.ListView):
 def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
-    filename = u'%d.zip' % p.pmid
-    filepath = static(filename)
+    file_name = u'%d.zip' % p.pmid
+    file_path = os.path.join(settings.STATIC_ROOT, settings.DATA_DIR, file_name)
 
-    response = HttpResponse(open(filepath, 'r'), content_type='application/zip')
+    response = HttpResponse(open(file_path, 'r'), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
     return response
 
