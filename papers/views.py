@@ -136,7 +136,7 @@ def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
     filename = u'%d.zip' % p.pmid
-    filepath = os.path.join(settings.DATA_DIR, filename)
+    filepath = os.path.join(settings.STATIC_ROOT, settings.DATA_DIR, filename)
 
     response = HttpResponse(open(filepath, 'r'), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
