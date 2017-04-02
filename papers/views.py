@@ -138,7 +138,7 @@ def download_zip(request, paper_id, paper_pmid):
     file_name = os.path.join(settings.DATA_DIR, u'%d.zip' % p.pmid)
     file_path = os.path.join(settings.STATIC_ROOT, file_name)
 
-    response = HttpResponse(open(file_path, 'r'), content_type='application/zip')
+    response = HttpResponse(open(file_path, 'r'), content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
     return response
 
