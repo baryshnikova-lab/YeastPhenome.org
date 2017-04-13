@@ -1,20 +1,15 @@
 from django.db.models import Q
 from django.views import generic
 from django.shortcuts import render
-from django.contrib.staticfiles.storage import staticfiles_storage
 
 from papers.models import Paper
 
 from Bio import Entrez
 
-# These only needed for zipo
 import os
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.conf import settings
-# from cStringIO import StringIO
-from zipfile import ZipFile
-import io
 
 
 def paper_list_view(request):
@@ -103,33 +98,6 @@ class ContributorsListView(generic.ListView):
     def get_queryset(self):
         return Paper.objects.filter(
             Q(dataset__data_source__acknowledge=True) | Q(dataset__tested_source__acknowledge=True)).distinct()
-
-
-# def zipo(request, pk):
-#     """Constructs a zip file in memory for users to download."""
-#
-#     p = get_object_or_404(Paper, pk=pk)
-#     if not(p.should_have_data()):
-#         raise Http404("Paper has no data.")
-#
-#     zip_buff=io.StringIO()
-#     zip_file=ZipFile(zip_buff,'w')
-#
-#     rm=settings.README
-#     if rm and os.path.isfile(rm):
-#         zip_file.write(rm,os.path.basename(rm))
-#
-#     dp=p.download_path()
-#     for root,_,basenames in os.walk(dp):
-#         for name in basenames:
-#             path=os.path.join(root,name)
-#             an=path.replace(dp,'')
-#             zip_file.write(path,arcname=an)
-#     zip_file.close()
-#
-#     out=HttpResponse(zip_buff.getvalue(),content_type="application/zip")
-#     out['Content-Disposition'] = 'attachment; filename="%s_%d.zip"' % (settings.DOWNLOAD_PREFIX, p.pmid)
-#     return out
 
 
 def download_zip(request, paper_id, paper_pmid):
