@@ -63,7 +63,14 @@ class Paper(models.Model):
         return Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
 
     def phenotypes_str_list(self):
-        return ', '.join([(u'%s' % i) for i in self.phenotypes()])
+        num = len(self.phenotypes())
+        if num == 0:
+            return ''
+        elif num <= 20:
+            return ', '.join([(u'%s' % i) for i in self.phenotypes()])
+        else:
+            num_remaining = num-20
+            return ', '.join([(u'%s' % i) for i in self.phenotypes()[:20]]) + '... and ' + str(num_remaining) + ' more'
 
     def phenotypes_link_list(self):
         return ', '.join([p.link_detail() for p in self.phenotypes()])
