@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.views import generic
 from django.shortcuts import render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from papers.models import Paper
 
@@ -51,7 +52,17 @@ class PaperDetailView(generic.DetailView):
         context['USER_AUTH'] = self.request.user.is_authenticated()
 
         # Define dataset_set
-        context['datasets'] = obj.dataset_set.select_related('phenotype__observable2').select_related('collection').select_related('conditionset').all()
+        dataset_list = obj.dataset_set.select_related('phenotype__observable2').select_related('collection').select_related('conditionset').all()
+        page = self.request.GET.get('page', 1)
+        paginator = Paginator(dataset_list, 50)
+        try:
+            datasets = paginator.page(page)
+        except PageNotAnInteger:
+            datasets = paginator.page(1)
+        except EmptyPage:
+            datasets = paginator.page(paginator.num_pages)
+
+        context['datasets'] = datasets
 
         context['id'] = obj.id
 
