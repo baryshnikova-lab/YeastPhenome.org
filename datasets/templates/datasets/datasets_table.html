@@ -33,11 +33,11 @@
     <tbody>
     {% for dataset in datasets %}
     <tr>
-        <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset" {% if not dataset.has_data_in_db %}disabled{% endif %}></td>
-        <td class="col-md-2"><a href="{% url 'papers:detail' dataset.paper.id %}">{{ dataset.paper }}</a></td>
-        <td class="col-md-3">{{ dataset.phenotype.link_detail|safe }}</td>
-        <td class="col-md-3">{{ dataset.conditionset.link_detail|safe }}</td>
-        <td class="col-md-1">{{ dataset.collection }}</td>
+        <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset" {# {% if not dataset.has_data_in_db %}disabled{% endif %} #}></td>
+        <td class="col-md-2"><a href="{% url 'papers:detail' object.id %}">{{ object }}</a></td>
+        <td class="col-md-3">{{ dataset.phenotype.observable2.name }} {% if dataset.phenotype.reporter %} ({{ dataset.phenotype.reporter }}) {% endif %}</td>
+        <td class="col-md-3">{{ dataset.conditionset.name }}</td>
+        <td class="col-md-1">{{ dataset.collection.shortname }}</td>
 
         <td class="col-md-1">
             {{ dataset.tested_space|safe }}
@@ -55,17 +55,6 @@
             <a href="/datasets/{{ dataset.id }}/"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
         </td>
     </tr>
-
-    <script>
-        $(document).ready(function(){
-            $(".{{ dataset.id }}").on("hide.bs.collapse", function(){
-                $(".collapsible-{{ dataset.id }}").html('<span class="glyphicon glyphicon-eye-open"></span>');
-            });
-            $(".{{ dataset.id }}").on("show.bs.collapse", function(){
-                $(".collapsible-{{ dataset.id }}").html('<span class="glyphicon glyphicon-eye-close"></span>');
-            });
-        });
-    </script>
 
     {% endfor %}
     </tbody>

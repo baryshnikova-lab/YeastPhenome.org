@@ -9,16 +9,17 @@ from itertools import chain
 
 from papers.models import Paper, Status, Statusdata, Statustested
 from datasets.models import Dataset, Collection, Source
-from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
+from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, LimitedInlineFormSet
 
 
 class DatasetAdmin(ImprovedModelAdmin):
     model = Dataset
-    fields = ('paper', 'conditionset', 'phenotype', 'collection',
+    fields = ('name', 'paper', 'conditionset', 'phenotype', 'collection',
               'tested_num', 'tested_list_published', 'tested_source',
               'data_measured', 'data_published', 'data_available', 'data_source',
               'notes')
     raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
+    readonly_fields = ('name',)
     save_as = True
 
     def get_changeform_initial_data(self, request):
@@ -40,9 +41,15 @@ class DatasetAdmin(ImprovedModelAdmin):
             return HttpResponse('<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(DatasetAdmin, self).response_add(request, obj, post_url_continue)
 
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        obj.name = u'%s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.paper)
+        obj.save()
+
 
 class DatasetInline(ImprovedTabularInline):
     model = Dataset
+    formset = LimitedInlineFormSet
     fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     extra = 0
@@ -119,7 +126,7 @@ class CollectionAdmin(admin.ModelAdmin):
 
 
 class PaperAdmin(admin.ModelAdmin):
-    list_per_page = 1000
+    list_per_page = 50
     list_display = ('pmid', 'user', '__str__', 'datasets_summary',
                     'latest_data_status_name', 'latest_tested_status_name')
     list_filter = ['pub_date', 'last_author']

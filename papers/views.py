@@ -50,7 +50,9 @@ class PaperDetailView(generic.DetailView):
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
 
-        context['datasets'] = obj.dataset_set.all
+        # Define dataset_set
+        context['datasets'] = obj.dataset_set.select_related('phenotype__observable2').select_related('collection').select_related('conditionset').all()
+
         context['id'] = obj.id
 
         # Give credit if credit is due.
@@ -114,7 +116,7 @@ def download_zip(request, paper_id, paper_pmid):
 def paper_datasets(request, paper_id):
     p = get_object_or_404(Paper, pk=paper_id)
 
-    txt = '\n'.join([(u'%s\t%s' % (d.id, d)) for d in p.dataset_set.all()])
+    txt = '\n'.join([(u'%s\t%s' % (d.id, d.name)) for d in p.dataset_set.all()])
 
     response = HttpResponse(txt, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="%s_%d_datasets_list.txt"' % (settings.DOWNLOAD_PREFIX, p.pmid)

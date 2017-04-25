@@ -92,7 +92,7 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 class ConditionSetAdmin(ImprovedModelAdmin):
     list_display = ('id', '__str__', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
-    search_fields = ('name', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
+    search_fields = ('nickname', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('id', 'conditions__type__name',)
     inlines = (DatasetInline,)
 
@@ -101,6 +101,15 @@ class ConditionSetAdmin(ImprovedModelAdmin):
             return HttpResponse(
                 '<script type="text/javascript">window.close();</script>')
         return super(ConditionSetAdmin, self).response_change(request, obj)
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
+        if not obj.nickname or self.nickname == '':
+            obj.name = u'%s' % conditions_list
+        else:
+            obj.name = u'%s (%s)' % (self.nickname, conditions_list)
+        obj.save()
 
 
 admin.site.register(Condition, ConditionAdmin)

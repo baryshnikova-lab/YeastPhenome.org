@@ -4,6 +4,8 @@ from django.contrib.admin.widgets import ManyToManyRawIdWidget, ForeignKeyRawIdW
 from django.core.urlresolvers import reverse
 from django.utils.html import escape
 
+from django.forms.models import BaseInlineFormSet
+
 
 class VerboseForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
     def label_for_value(self, value):
@@ -63,3 +65,9 @@ class ImprovedModelAdmin(admin.ModelAdmin):
                 kwargs['widget'] = VerboseManyToManyRawIdWidget(db_field.rel, site)
             return db_field.formfield(**kwargs)
         return super(ImprovedModelAdmin, self).formfield_for_dbfield(db_field, **kwargs)
+
+
+class LimitedInlineFormSet(BaseInlineFormSet):
+    def get_queryset(self):
+        qs = super(BaseInlineFormSet, self).get_queryset()
+        return qs[:10]

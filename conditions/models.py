@@ -120,15 +120,12 @@ class Condition(models.Model):
 
 class ConditionSet(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
+    nickname = models.CharField(max_length=200, blank=True, null=True)
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        conditions_list = ", ".join([(u'%s' % condition) for condition in self.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
-        if not self.name or self.name == '':
-            return u'%s' % conditions_list
-        else:
-            return u'%s (%s)' % (self.name, conditions_list)
+        return self.name
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()

@@ -65,6 +65,7 @@ class Source(models.Model):
 
 
 class Dataset(models.Model):
+    name = models.CharField(max_length=500, null=True, blank=True)
     paper = models.ForeignKey('papers.Paper')
     conditionset = models.ForeignKey('conditions.ConditionSet', null=True, blank=True)
     phenotype = models.ForeignKey('phenotypes.Phenotype', null=True, blank=True)
@@ -97,11 +98,10 @@ class Dataset(models.Model):
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
 
     def __str__(self):
-        return u'%s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset, self.paper)
+        return u'%s' % self.name
 
     def admin_name(self):
-        return u'%s | %s | %s | %s | %s | %s' % (self.collection, self.phenotype, self.conditionset,
-                                                 self.data_measured, self.data_published, self.data_available)
+        return u'%s | %s | %s | %s' % (self.name, self.data_measured, self.data_published, self.data_available)
 
     class Meta:
         ordering = ['id']
