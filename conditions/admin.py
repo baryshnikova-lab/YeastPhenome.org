@@ -103,13 +103,14 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         return super(ConditionSetAdmin, self).response_change(request, obj)
 
     def save_model(self, request, obj, form, change):
-        obj.save()
-        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
-        if not obj.nickname or self.nickname == '':
+        # super(ConditionSetAdmin, self).save_model(request, obj, form, change)
+        # conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
+        conditions_list = ", ".join([(u'%s' % condition) for condition in form.cleaned_data['conditions']])
+        if not obj.nickname or obj.nickname == '':
             obj.name = u'%s' % conditions_list
         else:
-            obj.name = u'%s (%s)' % (self.nickname, conditions_list)
-        obj.save()
+            obj.name = u'%s (%s)' % (obj.nickname, conditions_list)
+        super(ConditionSetAdmin, self).save_model(request, obj, form, change)
 
 
 admin.site.register(Condition, ConditionAdmin)
