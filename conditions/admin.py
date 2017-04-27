@@ -106,10 +106,10 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         # super(ConditionSetAdmin, self).save_model(request, obj, form, change)
         # conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
         conditions_list = ", ".join([(u'%s' % condition) for condition in form.cleaned_data['conditions']])
-        if not obj.nickname or obj.nickname == '':
+        if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
             obj.name = u'%s' % conditions_list
         else:
-            obj.name = u'%s (%s)' % (obj.nickname, conditions_list)
+            obj.name = u'%s (%s)' % (form.cleaned_data['nickname'], conditions_list)
         super(ConditionSetAdmin, self).save_model(request, obj, form, change)
 
 
