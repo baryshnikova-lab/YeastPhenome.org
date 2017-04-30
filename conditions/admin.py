@@ -94,6 +94,8 @@ class ConditionSetAdmin(ImprovedModelAdmin):
     raw_id_fields = ('conditions',)
     search_fields = ('nickname', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('id', 'conditions__type__name',)
+    readonly_fields = ('name',)
+    fields = ('name', 'nickname', 'conditions', 'description',)
     inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
@@ -103,14 +105,14 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         return super(ConditionSetAdmin, self).response_change(request, obj)
 
     def save_model(self, request, obj, form, change):
-        # super(ConditionSetAdmin, self).save_model(request, obj, form, change)
-        # conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name')])
-        conditions_list = ", ".join([(u'%s' % condition) for condition in form.cleaned_data['conditions']])
+        form.save_m2m()
+        obj.save()
+        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name').all()])
         if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
             obj.name = u'%s' % conditions_list
         else:
             obj.name = u'%s (%s)' % (form.cleaned_data['nickname'], conditions_list)
-        super(ConditionSetAdmin, self).save_model(request, obj, form, change)
+        obj.save()
 
 
 admin.site.register(Condition, ConditionAdmin)
