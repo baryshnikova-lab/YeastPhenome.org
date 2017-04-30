@@ -1,0 +1,15 @@
+{% include 'django/forms/widgets/input.html' %}
+
+{% if related_url %}
+    <a href="{{ related_url }}" class="related-lookup" id="lookup_id_{{ widget.name }}" title="{{ link_title }}" onclick="return showAddAnotherPopup(this);"></a>
+{% endif %}
+
+{% if link_label %}
+    &nbsp;<strong>
+    {% if link_url %}
+        <a href="{{ link_url }}?_popup=1" onclick="return showAddAnotherPopup(this);">{{ link_label }}</a>
+    {% else %}
+        {{ link_label }}
+    {% endif %}
+    </strong>
+{% endif %}

@@ -116,7 +116,7 @@ class SourceAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
             return HttpResponse(
-                '<script type="text/javascript">window.close();</script>')
+                '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(SourceAdmin, self).response_change(request, obj)
 
 
@@ -167,7 +167,7 @@ class PaperAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
             return HttpResponse(
-                '<script type="text/javascript">window.close();</script>')
+                '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(PaperAdmin, self).response_change(request, obj)
 
 

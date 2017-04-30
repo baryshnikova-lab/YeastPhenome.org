@@ -4,10 +4,19 @@ from django.contrib.admin.widgets import ManyToManyRawIdWidget, ForeignKeyRawIdW
 from django.core.urlresolvers import reverse
 from django.utils.html import escape
 
+from django.urls.exceptions import NoReverseMatch
+from django.utils.text import Truncator
+
+
 from django.forms.models import BaseInlineFormSet
 
 
 class VerboseForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
+
+    # Django 1.11
+    template_name = 'foreign_key_raw_id.html'
+
+    # Django 1.10.5
     def label_for_value(self, value):
         key = self.rel.get_related_field().name
         try:
@@ -22,6 +31,11 @@ class VerboseForeignKeyRawIdWidget(ForeignKeyRawIdWidget):
 
 
 class VerboseManyToManyRawIdWidget(ManyToManyRawIdWidget):
+
+    # Django 1.11
+    template_name = 'many_to_many_raw_id.html'
+
+    # Django 1.10.5
     def label_for_value(self, value):
         values = value.split(',')
         str_values = []
@@ -30,15 +44,45 @@ class VerboseManyToManyRawIdWidget(ManyToManyRawIdWidget):
             try:
                 obj = self.rel.to._default_manager.using(self.db).get(**{key: v})
                 x = (u'%s' % obj)
-                # x = smart_unicode(obj)
                 change_url = reverse(
                     "admin:%s_%s_change" % (obj._meta.app_label, obj._meta.object_name.lower()),
                     args=(obj.pk,)
                 )
-                str_values += ['<strong><a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a></strong>' % (change_url, escape(x))]
+                str_values += [
+                    '<strong><a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a></strong>' % (
+                    change_url, escape(x))]
             except self.rel.to.DoesNotExist:
                 str_values += [u'???']
         return u', '.join(str_values)
+
+    # Django 1.11
+    def label_and_url_for_value(self, value):
+        key = self.rel.get_related_field().name
+
+        link_label = []
+        link_url = []
+        for v in value:
+            try:
+                obj = self.rel.model._default_manager.using(self.db).get(**{key: v})
+            except (ValueError, self.rel.model.DoesNotExist):
+                return '', ''
+
+            try:
+                url = reverse(
+                    '%s:%s_%s_change' % (
+                        self.admin_site.name,
+                        obj._meta.app_label,
+                        obj._meta.object_name.lower(),
+                    ),
+                    args=(obj.pk,)
+                )
+            except NoReverseMatch:
+                url = ''    # Admin not registered for target model.
+
+            link_label.append(Truncator(obj).words(14, truncate='...'))
+            link_url.append(url)
+
+        return zip(link_label, link_url), ''
 
 
 class ImprovedTabularInline(admin.TabularInline):
