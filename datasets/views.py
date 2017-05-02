@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.views import generic
-from django.contrib.auth.decorators import login_required
 
 from papers.models import Paper
 from datasets.models import Dataset, Data
@@ -19,20 +18,23 @@ class DatasetDetailView(generic.DetailView):
     context_object_name = 'dataset'
 
 
-@login_required
 def download_all(request):
 
-    datasets = Dataset.objects.select_related().filter(paper__latest_data_status__status__status_name='loaded').all()
+    datasets = Dataset.objects.\
+        select_related('paper__latest_tested_status__status').\
+        filter(paper__latest_data_status__status__status_name='loaded').all()
 
     datasets_list = list()
     for d in datasets:
-        fields = [d.id, d.name]
+        fields = [d.id, d.name, d.paper.latest_tested_status]
         fields_str = '\t'.join(['%s' % field for field in fields])
         datasets_list.append(fields_str)
     txt = '\n'.join(datasets_list)
 
+    txt = 'id\tname\tlatest_tested_status\n' + txt
+
     response = HttpResponse(txt, content_type='text/plain')
-    response['Content-Disposition'] = 'attachment; filename="%s_datasets.txt"' % (settings.DOWNLOAD_PREFIX)
+    response['Content-Disposition'] = 'attachment; filename="%s_datasets.txt"' % settings.DOWNLOAD_PREFIX
 
     return response
 
