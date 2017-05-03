@@ -125,7 +125,10 @@ class ConditionSet(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return ''
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()
