@@ -26,12 +26,12 @@ def download_all(request):
 
     datasets_list = list()
     for d in datasets:
-        fields = [d.id, d.name, d.paper.latest_tested_status]
+        fields = [d.id, d.name, d.paper.pmid, d.paper.latest_tested_status]
         fields_str = '\t'.join(['%s' % field for field in fields])
         datasets_list.append(fields_str)
     txt = '\n'.join(datasets_list)
 
-    txt = 'id\tname\tlatest_tested_status\n' + txt
+    txt = 'id\tname\tpmid\tlatest_tested_status\n' + txt
 
     response = HttpResponse(txt, content_type='text/plain')
     response['Content-Disposition'] = 'attachment; filename="%s_datasets.txt"' % settings.DOWNLOAD_PREFIX
