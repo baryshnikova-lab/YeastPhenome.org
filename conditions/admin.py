@@ -105,8 +105,9 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         return super(ConditionSetAdmin, self).response_change(request, obj)
 
     def save_model(self, request, obj, form, change):
-        form.save_m2m()
         obj.save()
+        form.save_m2m()
+        # obj.save()
         conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name').all()])
         if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
             obj.name = u'%s' % conditions_list
