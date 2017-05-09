@@ -1,1 +1,5 @@
+{% if object.latest_data_status_name == 'loaded' %}
 <a class="btn btn-success" role="button" href="{% url 'papers:download_zip' paper_id=object.id paper_pmid=object.pmid %}">Download paper package</a>
+{% else %}
+<a class="btn btn-success disabled" role="button">Paper package not available yet</a>
+{% endif %}
