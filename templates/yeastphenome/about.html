@@ -20,12 +20,13 @@
             <p>Our goal is to collect, process and share in a standardized format the results of all genome-scale experiments that have examined the yeast deletion collection for any given <a href="{% url 'phenotypes:index' %}">phenotype</a> under any given <a href="{% url 'conditions:index' %}">experimental condition</a>.</p>
 
             <p>In order to be included in the compendium, a study must meet all of the following criteria:
-                <ul>
+                <ol>
                     <li>use any current or past version of the Mat-a, Mat-alpha, homozygous diploid or heterozygous diploid deletion collection</li>
                     <li>test at least 1,000 mutants</li>
                     <li>record a quantitative (continuous) or qualitative (binary, discrete, categorical) phenotype (or the lack thereof) for all mutants</li>
                     <li>report data on all of the tested mutants or just the most extreme/significant hits (studies that report an arbitrary subset of the hits based on biological interest are excluded)</li>
-                </ul>
+                    <li>be described in a Pubmed-indexed journal article</li>
+                </ol>
             </p>
 
             <p>Our primary source of data are the supplementary materials of the relevant <a href="{% url 'papers:all' %}">publications</a>. On top of that, <a href="{% url 'contributors' %}">many authors</a> have contributed more complete and previously unpublished versions of their datasets (e.g., raw quantitative values from which the published hit list was derived). These datasets are explicitly flagged to emphasize their special status.</p>
