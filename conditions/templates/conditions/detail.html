@@ -17,7 +17,9 @@
 
             <h1>{{ object }}</h1>
 
+
             <table class="table">
+
                 <tr>
                     <th width="20%" scope="row" class="first">ChEBI name</th>
                     <td class="first">{{ object.chebi_name }}
@@ -31,6 +33,7 @@
                         {% endif %}
                     </td>
                 </tr>
+
                 <tr>
                     <th width="20%" scope="row">PubChem name</th>
                     <td>{{ object.pubchem_name }}
@@ -39,6 +42,7 @@
                         {% endif %}
                     </td>
                 </tr>
+
                 <tr>
                     <th width="20%" scope="row">Names used in publications</th>
                     <td>
@@ -46,12 +50,12 @@
                     </td>
                 </tr>
 
-            {% if object.definition %}
+                {% if object.definition %}
                 <tr>
                     <th width="20%" scope="row">Description</th>
                     <td>{{ object.definition }}</td>
                 </tr>
-            {% endif %}
+                {% endif %}
 
             </table>
 

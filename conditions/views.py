@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.http import HttpResponse
 from django.conf import settings
 import json
+import re
 
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
@@ -58,7 +59,8 @@ def conditionclass(request, class_id):
     for relation in class_entity.get_incomings():
         if relation.get_type() == 'has_role':
             tid = relation.get_target_chebi_id()
-            tid = int(filter(str.isdigit, tid))
+            tid = re.search('(?<=CHEBI:)(\d)*', tid)
+            tid = int(tid.group(0))
             children.append(tid)
 
     conditiontypes = ConditionType.objects.filter(chebi_id__in=children)
