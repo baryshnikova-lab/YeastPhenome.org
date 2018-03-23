@@ -8,6 +8,7 @@
 <body>
 
 {% include "navbar.html" with active='about' %}
+{% load humanize %}
 
 <div class="container-fluid">
 
@@ -33,7 +34,7 @@
 
             <p>The individual datasets are available for download as soon as they are curated (e.g., see the green "Download all data" button for <a href="http://www.yeastphenome.org/papers/125/">Bleackley MR~MacGillivray RT, 2011</a>). The full compendium of all datasets will be accessible later on, as soon as we finalize the standardized nomenclature of phenotypes and experimental conditions.</p>
 
-            <p>Yeastphenome.org was created and is being maintained at <a class="external" href="http://www.princeton.edu/">Princeton University</a> by:</p>
+            <p>Yeastphenome.org was created and is being maintained by:</p>
 
             <ul>
                 <li>Anastasia Baryshnikova (principal investigator, <a class="external" href="http://www.baryshnikova-lab.org">www.baryshnikova-lab.org</a>)</li>
@@ -44,6 +45,16 @@
                 <li>Sven Heinicke (database and website support)</li>
                 <li>Fan Kang (database support)</li>
                 <li>Mark Schroeder (server support)</li>
+            </ul>
+
+            <h2>Current stats</h2>
+
+            <ul>
+                <li>Total publications: {{ papers_nr|intcomma }}</li>
+                <li>Publications with data: {{ papers_processed_nr|intcomma }} ({% widthratio papers_processed_nr papers_nr 100 %}%)</li>
+                <li>Phenotypes with data: {{ phenotypes_nr|intcomma }}</li>
+                <li>Environments with data: {{ conditions_nr|intcomma }}</li>
+                <li>Total datasets: {{ datasets_nr|intcomma }}</li>
             </ul>
 
             <h2>Frequenty Asked Questions (FAQ)</h2>
