@@ -97,12 +97,17 @@ class PaperDetailView(generic.DetailView):
             else:
                 pgn = '.'
 
+            if 'Volume' in article['Journal']['JournalIssue'].keys():
+                vol = article['Journal']['JournalIssue']['Volume']
+            else:
+                vol = ''
+
             context['title'] = article['ArticleTitle']
             context['authors'] = authors_list
             context['abstract'] = article['Abstract']['AbstractText'][0]
             context['citation'] = u'%s %s; %s:%s' % (article['Journal']['ISOAbbreviation'],
                                                       pubdate,
-                                                      article['Journal']['JournalIssue']['Volume'],
+                                                      vol,
                                                       pgn)
 
         return context
