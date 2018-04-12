@@ -50,10 +50,10 @@
             <h2>Current stats</h2>
 
             <ul>
-                <li>Total publications: {{ papers_nr|intcomma }}</li>
-                <li>Publications with data: {{ papers_processed_nr|intcomma }} ({% widthratio papers_processed_nr papers_nr 100 %}%)</li>
-                <li>Phenotypes with data: {{ phenotypes_nr|intcomma }}</li>
-                <li>Environments with data: {{ conditions_nr|intcomma }}</li>
+                <li>Total publications: {{ papers_nr|intcomma }} (+ {{ papers_hopeless_nr|intcomma }} for which data could not be recovered)</li>
+                <li>Publications with data loaded: {{ papers_processed_nr|intcomma }} ({% widthratio papers_processed_nr papers_nr 100 %}%)</li>
+                <li>Phenotypes with data loaded: {{ phenotypes_nr|intcomma }}</li>
+                <li>Environments with data loaded: {{ conditions_nr|intcomma }}</li>
                 <li>Total datasets: {{ datasets_nr|intcomma }}</li>
             </ul>
 

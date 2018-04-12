@@ -8,6 +8,7 @@
 <body>
 
 {% include "navbar.html" with active="" %}
+{% load humanize %}
 
 <div class="container-fluid">
 
@@ -32,14 +33,14 @@
         </div>
 
         <div class="col-xs-4">
-            <p>Current status for data collection:</p>
+            <p>General stats on data collection (<a href="/about/">more details</a>):</p>
             <ul>
-                <li>{{ paper_num_total }} <a href="{% url 'papers:all' %}">papers</a></li>
-                <li>{{ phenotype_num_total }} <a href="{% url 'phenotypes:index' %}">phenotypes</a></li>
-                <li>{{ condition_num }} <a href="{% url 'conditions:index' %}">experimental conditions</a></li>
+                <li>{{ papers_nr }} <a href="{% url 'papers:all' %}">papers</a></li>
+                <li>{{ phenotypes_nr|intcomma }} <a href="{% url 'phenotypes:index' %}">phenotypes</a></li>
+                <li>{{ conditions_nr|intcomma }} <a href="{% url 'conditions:index' %}">experimental conditions</a></li>
             </ul>
 
-            <p>Updated on: {{ updated }}.</p>
+            <p>Updated on: {{ updated_on }}.</p>
         </div>
 
     </div>
