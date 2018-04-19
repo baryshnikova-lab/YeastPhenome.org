@@ -53,9 +53,11 @@
 
             <h3>Curation history</h3>
             <div class="row">
+                {% for k, v in paper.history.items %}
                 <div class="col-xs-4">
                     <table class="table table-condensed table-no-border">
-                        {% for x in paper.history %}
+                        <caption><h4>{{ k|capfirst }}</h4></caption>
+                        {% for x in v %}
                         <tr>
                             <td>{{ x.status_date }}</td>
                             <td>{{ x.type|capfirst }} {{ x.status.status_name }}.</td>
@@ -63,6 +65,7 @@
                         {% endfor %}
                     </table>
                 </div>
+                {% endfor %}
             </div>
 
             {% include "footer.html" %}
