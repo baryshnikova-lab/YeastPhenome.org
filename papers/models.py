@@ -143,8 +143,8 @@ class Paper(models.Model):
     latest_tested_status_name.admin_order_field = 'latest_tested_status__status__status_name'
 
     def history(self):
-        queryset_data = Statusdata.objects.filter(paper=self).all().annotate(type=Value('data', CharField()))
-        queryset_tested = Statustested.objects.filter(paper=self).all().annotate(type=Value('tested strains', CharField()))
+        queryset_data = Statusdata.objects.filter(paper=self).order_by('status_date')
+        queryset_tested = Statustested.objects.filter(paper=self).order_by('status_date')
         return {'data': queryset_data, 'tested strains': queryset_tested}
 
     def link_detail(self):
