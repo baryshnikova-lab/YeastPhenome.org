@@ -17,19 +17,19 @@ def get_latest_stats():
     datasets_queryset = Dataset.objects.all()
 
     # Total number of papers to process
-    f = Q(latest_data_status__status__status_name__in=['not relevant', 'abandoned', 'not available'])
+    f = Q(latest_data_status__status__status_name__in=['not relevant', 'request abandoned', 'not available'])
     papers_nr = papers_queryset.exclude(f).count()
 
     # Latest modified paper
     updated_on = papers_queryset.latest().modified_on
 
     # Number of hopeless papers
-    f = Q(latest_data_status__status__status_name__in=['abandoned', 'not available'])
+    f = Q(latest_data_status__status__status_name__in=['request abandoned', 'not available'])
     papers_hopeless_nr = papers_queryset.filter(f).count()
 
     # Number of papers processed and loaded
     f = Q(latest_data_status__status__status_name__exact='loaded') & \
-        Q(latest_tested_status__status__status_name__in=['loaded', 'abandoned', 'not available'])
+        Q(latest_tested_status__status__status_name__in=['loaded', 'request abandoned', 'not available'])
     papers_queryset = papers_queryset.filter(f)
     papers_processed_nr = papers_queryset.count()
 
