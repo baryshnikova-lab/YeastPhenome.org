@@ -68,6 +68,7 @@ class Dataset(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
     paper = models.ForeignKey('papers.Paper')
     conditionset = models.ForeignKey('conditions.ConditionSet', null=True, blank=True)
+    medium = models.ForeignKey('conditions.Medium', null=True, blank=True)
     phenotype = models.ForeignKey('phenotypes.Phenotype', null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
 
@@ -101,7 +102,12 @@ class Dataset(models.Model):
         return u'%s' % self.name
 
     def admin_name(self):
-        return u'%s | %s | %s | %s' % (self.name, self.data_measured, self.data_published, self.data_available)
+        data_info = [self.data_measured, self.data_published, self.data_available]
+        data_info_acronym = []
+        for dt in data_info:
+            data_info_acronym.append("".join(word[0] for word in dt.split()))
+        data_all = u'%s | %s' % (self.name, ", ".join(data_info_acronym))
+        return data_all
 
     class Meta:
         ordering = ['id']

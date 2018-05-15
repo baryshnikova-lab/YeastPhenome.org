@@ -104,7 +104,11 @@ class Condition(models.Model):
         get_latest_by = 'modified_on'
 
     def __str__(self):
-        return u'%s [%s]' % (self.type, self.dose)
+        if self.dose == 'standard':
+            txt = u'%s' % self.type
+        else:
+            txt = u'%s [%s]' % (self.type, self.dose)
+        return txt
 
     def conditionsets(self):
         return ConditionSet.objects.filter(conditions=self).all()
@@ -150,4 +154,46 @@ class ConditionSet(models.Model):
 
     def link_edit(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_conditionset_change", args=(self.id,)), self)
+    link_edit.allow_tags = True
+
+
+class Medium(models.Model):
+    name = models.CharField(max_length=200, blank=True, null=True)
+    nickname = models.CharField(max_length=200, blank=True, null=True)
+    conditions = models.ManyToManyField(Condition)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        if self.name:
+            return self.name
+        else:
+            return ''
+
+    def papers(self):
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__medium=self).distinct()
+
+    def papers_link_list(self):
+        return ', '.join([p.link_detail() for p in self.papers()])
+
+    papers_link_list.allow_tags = True
+
+    def papers_edit_link_list(self):
+        return ', '.join([p.link_edit() for p in self.papers()])
+
+    papers_edit_link_list.allow_tags = True
+
+    # def datasets(self):
+    #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+
+    def link_detail(self):
+        txt = ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
+        if self.nickname:
+            txt = u'%s (%s)' % (self.nickname, txt)
+        return txt
+
+    link_detail.allow_tags = True
+
+    def link_edit(self):
+        return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_medium_change", args=(self.id,)), self)
+
     link_edit.allow_tags = True

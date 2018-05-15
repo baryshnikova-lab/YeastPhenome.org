@@ -7,7 +7,7 @@ import re
 from pubchempy import Compound
 from libchebipy import ChebiEntity
 
-from conditions.models import ConditionSet, Condition, ConditionType
+from conditions.models import ConditionSet, Condition, ConditionType, Medium
 from datasets.models import Dataset
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
@@ -116,6 +116,34 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         obj.save()
 
 
+class MediumAdmin(ImprovedModelAdmin):
+    list_display = ('id', '__str__', 'papers_edit_link_list',)
+    raw_id_fields = ('conditions',)
+    search_fields = ('nickname', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
+    ordering = ('id', 'conditions__type__name',)
+    readonly_fields = ('name',)
+    fields = ('name', 'nickname', 'conditions', 'description',)
+    inlines = (DatasetInline,)
+
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
+        return super(MediumAdmin, self).response_change(request, obj)
+
+    def save_model(self, request, obj, form, change):
+        obj.save()
+        form.save_m2m()
+        # obj.save()
+        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name').all()])
+        if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
+            obj.name = u'%s' % conditions_list
+        else:
+            obj.name = u'%s' % form.cleaned_data['nickname']
+        obj.save()
+
+
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)
 admin.site.register(ConditionSet, ConditionSetAdmin)
+admin.site.register(Medium, MediumAdmin)

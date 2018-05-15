@@ -14,12 +14,14 @@ from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, Limited
 
 class DatasetAdmin(ImprovedModelAdmin):
     model = Dataset
-    fields = ('name', 'paper', 'conditionset', 'phenotype', 'collection',
+    fields = ('name', 'paper', 'conditionset', 'medium', 'phenotype', 'collection',
               'tested_num', 'tested_list_published', 'tested_source',
               'data_measured', 'data_published', 'data_available', 'data_source',
               'notes')
-    raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
+    raw_id_fields = ('paper', 'conditionset', 'medium', 'phenotype', 'tested_source', 'data_source')
     readonly_fields = ('name',)
+    search_fields = ('name',)
+
     save_as = True
 
     def get_changeform_initial_data(self, request):
@@ -43,7 +45,7 @@ class DatasetAdmin(ImprovedModelAdmin):
 
     def save_model(self, request, obj, form, change):
         obj.save()
-        obj.name = u'%s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.paper)
+        obj.name = u'%s | %s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.medium, obj.paper)
         obj.save()
 
 
