@@ -7,7 +7,7 @@ import re
 from pubchempy import Compound
 from libchebipy import ChebiEntity
 
-from conditions.models import ConditionSet, Condition, ConditionType, Medium
+from conditions.models import ConditionSet, Condition, ConditionType, ConditionTypeGroup, Medium
 from datasets.models import Dataset
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
@@ -50,6 +50,11 @@ class ConditionInline(admin.TabularInline):
     model = Condition
     ordering = ('dose',)
     extra = 0
+
+
+class ConditionTypeGroupAdmin(admin.ModelAdmin):
+    list_display = ('name','order')
+    search_fields = ('name',)
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
@@ -107,10 +112,12 @@ class ConditionSetAdmin(ImprovedModelAdmin):
     def save_model(self, request, obj, form, change):
         obj.save()
         form.save_m2m()
-        # obj.save()
-        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name').all()])
         if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
-            obj.name = u'%s' % conditions_list
+            conditions_list = [(u'%s' % condition) for condition in
+                               obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                       'type__name').all()]
+            conditions_str = ", ".join(conditions_list)
+            obj.name = u'%s' % conditions_str
         else:
             obj.name = u'%s' % form.cleaned_data['nickname']
         obj.save()
@@ -145,5 +152,6 @@ class MediumAdmin(ImprovedModelAdmin):
 
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)
+admin.site.register(ConditionTypeGroup, ConditionTypeGroupAdmin)
 admin.site.register(ConditionSet, ConditionSetAdmin)
 admin.site.register(Medium, MediumAdmin)
