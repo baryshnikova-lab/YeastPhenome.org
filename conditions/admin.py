@@ -112,7 +112,7 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
             obj.name = u'%s' % conditions_list
         else:
-            obj.name = u'%s (%s)' % (form.cleaned_data['nickname'], conditions_list)
+            obj.name = u'%s' % form.cleaned_data['nickname']
         obj.save()
 
 
