@@ -129,10 +129,13 @@ class ConditionSet(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        if self.name:
-            return self.name
+        if self.nickname:
+            txt = self.nickname
+        elif self.name:
+            txt = self.name
         else:
-            return ''
+            txt = ''
+        return txt
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()

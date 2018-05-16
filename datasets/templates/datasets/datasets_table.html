@@ -24,6 +24,7 @@
         <th>Papers</th>
         <th>Phenotype</th>
         <th>Conditions</th>
+        <th>Media</th>
         <th>Collection</th>
         <th>Tested mutants</th>
         <th>Data</th>
@@ -37,6 +38,7 @@
             <td class="col-md-2"><a href="{% url 'papers:detail' dataset.paper.id %}">{{ dataset.paper }}</a></td>
             <td class="col-md-3">{{ dataset.phenotype.observable2.name }} {% if dataset.phenotype.reporter %} ({{ dataset.phenotype.reporter }}) {% endif %}</td>
             <td class="col-md-3">{{ dataset.conditionset.name }}</td>
+            <td class="col-md-3">{{ dataset.medium.name }}</td>
             <td class="col-md-1">{{ dataset.collection.shortname }}</td>
 
             <td class="col-md-1">
