@@ -21,6 +21,7 @@ class DatasetAdmin(ImprovedModelAdmin):
     raw_id_fields = ('paper', 'conditionset', 'medium', 'phenotype', 'tested_source', 'data_source')
     readonly_fields = ('name',)
     search_fields = ('name',)
+    ordering = ('name',)
 
     save_as = True
 
@@ -54,6 +55,7 @@ class DatasetInline(ImprovedTabularInline):
     formset = LimitedInlineFormSet
     fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
+    ordering = ('name',)
     extra = 0
     max_num = 5000
 
