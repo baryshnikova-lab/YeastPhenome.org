@@ -1,0 +1,31 @@
+{% load my_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' %}
+    <title>Datasets / {{ SITE_NAME }}</title>
+</head>
+
+<body>
+{% include "navbar.html" with active='datasets' %}
+
+<div class="container-fluid">
+
+    <h1>Datasets</h1>
+
+    <h3>Dataset lists of particular interest</h3>
+    <ul>
+        <li><a href="/datasets/class/growth/">Growth in rich or minimal media</a></li>
+    </ul>
+
+    {% include "footer.html" %}
+
+</div>
+
+<script>$(document).ready(function(){
+ $("#papersTable").tablesorter();
+});</script>
+
+{% include "ga.html" %}
+
+</body></html>

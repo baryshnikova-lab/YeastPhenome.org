@@ -18,6 +18,28 @@ class DatasetDetailView(generic.DetailView):
     context_object_name = 'dataset'
 
 
+def index(request):
+
+    context = ''
+    return render(request, 'datasets/index.html', context)
+
+
+def datasets_growth(request):
+
+    class_description = 'List of datasets that measure growth in rich or minimal media. These may be standalone experiments or controls within larger studies of chemical and/or physical perturbations.'
+
+    datasets = Dataset.objects.filter(conditionset__name='standard')\
+        .filter(phenotype__observable2__name__startswith='growth')\
+        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+    return render(request, 'datasets/class.html', {
+        'datasets': datasets,
+        'class_description': class_description,
+        'class_name': 'Growth in rich or minimal media',
+        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
+        'USER_AUTH': request.user.is_authenticated()
+    })
+
+
 def download_all(request):
 
     datasets = Dataset.objects.\
