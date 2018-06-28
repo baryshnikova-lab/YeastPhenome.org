@@ -26,9 +26,9 @@
     {% if node.has_annotated_descendants %}
     <tr>
         <!-- putting text-nowrap is a <col> tag didn't work. -->
-        <td class="text-nowrap">{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
-        <td>{{ node.conditiontypes|join_and_more:7|safe }}</td>
-        <td>{{ node.papers|join_and_more:7|safe }}</td>
+        <td class="col-md-4">{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
+        <td class="col-md-4">{{ node.conditiontypes|join_and_more:7|safe }}</td>
+        <td class="col-md-4">{{ node.papers|join_and_more:7|safe }}</td>
         {% if not node.is_leaf_node %}{{ children }}{% endif %}
     </tr>
     {% endif %}
