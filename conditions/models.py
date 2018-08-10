@@ -201,7 +201,10 @@ class Medium(models.Model):
     #     super(Medium, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.display_name
+        if self.display_name:
+            return self.display_name
+        else:
+            return ''
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__medium=self).distinct()
