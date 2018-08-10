@@ -67,8 +67,15 @@ class Source(models.Model):
 class Dataset(models.Model):
     name = models.CharField(max_length=500, null=True, blank=True)
     paper = models.ForeignKey('papers.Paper')
+
     conditionset = models.ForeignKey('conditions.ConditionSet', null=True, blank=True)
     medium = models.ForeignKey('conditions.Medium', null=True, blank=True)
+
+    control_conditionset = models.ForeignKey('conditions.ConditionSet', related_name='control_conditionset',
+                                             null=True, blank=True)
+    control_medium = models.ForeignKey('conditions.Medium', related_name='control_medium',
+                                       null=True, blank=True)
+
     phenotype = models.ForeignKey('phenotypes.Phenotype', null=True, blank=True)
     collection = models.ForeignKey(Collection, null=True, blank=True)
 

@@ -21,13 +21,13 @@ class ConditionAdminForm(forms.ModelForm):
         super(ConditionAdminForm, self).clean()
 
 
-class DatasetInline(ImprovedTabularInline):
-    model = Dataset
-    fields = ('paper', 'conditionset', 'phenotype', 'collection',
-              'tested_num', 'tested_list_published', 'tested_source',
-              'data_measured', 'data_published', 'data_available', 'data_source', 'notes')
-    raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
-    extra = 0
+# class DatasetInline(ImprovedTabularInline):
+#     model = Dataset
+#     fields = ('paper', 'conditionset', 'control_conditionset', 'phenotype', 'collection',
+#               'tested_num', 'tested_list_published', 'tested_source',
+#               'data_measured', 'data_published', 'data_available', 'data_source', 'notes')
+#     raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
+#     extra = 0
 
 
 class ConditionAdmin(ImprovedModelAdmin):
@@ -53,7 +53,7 @@ class ConditionInline(admin.TabularInline):
 
 
 class ConditionTypeGroupAdmin(admin.ModelAdmin):
-    list_display = ('name','order')
+    list_display = ('name', 'order')
     search_fields = ('name',)
 
 
@@ -101,7 +101,7 @@ class ConditionSetAdmin(ImprovedModelAdmin):
     ordering = ('id', 'conditions__type__name',)
     readonly_fields = ('name',)
     fields = ('name', 'nickname', 'conditions', 'description',)
-    inlines = (DatasetInline,)
+    # inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
@@ -130,7 +130,7 @@ class MediumAdmin(ImprovedModelAdmin):
     ordering = ('id', 'conditions__type__name',)
     readonly_fields = ('name',)
     fields = ('name', 'nickname', 'conditions', 'description',)
-    inlines = (DatasetInline,)
+    # inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':

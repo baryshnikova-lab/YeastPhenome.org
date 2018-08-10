@@ -14,11 +14,13 @@ from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, Limited
 
 class DatasetAdmin(ImprovedModelAdmin):
     model = Dataset
-    fields = ('name', 'paper', 'conditionset', 'medium', 'phenotype', 'collection',
+    fields = ('name', 'paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
+              'phenotype', 'collection',
               'tested_num', 'tested_list_published', 'tested_source',
               'data_measured', 'data_published', 'data_available', 'data_source',
               'notes')
-    raw_id_fields = ('paper', 'conditionset', 'medium', 'phenotype', 'tested_source', 'data_source')
+    raw_id_fields = ('paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
+                     'phenotype', 'tested_source', 'data_source')
     readonly_fields = ('name',)
     search_fields = ('name',)
     ordering = ('name',)

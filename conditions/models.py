@@ -26,16 +26,6 @@ class ConditionType(models.Model):
     chebi_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
     chebi_name = models.CharField(max_length=200, blank=True, null=True)
 
-    # CONDITION_GROUP_CHOICES = (
-    #     ('chemical', 'chemical'),
-    #     ('physical', 'physical'),
-    #     ('nutrient', 'nutrient'),
-    #     ('other', 'other'),
-    # )
-
-    # group = models.CharField(max_length=200,
-    #                          choices=CONDITION_GROUP_CHOICES,
-    #                          blank=True, null=True)
     group = models.ForeignKey(ConditionTypeGroup, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
