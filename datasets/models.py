@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.apps import apps
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.core.urlresolvers import reverse
 
 
 class Collection(models.Model):
@@ -149,6 +150,11 @@ class Dataset(models.Model):
     def has_data_in_db(self):
         return self.data_set.exists()
     has_data_in_db.boolean = True
+
+    def link_edit(self):
+        html = '<a href="%s">%s</a>' % (reverse("admin:datasets_dataset_change", args=(self.id,)), self)
+        return html
+    link_edit.allow_tags = True
 
 
 class Data(models.Model):

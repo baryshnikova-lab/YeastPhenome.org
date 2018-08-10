@@ -21,15 +21,6 @@ class ConditionAdminForm(forms.ModelForm):
         super(ConditionAdminForm, self).clean()
 
 
-# class DatasetInline(ImprovedTabularInline):
-#     model = Dataset
-#     fields = ('paper', 'conditionset', 'control_conditionset', 'phenotype', 'collection',
-#               'tested_num', 'tested_list_published', 'tested_source',
-#               'data_measured', 'data_published', 'data_available', 'data_source', 'notes')
-#     raw_id_fields = ('paper', 'conditionset', 'phenotype', 'tested_source', 'data_source')
-#     extra = 0
-
-
 class ConditionAdmin(ImprovedModelAdmin):
     form = ConditionAdminForm
     list_display = ('id', 'type', 'dose', 'conditionsets_str_list')
@@ -95,21 +86,38 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 
 
 class ConditionSetAdmin(ImprovedModelAdmin):
-    list_display = ('id', 'display_name', 'papers_edit_link_list',)
-    raw_id_fields = ('conditions',)
+    list_display = ('id', 'display_name', 'papers_edit_link_list', )
+    raw_id_fields = ('conditions', )
     search_fields = ('systematic_name', 'common_name',
                      'conditions__type__name', 'conditions__type__other_names',
                      'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('id', 'display_name', )
-    readonly_fields = ('systematic_name', 'display_name', )
-    fields = ('systematic_name', 'common_name', 'display_name', 'conditions', 'description',)
-    # inlines = (DatasetInline,)
+
+    fields = ('systematic_name', 'common_name', 'display_name',
+              'conditions', 'description', 'datasets_edit_link_list', )
+    readonly_fields = ('systematic_name', 'display_name', 'datasets_edit_link_list', )
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
             return HttpResponse(
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(ConditionSetAdmin, self).response_change(request, obj)
+
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        form.save_m2m()
+
+        conditions_list = [(u'%s' % condition) for condition in
+                           obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                   'type__name').all()]
+        obj.systematic_name = ", ".join(conditions_list)
+
+        obj.display_name = obj.systematic_name
+        if obj.common_name:
+            obj.display_name = obj.common_name
+
+        obj.save()
 
 
 class MediumAdmin(ImprovedModelAdmin):
@@ -119,15 +127,32 @@ class MediumAdmin(ImprovedModelAdmin):
                      'conditions__type__name', 'conditions__type__other_names',
                      'conditions__type__pubchem_name', 'conditions__type__chebi_name')
     ordering = ('id', 'display_name', )
-    readonly_fields = ('systematic_name', 'display_name', )
-    fields = ('systematic_name', 'common_name', 'display_name', 'conditions', 'description',)
-    # inlines = (DatasetInline,)
+
+    fields = ('systematic_name', 'common_name', 'display_name',
+              'conditions', 'description', 'datasets_edit_link_list', )
+    readonly_fields = ('systematic_name', 'display_name', 'datasets_edit_link_list', )
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
             return HttpResponse(
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(MediumAdmin, self).response_change(request, obj)
+
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        form.save_m2m()
+
+        conditions_list = [(u'%s' % condition) for condition in
+                           obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                   'type__name').all()]
+        obj.systematic_name = ", ".join(conditions_list)
+
+        obj.display_name = obj.systematic_name
+        if obj.common_name:
+            obj.display_name = obj.common_name
+
+        obj.save()
 
 
 admin.site.register(Condition, ConditionAdmin)

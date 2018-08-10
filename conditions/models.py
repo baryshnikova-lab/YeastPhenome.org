@@ -130,19 +130,19 @@ class ConditionSet(models.Model):
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-
-        # Generate the systematic name
-        conditions_list = [(u'%s' % condition) for condition in
-                           self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-                                                    'type__name').all()]
-        self.systematic_name = u'%s' % ", ".join(conditions_list)
-
-        self.display_name = self.systematic_name
-        if self.common_name:
-            self.display_name = self.common_name
-
-        super(ConditionSet, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #
+    #     # Generate the systematic name
+    #     conditions_list = [(u'%s' % condition) for condition in
+    #                        self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+    #                                                 'type__name').all()]
+    #     self.systematic_name = u'%s' % ", ".join(conditions_list)
+    #
+    #     self.display_name = self.systematic_name
+    #     if self.common_name:
+    #         self.display_name = self.common_name
+    #
+    #     super(ConditionSet, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.display_name:
@@ -161,8 +161,12 @@ class ConditionSet(models.Model):
         return ', '.join([p.link_edit() for p in self.papers()])
     papers_edit_link_list.allow_tags = True
 
-    # def datasets(self):
-    #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+    def datasets(self):
+        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self).distinct()
+
+    def datasets_edit_link_list(self):
+        return '\n'.join([d.link_edit() for d in self.datasets()])
+    datasets_edit_link_list.allow_tags = True
 
     def link_detail(self):
         return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
@@ -182,19 +186,19 @@ class Medium(models.Model):
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
-    def save(self, *args, **kwargs):
-
-        # Generate the systematic name
-        conditions_list = [(u'%s' % condition) for condition in
-                           self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-                                                    'type__name').all()]
-        self.systematic_name = u'%s' % ", ".join(conditions_list)
-
-        self.display_name = self.systematic_name
-        if self.common_name:
-            self.display_name = self.common_name
-
-        super(Medium, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #
+    #     # Generate the systematic name
+    #     conditions_list = [(u'%s' % condition) for condition in
+    #                        self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+    #                                                 'type__name').all()]
+    #     self.systematic_name = u'%s' % ", ".join(conditions_list)
+    #
+    #     self.display_name = self.systematic_name
+    #     if self.common_name:
+    #         self.display_name = self.common_name
+    #
+    #     super(Medium, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.display_name
@@ -204,16 +208,18 @@ class Medium(models.Model):
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
-
     papers_link_list.allow_tags = True
 
     def papers_edit_link_list(self):
         return ', '.join([p.link_edit() for p in self.papers()])
-
     papers_edit_link_list.allow_tags = True
 
-    # def datasets(self):
-    #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
+    def datasets(self):
+        return apps.get_model('datasets', 'Dataset').objects.filter(medium=self).distinct()
+
+    def datasets_edit_link_list(self):
+        return '\n'.join([d.link_edit() for d in self.datasets()])
+    datasets_edit_link_list.allow_tags = True
 
     def link_detail(self):
         return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
