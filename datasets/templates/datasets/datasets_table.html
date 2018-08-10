@@ -4,7 +4,7 @@
     <strong>Warning:</strong> These data may contain errors.
     <p>
         YeastPhenome.org is running in beta version.
-        The data are available for download, but, as of today, we cannot guarantee the absence of errors or code bugs introduced during processing.
+        The data are available for download, but, as of today, we cannot guarantee lack of errors or code bugs introduced during processing.
         This warning will be removed after all cross-checks and validations have been completed.
         In the meantime, please, be careful when using the data.
     </p>
@@ -37,7 +37,7 @@
             <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset" {# {% if not dataset.has_data_in_db %}disabled{% endif %} #}></td>
             <td class="col-md-2"><a href="{% url 'papers:detail' dataset.paper.id %}">{{ dataset.paper }}</a></td>
             <td class="col-md-3">{{ dataset.phenotype.observable2.name }} {% if dataset.phenotype.reporter %} ({{ dataset.phenotype.reporter }}) {% endif %}</td>
-            <td class="col-md-3">{{ dataset.conditionset.name }}</td>
+            <td class="col-md-3">{{ dataset.conditionset.display_name }}</td>
             <td class="col-md-1">{{ dataset.medium.name }}</td>
             <td class="col-md-1">{{ dataset.collection.shortname }}</td>
 

@@ -122,19 +122,33 @@ class Condition(models.Model):
 
 
 class ConditionSet(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True)
-    nickname = models.CharField(max_length=200, blank=True, null=True)
+
+    systematic_name = models.CharField(max_length=200, blank=True, null=True)
+    common_name = models.CharField(max_length=200, blank=True, null=True)
+    display_name = models.CharField(max_length=200, blank=True, null=True)
+
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+
+        # Generate the systematic name
+        conditions_list = [(u'%s' % condition) for condition in
+                           self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                    'type__name').all()]
+        self.systematic_name = u'%s' % ", ".join(conditions_list)
+
+        self.display_name = self.systematic_name
+        if self.common_name:
+            self.display_name = self.common_name
+
+        super(ConditionSet, self).save(*args, **kwargs)
+
     def __str__(self):
-        if self.nickname:
-            txt = self.nickname
-        elif self.name:
-            txt = self.name
+        if self.display_name:
+            return self.display_name
         else:
-            txt = ''
-        return txt
+            return ''
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()
@@ -160,16 +174,30 @@ class ConditionSet(models.Model):
 
 
 class Medium(models.Model):
-    name = models.CharField(max_length=200, blank=True, null=True)
-    nickname = models.CharField(max_length=200, blank=True, null=True)
+
+    systematic_name = models.CharField(max_length=200, blank=True, null=True)
+    common_name = models.CharField(max_length=200, blank=True, null=True)
+    display_name = models.CharField(max_length=200, blank=True, null=True)
+
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+
+        # Generate the systematic name
+        conditions_list = [(u'%s' % condition) for condition in
+                           self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                    'type__name').all()]
+        self.systematic_name = u'%s' % ", ".join(conditions_list)
+
+        self.display_name = self.systematic_name
+        if self.common_name:
+            self.display_name = self.common_name
+
+        super(Medium, self).save(*args, **kwargs)
+
     def __str__(self):
-        if self.name:
-            return self.name
-        else:
-            return ''
+        return self.display_name
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__medium=self).distinct()
@@ -188,14 +216,9 @@ class Medium(models.Model):
     #     return apps.get_model('papers','Dataset').objects.filter(conditionset=self).distinct()
 
     def link_detail(self):
-        txt = ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
-        if self.nickname:
-            txt = u'%s (%s)' % (self.nickname, txt)
-        return txt
-
+        return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
     link_detail.allow_tags = True
 
     def link_edit(self):
         return '{<a href="%s">%s</a>}' % (reverse("admin:conditions_medium_change", args=(self.id,)), self)
-
     link_edit.allow_tags = True

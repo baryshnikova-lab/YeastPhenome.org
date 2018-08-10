@@ -46,10 +46,10 @@ class DatasetAdmin(ImprovedModelAdmin):
             return HttpResponse('<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(DatasetAdmin, self).response_add(request, obj, post_url_continue)
 
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        obj.name = u'%s | %s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.medium, obj.paper)
-        obj.save()
+    # def save_model(self, request, obj, form, change):
+    #     obj.save()
+    #     obj.name = u'%s | %s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.medium, obj.paper)
+    #     obj.save()
 
 
 class DatasetInline(ImprovedTabularInline):

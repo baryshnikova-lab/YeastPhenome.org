@@ -65,6 +65,7 @@ class Source(models.Model):
 
 
 class Dataset(models.Model):
+
     name = models.CharField(max_length=500, null=True, blank=True)
     paper = models.ForeignKey('papers.Paper')
 
@@ -104,6 +105,11 @@ class Dataset(models.Model):
                                       null=True, blank=True)
 
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
+
+    def save(self, *args, **kwargs):
+        self.name = u'%s | %s | %s | %s | %s' % (self.collection, self.phenotype,
+                                                 self.conditionset, self.medium, self.paper)
+        super(Dataset, self).save(*args, **kwargs)
 
     def __str__(self):
         return u'%s' % self.name

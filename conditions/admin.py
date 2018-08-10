@@ -95,12 +95,14 @@ class ConditionTypeAdmin(admin.ModelAdmin):
 
 
 class ConditionSetAdmin(ImprovedModelAdmin):
-    list_display = ('id', '__str__', 'papers_edit_link_list',)
+    list_display = ('id', 'display_name', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
-    search_fields = ('nickname', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
-    ordering = ('id', 'conditions__type__name',)
-    readonly_fields = ('name',)
-    fields = ('name', 'nickname', 'conditions', 'description',)
+    search_fields = ('systematic_name', 'common_name',
+                     'conditions__type__name', 'conditions__type__other_names',
+                     'conditions__type__pubchem_name', 'conditions__type__chebi_name')
+    ordering = ('id', 'display_name', )
+    readonly_fields = ('systematic_name', 'display_name', )
+    fields = ('systematic_name', 'common_name', 'display_name', 'conditions', 'description',)
     # inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
@@ -109,27 +111,16 @@ class ConditionSetAdmin(ImprovedModelAdmin):
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(ConditionSetAdmin, self).response_change(request, obj)
 
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        form.save_m2m()
-        if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
-            conditions_list = [(u'%s' % condition) for condition in
-                               obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-                                                       'type__name').all()]
-            conditions_str = ", ".join(conditions_list)
-            obj.name = u'%s' % conditions_str
-        else:
-            obj.name = u'%s' % form.cleaned_data['nickname']
-        obj.save()
-
 
 class MediumAdmin(ImprovedModelAdmin):
-    list_display = ('id', '__str__', 'papers_edit_link_list',)
+    list_display = ('id', 'display_name', 'papers_edit_link_list',)
     raw_id_fields = ('conditions',)
-    search_fields = ('nickname', 'conditions__type__name', 'conditions__type__other_names', 'conditions__type__pubchem_name', 'conditions__type__chebi_name')
-    ordering = ('id', 'conditions__type__name',)
-    readonly_fields = ('name',)
-    fields = ('name', 'nickname', 'conditions', 'description',)
+    search_fields = ('systematic_name', 'common_name',
+                     'conditions__type__name', 'conditions__type__other_names',
+                     'conditions__type__pubchem_name', 'conditions__type__chebi_name')
+    ordering = ('id', 'display_name', )
+    readonly_fields = ('systematic_name', 'display_name', )
+    fields = ('systematic_name', 'common_name', 'display_name', 'conditions', 'description',)
     # inlines = (DatasetInline,)
 
     def response_change(self, request, obj):
@@ -137,17 +128,6 @@ class MediumAdmin(ImprovedModelAdmin):
             return HttpResponse(
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(MediumAdmin, self).response_change(request, obj)
-
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        form.save_m2m()
-        # obj.save()
-        conditions_list = ", ".join([(u'%s' % condition) for condition in obj.conditions.order_by('type__group','type__chebi_name','type__pubchem_name','type__name').all()])
-        if not form.cleaned_data['nickname'] or form.cleaned_data['nickname'] == '':
-            obj.name = u'%s' % conditions_list
-        else:
-            obj.name = u'%s' % form.cleaned_data['nickname']
-        obj.save()
 
 
 admin.site.register(Condition, ConditionAdmin)
