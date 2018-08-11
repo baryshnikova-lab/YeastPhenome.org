@@ -165,7 +165,10 @@ class ConditionSet(models.Model):
         return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self).distinct()
 
     def datasets_edit_link_list(self):
-        return '\n'.join([d.link_edit() for d in self.datasets()])
+        str = '<ul>'
+        str = str + '<li>'.join([d.link_edit() for d in self.datasets()])
+        str = str + '</ul>'
+        return str
     datasets_edit_link_list.allow_tags = True
 
     def link_detail(self):

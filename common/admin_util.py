@@ -114,4 +114,4 @@ class ImprovedModelAdmin(admin.ModelAdmin):
 class LimitedInlineFormSet(BaseInlineFormSet):
     def get_queryset(self):
         qs = super(BaseInlineFormSet, self).get_queryset()
-        return qs[:20]
+        return qs[:100]
