@@ -26,9 +26,11 @@ def index(request):
 
 def datasets_growth(request):
 
-    class_description = 'List of datasets that measure growth in rich or minimal media. These may be standalone experiments or controls within larger studies of chemical and/or physical perturbations.'
+    class_description = 'List of datasets that measure growth in rich or minimal media. ' \
+                        'These may be standalone experiments or controls within larger studies of chemical ' \
+                        'and/or physical perturbations.'
 
-    datasets = Dataset.objects.filter(conditionset__name='standard')\
+    datasets = Dataset.objects.filter(conditionset__systematic_name='standard')\
         .filter(phenotype__observable2__name__startswith='growth')\
         .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
     return render(request, 'datasets/class.html', {
@@ -81,7 +83,7 @@ def download(request):
         j = datasets_ids.index(datapoint.dataset_id)
         matrix[i][j] = datapoint.value
 
-    column_headers = '\t' + '\t'.join(
+    column_headers = 'ORF\t' + '\t'.join(
         [u'%s' % get_object_or_404(Dataset, pk=dataset_id) for dataset_id in datasets_ids]) + '\n'
 
     data_row = []

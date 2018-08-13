@@ -24,7 +24,7 @@
         <th>Paper</th>
         <th>Phenotype</th>
         <th>Condition</th>
-        <th>Reference</th>
+        <th>Medium</th>
         <th>Collection</th>
         <th>Tested mutants</th>
         <th>Data</th>
@@ -37,8 +37,8 @@
             <td><input id="{{ dataset.id }}" type="checkbox" name="{{ dataset.id }}" class="dataset" {# {% if not dataset.has_data_in_db %}disabled{% endif %} #}></td>
             <td class="col-md-2"><a href="{% url 'papers:detail' dataset.paper.id %}">{{ dataset.paper }}</a></td>
             <td class="col-md-3">{{ dataset.phenotype.observable2.name }} {% if dataset.phenotype.reporter %} ({{ dataset.phenotype.reporter }}) {% endif %}</td>
-            <td class="col-md-3">{{ dataset.conditionset.display_name }}</td>
-            <td class="col-md-1">{{ dataset.medium.name }}</td>
+            <td class="col-md-2">{{ dataset.conditionset.display_name }}</td>
+            <td class="col-md-2">{{ dataset.medium.display_name }}</td>
             <td class="col-md-1">{{ dataset.collection.shortname }}</td>
 
             <td class="col-md-1">

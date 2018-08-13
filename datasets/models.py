@@ -138,7 +138,9 @@ class Dataset(models.Model):
         if self.tested_source and self.data_set.exists():
             tested_space = intcomma(self.data_set.count())
         elif self.tested_num and self.tested_num > 0:
-            tested_space = '<abbr title="The list of tested mutants is not available. This is an approximate number of tested mutants as reported by the authors.">~%s</abbr>' % intcomma(self.tested_num)
+            tested_space = '<abbr title="The list of tested mutants is not available. ' \
+                           'This is an approximate number of tested mutants ' \
+                           'as reported by the authors.">~%s</abbr>' % intcomma(self.tested_num)
         else:
             tested_space = 'N/A'
         return tested_space
