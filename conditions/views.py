@@ -22,7 +22,7 @@ def index(request):
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         queryset = ConditionType.objects.order_by('name')
-        q = request.GET['q']
+        q = request.GET['q'].strip()
         f = Q(name__icontains=q) | Q(other_names__icontains=q) | Q(chebi_name__contains=q) | Q(pubchem_name__contains=q)
         queryset = queryset.filter(f)
 
