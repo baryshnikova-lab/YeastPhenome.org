@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^(?P<domain>phenotypes)/(?P<id>\d+)/', views.data, name='data'),
     url(r'^(?P<pk>\d+)/$', views.DatasetDetailView.as_view(), name='detail'),
     url(r'^class/growth/$', views.datasets_growth, name='growth'),
+    url(r'^class/human/$', views.datasets_human, name='human'),
     url(r'^download/all/', views.download_all, name='download_all'),
     url(r'^download/', views.download, name='download'),
 ]

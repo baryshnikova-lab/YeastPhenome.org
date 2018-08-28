@@ -42,6 +42,21 @@ def datasets_growth(request):
     })
 
 
+def datasets_human(request):
+
+    class_description = 'List of datasets that involve the expression of a human protein.'
+
+    datasets = Dataset.objects.filter(conditionset__conditions__type__group__name='expression of a human protein')\
+        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+    return render(request, 'datasets/class.html', {
+        'datasets': datasets,
+        'class_description': class_description,
+        'class_name': 'Expression of a human protein',
+        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
+        'USER_AUTH': request.user.is_authenticated()
+    })
+
+
 def download_all(request):
 
     datasets = Dataset.objects.\
