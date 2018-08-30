@@ -28,7 +28,7 @@ class Status(models.Model):
 
 class Paper(models.Model):
     first_author = models.CharField(max_length=200)
-    last_author = models.CharField(max_length=200)
+    last_author = models.CharField(max_length=200, blank=True, null=True)
     pub_date = models.IntegerField(default=0)
     pmid = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
@@ -51,7 +51,11 @@ class Paper(models.Model):
         ordering =['pmid', 'first_author', 'last_author']
 
     def __str__(self):
-        return u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
+        if self.last_author:
+            txt = u'%s~%s, %s' % (self.first_author, self.last_author, self.pub_date)
+        else:
+            txt = u'%s, %s' % (self.first_author, self.pub_date)
+        return txt
 
     def collections(self):
         return Collection.objects.filter(dataset__paper=self).distinct()
