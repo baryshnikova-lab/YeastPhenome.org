@@ -23,7 +23,7 @@ class ConditionAdminForm(forms.ModelForm):
 
 class ConditionAdmin(ImprovedModelAdmin):
     form = ConditionAdminForm
-    list_display = ('id', 'type', 'dose', 'conditionsets_str_list')
+    list_display = ('id', 'type', 'dose', 'conditionsets_str_list', 'media_str_list')
     list_filter = ['type__name']
     ordering = ('type__name', 'dose')
     fields = ['type', 'dose']

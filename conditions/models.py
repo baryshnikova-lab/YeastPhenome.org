@@ -112,9 +112,16 @@ class Condition(models.Model):
     def conditionsets(self):
         return ConditionSet.objects.filter(conditions=self).all()
 
+    def media(self):
+        return Medium.objects.filter(conditions=self).all()
+
     def conditionsets_str_list(self):
         return ", ".join([p.link_edit() for p in self.conditionsets()])
     conditionsets_str_list.allow_tags = True
+
+    def media_str_list(self):
+        return ", ".join([p.link_edit() for p in self.media()])
+    media_str_list.allow_tags = True
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.type.id,)), self)
