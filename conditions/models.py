@@ -1,10 +1,11 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.apps import apps
+from django.db.models import Q
+
 import re
 
 from phenotypes.models import Phenotype
-
 from libchebipy import ChebiEntity
 
 
@@ -71,14 +72,16 @@ class ConditionType(models.Model):
         return ', '.join([p.dose for p in self.conditions()])
 
     def phenotypes(self):
-        return Phenotype.objects.filter(dataset__conditionset__conditions__type=self).distinct()
+        return Phenotype.objects.filter(Q(dataset__conditionset__conditions__type=self) |
+                                        Q(dataset__medium__conditions__type=self)).distinct()
 
     def phenotypes_link_list(self):
         return ', '.join([p.link_detail() for p in self.phenotypes()])
     phenotypes_link_list.allow_tags = True
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset__conditions__type=self)\
+        return apps.get_model('papers', 'Paper').objects\
+            .filter(Q(dataset__conditionset__conditions__type=self) | Q(dataset__medium__conditions__type=self))\
             .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
@@ -86,7 +89,8 @@ class ConditionType(models.Model):
     papers_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset__conditions__type=self)\
+        return apps.get_model('datasets', 'Dataset').objects.\
+            filter(Q(conditionset__conditions__type=self) | Q(medium__conditions__type=self))\
             .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
 
     def link_detail(self):

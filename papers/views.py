@@ -28,6 +28,9 @@ def paper_list_view(request):
         f = f | Q(dataset__conditionset__conditions__type__name__icontains=q) | Q(dataset__conditionset__conditions__type__other_names__icontains=q)
         f = f | Q(dataset__conditionset__conditions__type__chebi_name__icontains=q)
         f = f | Q(dataset__conditionset__conditions__type__pubchem_name__icontains=q)
+        f = f | Q(dataset__medium__conditions__type__name__icontains=q) | Q(dataset__medium__conditions__type__other_names__icontains=q)
+        f = f | Q(dataset__medium__conditions__type__chebi_name__icontains=q)
+        f = f | Q(dataset__medium__conditions__type__pubchem_name__icontains=q)
         queryset = queryset.filter(f)
     else:
         q = ''
