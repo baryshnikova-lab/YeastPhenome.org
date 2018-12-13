@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.core.urlresolvers import reverse
 from django import forms
 from django.http import HttpResponse
 
@@ -39,8 +40,19 @@ class ConditionAdmin(ImprovedModelAdmin):
 
 class ConditionInline(admin.TabularInline):
     model = Condition
+    fields = ('id', 'admin_change_link')
+    readonly_fields = ('id', 'admin_change_link')
     ordering = ('dose',)
     extra = 0
+
+    def admin_change_link(self, obj):
+        if obj.id:
+            return '<a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a>' \
+                   % (reverse("admin:conditions_condition_change", args=(obj.id,)), obj.dose)
+        else:
+            return '<a href="%s?_popup=1&paper=%s" onclick="return showAddAnotherPopup(this);">Create new</a>' \
+                   % (reverse("admin:conditions_condition_add"), self.parent_obj_id)
+    admin_change_link.allow_tags = True
 
 
 class ConditionTypeGroupAdmin(admin.ModelAdmin):
@@ -49,7 +61,7 @@ class ConditionTypeGroupAdmin(admin.ModelAdmin):
 
 
 class ConditionTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_str_list')
+    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_edit_list')
     list_filter = ['group']
     ordering = ('name',)
     radio_fields = {'group': admin.VERTICAL}

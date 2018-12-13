@@ -71,6 +71,10 @@ class ConditionType(models.Model):
     def conditions_str_list(self):
         return ', '.join([p.dose for p in self.conditions()])
 
+    def conditions_edit_list(self):
+        return ', '.join([p.link_edit() for p in self.conditions()])
+    conditions_edit_list.allow_tags = True
+
     def phenotypes(self):
         return Phenotype.objects.filter(Q(dataset__conditionset__conditions__type=self) |
                                         Q(dataset__medium__conditions__type=self)).distinct()
@@ -130,6 +134,10 @@ class Condition(models.Model):
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.type.id,)), self)
     link_detail.allow_tags = True
+
+    def link_edit(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:conditions_condition_change", args=(self.id,)), self.dose)
+    link_edit.allow_tags = True
 
 
 class ConditionSet(models.Model):
