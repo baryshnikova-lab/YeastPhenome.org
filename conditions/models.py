@@ -138,7 +138,7 @@ class ConditionSet(models.Model):
     common_name = models.CharField(max_length=200, blank=True, null=True)
     display_name = models.CharField(max_length=1000, blank=True, null=True)
 
-    conditions = models.ManyToManyField(Condition)
+    conditions = models.ManyToManyField(Condition, blank=True)
     description = models.TextField(blank=True, null=True)
 
     # def save(self, *args, **kwargs):
@@ -197,7 +197,7 @@ class Medium(models.Model):
     common_name = models.CharField(max_length=200, blank=True, null=True)
     display_name = models.CharField(max_length=1000, blank=True, null=True)
 
-    conditions = models.ManyToManyField(Condition)
+    conditions = models.ManyToManyField(Condition, blank=True)
     description = models.TextField(blank=True, null=True)
 
     # def save(self, *args, **kwargs):
