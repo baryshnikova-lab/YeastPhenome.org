@@ -38,19 +38,24 @@ class ConditionAdmin(ImprovedModelAdmin):
         return super(ConditionAdmin, self).response_change(request, obj)
 
 
-class ConditionInline(admin.TabularInline):
+class ConditionInline(ImprovedTabularInline):
     model = Condition
     fields = ('id', 'admin_change_link')
     readonly_fields = ('id', 'admin_change_link')
     ordering = ('dose',)
     extra = 0
 
+    def get_formset(self, request, obj=None, **kwargs):
+        if obj:
+            self.parent_obj_id = obj.id
+        return super(ConditionInline, self).get_formset(request, obj, **kwargs)
+
     def admin_change_link(self, obj):
         if obj.id:
             return '<a href="%s?_popup=1" onclick="return showAddAnotherPopup(this);">%s</a>' \
                    % (reverse("admin:conditions_condition_change", args=(obj.id,)), obj.dose)
         else:
-            return '<a href="%s?_popup=1&paper=%s" onclick="return showAddAnotherPopup(this);">Create new</a>' \
+            return '<a href="%s?_popup=1&type=%s" onclick="return showAddAnotherPopup(this);">Create new</a>' \
                    % (reverse("admin:conditions_condition_add"), self.parent_obj_id)
     admin_change_link.allow_tags = True
 
