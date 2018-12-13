@@ -111,7 +111,8 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         conditions_list = [(u'%s' % condition) for condition in
                            obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
                                                    'type__name').all()]
-        obj.systematic_name = ", ".join(conditions_list)
+        conditions_str = ", ".join(conditions_list)
+        obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
         obj.display_name = obj.systematic_name
         if obj.common_name:
@@ -146,7 +147,8 @@ class MediumAdmin(ImprovedModelAdmin):
         conditions_list = [(u'%s' % condition) for condition in
                            obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
                                                    'type__name').all()]
-        obj.systematic_name = ", ".join(conditions_list)
+        conditions_str = ", ".join(conditions_list)
+        obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
         obj.display_name = obj.systematic_name
         if obj.common_name:

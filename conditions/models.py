@@ -134,9 +134,9 @@ class Condition(models.Model):
 
 class ConditionSet(models.Model):
 
-    systematic_name = models.CharField(max_length=200, blank=True, null=True)
+    systematic_name = models.CharField(max_length=1000, blank=True, null=True)
     common_name = models.CharField(max_length=200, blank=True, null=True)
-    display_name = models.CharField(max_length=200, blank=True, null=True)
+    display_name = models.CharField(max_length=1000, blank=True, null=True)
 
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
@@ -193,9 +193,9 @@ class ConditionSet(models.Model):
 
 class Medium(models.Model):
 
-    systematic_name = models.CharField(max_length=200, blank=True, null=True)
+    systematic_name = models.CharField(max_length=1000, blank=True, null=True)
     common_name = models.CharField(max_length=200, blank=True, null=True)
-    display_name = models.CharField(max_length=200, blank=True, null=True)
+    display_name = models.CharField(max_length=1000, blank=True, null=True)
 
     conditions = models.ManyToManyField(Condition)
     description = models.TextField(blank=True, null=True)
