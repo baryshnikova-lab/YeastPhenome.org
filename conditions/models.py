@@ -105,6 +105,7 @@ class ConditionType(models.Model):
 class Condition(models.Model):
     type = models.ForeignKey(ConditionType)
     dose = models.CharField(max_length=200, null=False, blank=False)
+    description = models.TextField(blank=True, null=True)
     modified_on = models.DateField(auto_now=True, null=True)
 
     class Meta:

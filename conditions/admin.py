@@ -27,7 +27,7 @@ class ConditionAdmin(ImprovedModelAdmin):
     list_display = ('id', 'type', 'dose', 'conditionsets_str_list', 'media_str_list')
     list_filter = ['type__name']
     ordering = ('type__name', 'dose')
-    fields = ['type', 'dose']
+    fields = ['type', 'dose', 'description']
     search_fields = ('type__name', 'type__other_names', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id', 'dose')
     raw_id_fields = ('type',)
 
