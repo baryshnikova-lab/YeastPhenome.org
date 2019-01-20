@@ -230,7 +230,8 @@ class Medium(models.Model):
             return ''
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__medium=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
+                                                                Q(dataset__control_medium=self)).distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
