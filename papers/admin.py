@@ -57,7 +57,7 @@ class DatasetInline(ImprovedTabularInline):
     formset = LimitedInlineFormSet
     fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
     readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
-    ordering = ('name',)
+    ordering = ('name', 'id', )
     extra = 0
     max_num = 5000
 
