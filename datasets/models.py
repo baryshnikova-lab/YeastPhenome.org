@@ -67,7 +67,7 @@ class Source(models.Model):
 
 class Dataset(models.Model):
 
-    name = models.CharField(max_length=500, null=True, blank=True)
+    name = models.CharField(max_length=500, null=True, blank=True, unique=True)
     paper = models.ForeignKey('papers.Paper')
 
     conditionset = models.ForeignKey('conditions.ConditionSet', null=True, blank=True)
