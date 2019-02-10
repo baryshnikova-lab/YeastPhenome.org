@@ -9,7 +9,6 @@ from pubchempy import Compound
 from libchebipy import ChebiEntity
 
 from conditions.models import ConditionSet, Condition, ConditionType, ConditionTypeGroup, Medium
-from datasets.models import Dataset
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
 
 
@@ -18,8 +17,8 @@ class ConditionAdminForm(forms.ModelForm):
         cleaned_data = super(ConditionAdminForm, self).clean()
         dose = cleaned_data.get('dose')
         if dose is None or dose == '':
-            self.add_error('dose', "If unsure about the value, insert <unknown>.")
-        super(ConditionAdminForm, self).clean()
+            self.add_error('dose', 'If unsure about the value, insert "unknown".')
+        return cleaned_data
 
 
 class ConditionAdmin(ImprovedModelAdmin):
@@ -28,7 +27,8 @@ class ConditionAdmin(ImprovedModelAdmin):
     list_filter = ['type__name']
     ordering = ('type__name', 'dose')
     fields = ['type', 'dose', 'description']
-    search_fields = ('type__name', 'type__other_names', 'type__pubchem_name', 'type__chebi_name', 'type__pubchem_id', 'type__chebi_id', 'dose')
+    search_fields = ('type__name', 'type__other_names', 'type__pubchem_name', 'type__chebi_name',
+                     'type__pubchem_id', 'type__chebi_id', 'dose')
     raw_id_fields = ('type',)
 
     def response_change(self, request, obj):
