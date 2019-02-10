@@ -107,13 +107,15 @@ class Dataset(models.Model):
 
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
 
-    def save(self, *args, **kwargs):
-        self.name = u'%s | %s | %s | %s | %s' % (self.collection, self.phenotype,
-                                                 self.conditionset, self.medium, self.paper)
-        super(Dataset, self).save(*args, **kwargs)
-
     def __str__(self):
         return u'%s' % self.name
+
+    # Necessary to run database-wide updates of dataset names
+    def save(self, *args, **kwargs):
+        self.name = u'%s | %s | %s | %s | %s' % (self.collection, self.phenotype,
+                                                 self.conditionset, self.medium,
+                                                 self.paper)
+        super(Dataset, self).save(*args, **kwargs)
 
     def admin_name(self):
         data_info = [self.data_measured, self.data_published, self.data_available]

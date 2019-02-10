@@ -2,18 +2,36 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.db.models import ForeignKey
 from django.http import HttpResponse
-
-# import urllib
+from django import forms
 from django.utils.http import urlencode
-from itertools import chain
 
 from papers.models import Paper, Status, Statusdata, Statustested
 from datasets.models import Dataset, Collection, Source
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, LimitedInlineFormSet
 
 
+class DatasetAdminForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(DatasetAdminForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['style'] = 'width: 35em;'
+        self.fields['name'].widget.attrs['readonly'] = True
+
+    def clean(self):
+        cleaned_data = super(DatasetAdminForm, self).clean()
+        cleaned_data['name'] = u'%s | %s | %s | %s | %s' % \
+                               (cleaned_data['collection'], cleaned_data['phenotype'],
+                                cleaned_data['conditionset'], cleaned_data['medium'],
+                                cleaned_data['paper'])
+        obj = Dataset.objects.filter(name=cleaned_data['name'])
+        if obj:
+            self.add_error('name', forms.ValidationError('A dataset with this name already exists.'))
+        return cleaned_data
+
+
 class DatasetAdmin(ImprovedModelAdmin):
     model = Dataset
+    form = DatasetAdminForm
     fields = ('name', 'paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
               'phenotype', 'collection',
               'tested_num', 'tested_list_published', 'tested_source',
@@ -21,7 +39,6 @@ class DatasetAdmin(ImprovedModelAdmin):
               'notes')
     raw_id_fields = ('paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
                      'phenotype', 'tested_source', 'data_source')
-    readonly_fields = ('name',)
     search_fields = ('name',)
     ordering = ('name',)
 
@@ -30,10 +47,7 @@ class DatasetAdmin(ImprovedModelAdmin):
     def get_changeform_initial_data(self, request):
         initial = super(DatasetAdmin, self).get_changeform_initial_data(request)
         if 'tested_list_published' in initial:
-            if initial['tested_list_published'] == 'False':
-                initial['tested_list_published'] = False
-            elif initial['tested_list_published'] == 'True':
-                initial['tested_list_published'] = True
+            initial['tested_list_published'] = (initial['tested_list_published'] == 'True')
         return initial
 
     def response_change(self, request, obj):
@@ -45,11 +59,6 @@ class DatasetAdmin(ImprovedModelAdmin):
         if request.GET.get('_popup') == '1':
             return HttpResponse('<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(DatasetAdmin, self).response_add(request, obj, post_url_continue)
-
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        obj.name = u'%s | %s | %s | %s | %s' % (obj.collection, obj.phenotype, obj.conditionset, obj.medium, obj.paper)
-        obj.save()
 
 
 class DatasetInline(ImprovedTabularInline):
