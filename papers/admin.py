@@ -17,14 +17,20 @@ class DatasetAdminForm(forms.ModelForm):
         self.fields['name'].widget.attrs['style'] = 'width: 35em;'
         self.fields['name'].widget.attrs['readonly'] = True
 
+        self.id = None
+        if 'instance' in kwargs and kwargs['instance']:
+            self.id = kwargs['instance'].id
+
     def clean(self):
         cleaned_data = super(DatasetAdminForm, self).clean()
         cleaned_data['name'] = u'%s | %s | %s | %s | %s' % \
                                (cleaned_data['collection'], cleaned_data['phenotype'],
                                 cleaned_data['conditionset'], cleaned_data['medium'],
                                 cleaned_data['paper'])
-        obj = Dataset.objects.filter(name=cleaned_data['name'])
-        if obj:
+        qs = Dataset.objects.filter(name=cleaned_data['name'])
+        if self.id:
+            qs = qs.exclude(pk=self.id)
+        if qs.count() > 0:
             self.add_error('name', forms.ValidationError('A dataset with this name already exists.'))
         return cleaned_data
 
