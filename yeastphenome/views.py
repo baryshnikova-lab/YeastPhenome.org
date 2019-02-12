@@ -41,14 +41,26 @@ def get_latest_stats():
     f = Q(dataset__paper__in=papers_queryset)
     conditions_nr = conditions_queryset.filter(f).distinct().count()
 
-    # Number of datasets
+    # Number of datasets (total)
     f = Q(paper__in=papers_queryset)
     datasets_nr = datasets_queryset.filter(f).distinct().count()
+
+    # Haploid/homozygous diploid
+    f = Q(paper__in=papers_queryset) & \
+        Q(collection__shortname__in=['hap a','hap alpha', 'hom', 'hap ?', 'hap a/hap alpha/hom',
+                                     'hap a/hap alpha', 'hap a/hom'])
+    datasets_nr_hap_hom = datasets_queryset.filter(f).distinct().count()
+
+    # Heterozygous
+    f = Q(paper__in=papers_queryset) & \
+        Q(collection__shortname__in=['het'])
+    datasets_nr_het = datasets_queryset.filter(f).distinct().count()
 
     context = {'papers_nr': papers_nr, 'papers_hopeless_nr': papers_hopeless_nr,
                'papers_processed_nr': papers_processed_nr,
                'phenotypes_nr': phenotypes_nr, 'conditions_nr': conditions_nr,
-               'datasets_nr': datasets_nr,
+               'datasets_nr': datasets_nr, 'datasets_nr_hap_hom': datasets_nr_hap_hom,
+               'datasets_nr_het': datasets_nr_het,
                'updated_on': updated_on}
 
     return context
