@@ -27,6 +27,10 @@ def get_latest_stats():
     f = Q(latest_data_status__status__status_name__in=['request abandoned', 'not available'])
     papers_hopeless_nr = papers_queryset.filter(f).count()
 
+    # Number of labs
+    f = Q(latest_data_status__status__status_name__in=['not relevant'])
+    labs_nr = papers_queryset.exclude(f).values('last_author').distinct().count()
+
     # Number of papers processed and loaded
     f = Q(latest_data_status__status__status_name__exact='loaded') & \
         Q(latest_tested_status__status__status_name__in=['loaded', 'request abandoned', 'not available'])
@@ -57,6 +61,7 @@ def get_latest_stats():
     datasets_nr_het = datasets_queryset.filter(f).distinct().count()
 
     context = {'papers_nr': papers_nr, 'papers_hopeless_nr': papers_hopeless_nr,
+               'labs_nr': labs_nr,
                'papers_processed_nr': papers_processed_nr,
                'phenotypes_nr': phenotypes_nr, 'conditions_nr': conditions_nr,
                'datasets_nr': datasets_nr, 'datasets_nr_hap_hom': datasets_nr_hap_hom,
