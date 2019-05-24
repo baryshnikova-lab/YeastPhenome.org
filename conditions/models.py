@@ -183,7 +183,8 @@ class ConditionSet(models.Model):
     papers_edit_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self).distinct()
+        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self)\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def datasets_edit_link_list(self):
         str = '<ul>'
@@ -247,7 +248,8 @@ class Medium(models.Model):
     papers_edit_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(medium=self).distinct()
+        return apps.get_model('datasets', 'Dataset').objects.filter(medium=self)\
+            .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
 
     def datasets_edit_link_list(self):
         str = '<ul>'
