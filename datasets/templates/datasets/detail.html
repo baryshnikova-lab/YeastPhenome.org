@@ -64,16 +64,6 @@
                             {% endif %}
                     </td>
                 </tr>
-                <tr>
-                    <th scope="row">Visualization</th>
-                    <td>
-                        {% if dataset.has_data_in_db and USER_AUTH %}
-                            <span class="glyphicon glyphicon-picture pointer" aria-hidden="true" onclick="popup('https://safe.shinyapps.io/safe_shiny/?datasetid={{ dataset.id }}')"></span>
-                        {% else %}
-                            <span class="glyphicon glyphicon-picture text-muted"></span>
-                        {% endif %}
-                    </td>
-                </tr>
             </table>
 
             <a class="btn btn-success" role="button" href="/datasets/download/?{{ dataset.id }}=on">Download</a>
