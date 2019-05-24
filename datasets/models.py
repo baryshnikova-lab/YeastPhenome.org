@@ -65,6 +65,15 @@ class Source(models.Model):
         return ', '.join([(u'%s' % p) for p in self.papers()])
 
 
+class Datatype(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    shortname = models.CharField(max_length=20, null=True, blank=True)
+    rank = models.PositiveIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return u'%s' % self.name
+
+
 class Dataset(models.Model):
 
     name = models.CharField(max_length=500, null=True, blank=True, unique=True)
@@ -87,25 +96,11 @@ class Dataset(models.Model):
     tested_list_published = models.NullBooleanField()
     tested_source = models.ForeignKey(Source, null=True, blank=True, related_name='tested_source')
 
-    DATA_CHOICES = (
-        ('quantitative', 'quantitative'),
-        ('quantitative only for hits', 'quantitative only for hits'),
-        ('discrete', 'discrete'),
-        ('none', 'none'),
-        ('unknown', 'unknown'),
-    )
-
-    data_measured = models.CharField(max_length=200,
-                                     choices=DATA_CHOICES,
-                                     null=True, blank=True)
-    data_published = models.CharField(max_length=200,
-                                      choices=DATA_CHOICES,
-                                      null=True, blank=True)
-    data_available = models.CharField(max_length=200,
-                                      choices=DATA_CHOICES,
-                                      null=True, blank=True)
-
     data_source = models.ForeignKey(Source, null=True, blank=True, related_name='data_source')
+
+    data_measured = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_measured')
+    data_published = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_published')
+    data_available = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_available')
 
     def __str__(self):
         return u'%s' % self.name
@@ -118,11 +113,8 @@ class Dataset(models.Model):
         super(Dataset, self).save(*args, **kwargs)
 
     def admin_name(self):
-        data_info = [self.data_measured, self.data_published, self.data_available]
-        data_info_acronym = []
-        for dt in data_info:
-            data_info_acronym.append("".join(word[0] for word in dt.split()))
-        data_all = u'%s | %s' % (self.name, ", ".join(data_info_acronym))
+        data_info = [self.data_measured.shortname, self.data_published.shortname, self.data_available.shortname]
+        data_all = u'%s | %s' % (self.name, ", ".join(data_info))
         return data_all
 
     class Meta:
