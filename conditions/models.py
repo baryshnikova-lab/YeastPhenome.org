@@ -171,7 +171,8 @@ class ConditionSet(models.Model):
             return ''
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self).distinct()
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self)\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
@@ -191,8 +192,11 @@ class ConditionSet(models.Model):
         return str
     datasets_edit_link_list.allow_tags = True
 
+    def phenotypes(self):
+        return Phenotype.objects.filter(dataset__conditionset=self).distinct()
+
     def link_detail(self):
-        return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
+        return '<a href="%s">%s</a>' % (reverse("conditions:conditionset_detail", args=(self.id,)), self)
     link_detail.allow_tags = True
 
     def link_edit(self):
@@ -231,7 +235,8 @@ class Medium(models.Model):
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
-                                                                Q(dataset__control_medium=self)).distinct()
+                                                                Q(dataset__control_medium=self))\
+            .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
@@ -245,11 +250,17 @@ class Medium(models.Model):
         return apps.get_model('datasets', 'Dataset').objects.filter(medium=self).distinct()
 
     def datasets_edit_link_list(self):
-        return '\n'.join([d.link_edit() for d in self.datasets()])
+        str = '<ul>'
+        str = str + '<li>'.join([d.link_edit() for d in self.datasets()])
+        str = str + '</ul>'
+        return str
     datasets_edit_link_list.allow_tags = True
 
+    def phenotypes(self):
+        return Phenotype.objects.filter(dataset__medium=self).distinct()
+
     def link_detail(self):
-        return ', '.join([c.link_detail() for c in self.conditions.order_by('type__name')])
+        return '<a href="%s">%s</a>' % (reverse("conditions:medium_detail", args=(self.id,)), self)
     link_detail.allow_tags = True
 
     def link_edit(self):

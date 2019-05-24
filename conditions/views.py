@@ -1,15 +1,17 @@
+import json
+import re
+
+from itertools import chain
+
 from django.views import generic
 from django.views.generic.base import TemplateView
 from django.db.models import Count
 from django.http import HttpResponse
 from django.conf import settings
-import json
-import re
-
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 
-from conditions.models import ConditionType
+from conditions.models import ConditionType, ConditionSet, Medium
 from datasets.models import Dataset, Data
 
 from conditions.forms import SearchForm
@@ -20,14 +22,30 @@ from libchebipy import ChebiEntity
 def index(request):
 
     if 'q' in request.GET:
+
         form = SearchForm(request.GET)
-        queryset = ConditionType.objects.order_by('name')
         q = request.GET['q'].strip()
-        f = Q(name__icontains=q) | Q(other_names__icontains=q) | Q(chebi_name__contains=q) | Q(pubchem_name__contains=q)
-        queryset = queryset.filter(f)
+
+        f = Q(systematic_name__icontains=q) | \
+            Q(common_name__icontains=q) | \
+            Q(display_name__icontains=q) | \
+            Q(conditions__type__name__icontains=q) | \
+            Q(conditions__type__other_names__icontains=q) | \
+            Q(conditions__type__chebi_name__icontains=q) | \
+            Q(conditions__type__pubchem_name__icontains=q)
+
+        g = Count('dataset', filter=~Q(paper__latest_data_status__status__status_name='not relevant'))
+
+        queryset1 = ConditionSet.objects.all()
+        queryset1 = queryset1.filter(f).annotate(num_datasets=g).filter(num_datasets__gte=0).distinct()
+
+        queryset2 = Medium.objects.all()
+        queryset2 = queryset2.filter(f).annotate(num_datasets=g).filter(num_datasets__gte=0).distinct()
+
+        queryset = list(chain(queryset1, queryset2))
 
         return render(request, 'conditions/index.html', {
-            'conditiontype_list': queryset,
+            'queryset': queryset,
             'form': form,
             'q': q,
         })
@@ -76,24 +94,29 @@ def conditionclass(request, class_id):
     })
 
 
-class D3Packing(generic.ListView):
-    model = ConditionType
-    template_name = 'conditions/d3.html'
+class MediumDetailView(generic.DetailView):
+    model = Medium
+    template_name = 'conditions/conditionset_medium_detail.html'
 
-    def flare(self,ctl):
-        out={'name':'conditions','children':[]}
-        for ct in ctl:
-            paper_count=len(ct.paper_list())
-            if 0<paper_count:
-                out['children'].append({
-                    'name':ct.__unicode__(),
-                    'size':paper_count,
-                    'id':ct.id,
-                })
-        return out
-
-    def get_context_data(self,**kwargs):
-        context = super(generic.ListView,self).get_context_data(**kwargs)
-        # Luckily json is based on JavaScript so we just dump it out with this.
-        context['flare'] = json.dumps(self.flare(context['conditiontype_list']))
+    def get_context_data(self, **kwargs):
+        context = super(MediumDetailView, self).get_context_data(**kwargs)
+        context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+        context['USER_AUTH'] = self.request.user.is_authenticated()
+        context['datasets'] = context['object'].datasets
+        context['id'] = context['object'].id
         return context
+
+
+class ConditionSetDetailView(generic.DetailView):
+    model = ConditionSet
+    template_name = 'conditions/conditionset_medium_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ConditionSetDetailView, self).get_context_data(**kwargs)
+        context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
+        context['USER_AUTH'] = self.request.user.is_authenticated()
+        context['datasets'] = context['object'].datasets
+        context['id'] = context['object'].id
+        return context
+
+

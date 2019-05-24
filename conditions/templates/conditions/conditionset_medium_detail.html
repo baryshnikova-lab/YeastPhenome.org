@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' script_popup=1 %}
+    <title>{{ object|capfirst }} / Experimental conditions / {{ SITE_NAME }}</title>
+</head>
+
+<body>
+
+{% include "navbar.html" with active='conditions' %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <h1>{{ object }}</h1>
+
+
+            <table class="table">
+
+                <tr>
+                    <th width="20%" scope="row">Systematic name:</th>
+                    <td>
+                        {{ object.systematic_name }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th width="20%" scope="row">Common name:</th>
+                    <td>
+                        {{ object.common_name }}
+                    </td>
+                </tr>
+
+                {% if object.description %}
+                <tr>
+                    <th width="20%" scope="row">Description</th>
+                    <td>{{ object.description }}</td>
+                </tr>
+                {% endif %}
+
+            </table>
+
+            {% include "datasets/datasets_table.html" with template='condition' %}
+
+            {% include "footer.html" %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#papersTable").tablesorter();
+    });
+</script>
+
+{% include "ga.html" %}
+
+</body>
+</html>

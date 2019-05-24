@@ -27,23 +27,21 @@
     </form>
     </div>
 
-    {% if q and conditiontype_list %}
+    {% if q and queryset %}
     <table id="papersTable" class="tablesorter table table-striped" width="100%">
         <thead>
         <tr>
             <th width="25%">Name</th>
-            <th width="25%">Doses</th>
             <th width="25%">Phenotypes</th>
             <th width="25%">Papers</th>
         </tr>
         </thead>
         <tbody>
-        {% for conditiontype in conditiontype_list %}
+        {% for qs in queryset %}
         <tr>
-            <td>{{ conditiontype.link_detail|safe }}</td>
-            <td>{{ conditiontype.conditions_str_list }}</td>
-            <td>{{ conditiontype.phenotypes|join_and_more:7 }}</td>
-            <td>{{ conditiontype.papers|join_and_more:7 }}</td>
+            <td>{{ qs.link_detail|safe }}</td>
+            <td>{{ qs.phenotypes|join_and_more:7 }}</td>
+            <td>{{ qs.papers|join_and_more:7 }}</td>
         </tr>
         {% endfor %}
         </tbody>
