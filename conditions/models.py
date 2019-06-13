@@ -184,7 +184,7 @@ class ConditionSet(models.Model):
 
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self)\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
 
     def datasets_edit_link_list(self):
         str = '<ul>'
