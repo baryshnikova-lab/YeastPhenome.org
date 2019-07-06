@@ -6,7 +6,7 @@ from django import forms
 from django.utils.http import urlencode
 
 from papers.models import Paper, Status, Statusdata, Statustested
-from datasets.models import Dataset, Collection, Source
+from datasets.models import Dataset, Collection, Source, Tag
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, LimitedInlineFormSet
 
 
@@ -41,10 +41,10 @@ class DatasetAdmin(ImprovedModelAdmin):
     fields = ('name', 'paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
               'phenotype', 'collection',
               'tested_num', 'tested_list_published', 'tested_source',
-              'data_measured', 'data_published', 'data_available', 'data_source',
+              'data_measured', 'data_published', 'data_available', 'data_source', 'tags',
               'notes')
     raw_id_fields = ('paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
-                     'phenotype', 'tested_source', 'data_source')
+                     'phenotype', 'tested_source', 'data_source', 'tags')
     search_fields = ('name',)
     ordering = ('name',)
 
@@ -146,6 +146,11 @@ class CollectionAdmin(admin.ModelAdmin):
     list_display = ('__str__',)
 
 
+class TagAdmin(admin.ModelAdmin):
+    model = Tag
+    list
+
+
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = ('pmid', 'user', '__str__', 'datasets_summary',
@@ -202,3 +207,4 @@ admin.site.register(Source, SourceAdmin)
 admin.site.register(Status, StatusAdmin)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Dataset, DatasetAdmin)
+admin.site.register(Tag, TagAdmin)

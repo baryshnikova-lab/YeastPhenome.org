@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" with JavaScript='tablesorter' script_popup=1 %}
+    <title>{{ class_name|capfirst }} / Datasets / {{ SITE_NAME }}</title>
+</head>
+
+<body>
+{% include "navbar.html" with active='datasets' %}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <div class="col-xs-12">
+
+            <h1>{{ class_name }}</h1>
+
+            <p>{{ class_description }}</p>
+
+            {% include "datasets/datasets_table.html" with template='datasets_class' %}
+
+            {% include "footer.html" %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#papersTable").tablesorter();
+    });
+</script>
+
+{% include "ga.html" %}
+
+</body>
+</html>

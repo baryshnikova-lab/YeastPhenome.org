@@ -64,6 +64,10 @@
                             {% endif %}
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">Tags</th>
+                    <td>{{ dataset.tags_link_list|safe }}</td>
+                </tr>
             </table>
 
             <a class="btn btn-success" role="button" href="/datasets/download/?{{ dataset.id }}=on">Download</a>

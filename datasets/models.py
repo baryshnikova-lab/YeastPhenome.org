@@ -74,6 +74,18 @@ class Datatype(models.Model):
         return u'%s' % self.name
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def link_detail(self):
+        return '<a href="%s">%s</a>' % (reverse("datasets:tag", args=(self.name,)), self)
+    link_detail.allow_tags = True
+
+
 class Dataset(models.Model):
 
     name = models.CharField(max_length=500, null=True, blank=True, unique=True)
@@ -101,6 +113,8 @@ class Dataset(models.Model):
     data_measured = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_measured')
     data_published = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_published')
     data_available = models.ForeignKey(Datatype, null=True, blank=True, related_name='data_available')
+
+    tags = models.ManyToManyField(Tag, blank=True)
 
     def __str__(self):
         return u'%s' % self.name
@@ -142,6 +156,10 @@ class Dataset(models.Model):
 
     def phenotypes(self):
         return self.observable2.name
+
+    def tags_link_list(self):
+        return ", ".join([t.link_detail() for t in self.tags.all()])
+    tags_link_list.allow_tags = True
 
     def has_data_in_db(self):
         return self.data_set.exists()

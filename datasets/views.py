@@ -5,7 +5,7 @@ from django.conf import settings
 from django.views import generic
 
 from papers.models import Paper
-from datasets.models import Dataset, Data
+from datasets.models import Dataset, Data, Tag
 from conditions.models import ConditionType
 from phenotypes.models import Observable2
 
@@ -22,6 +22,22 @@ def index(request):
 
     context = ''
     return render(request, 'datasets/index.html', context)
+
+
+def tag(request, tag):
+
+    class_description = Tag.objects.filter(name=tag).values_list('description', flat=True)[0]
+
+    datasets = Dataset.objects.filter(tags__name=tag)\
+        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+
+    return render(request, 'datasets/tag.html', {
+        'datasets': datasets,
+        'class_name': tag,
+        'class_description': class_description,
+        'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
+        'USER_AUTH': request.user.is_authenticated()
+    })
 
 
 def datasets_growth(request):
