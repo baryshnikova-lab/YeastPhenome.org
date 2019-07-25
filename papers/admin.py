@@ -159,7 +159,7 @@ class PaperAdmin(admin.ModelAdmin):
     ordering = ('pub_date', 'last_author', 'first_author',)
     fields = [('user',), ('first_author', 'last_author', 'pub_date', 'pmid'), ('notes', 'private_notes'), ]
     inlines = (StatusdataInline, StatustestedInline, DatasetInline,)
-    search_fields = ('pmid', 'first_author', 'last_author')
+    search_fields = ('pmid', 'first_author', 'last_author', 'private_notes')
 
     class Media:
         css = {"all": ("hide_admin_original.css",)}
