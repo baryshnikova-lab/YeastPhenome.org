@@ -99,7 +99,10 @@ class DatasetInline(ImprovedTabularInline):
                 if isinstance(f, ForeignKey):
                     f_name += "_id"
                 f_value = str(getattr(obj, f_name, 'None'))
-                if f.name != 'id' and f_value != 'None':
+
+                # Hacky solution to prevent crash (to solve more permanently)
+                if f.name != 'id' and f_value != 'None' and f.name != 'tags':
+                # if f.name != 'id' and f_value != 'None':
                     query_dict[f.name] = f_value
         query_string = urlencode(query_dict)
         return '<a id="id_user" href="%s?%s" onclick="return showAddAnotherPopup(this);">Make a copy</a>' % (reverse("admin:datasets_dataset_add"), query_string)
