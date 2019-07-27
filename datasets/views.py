@@ -103,7 +103,7 @@ def download(request):
     #     datasets.append(key)
     datasets = sorted(request.GET)
 
-    data = Data.objects.filter(dataset_id__in=datasets).all()
+    data = Data.objects.filter(dataset_id__in=datasets).filter(dataset__data_source__release=True).all()
 
     orfs = list(data.values_list('orf', flat=True).distinct())
     datasets_ids = list(data.values_list('dataset_id', flat=True).order_by('dataset__paper').distinct())
