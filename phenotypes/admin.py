@@ -6,7 +6,7 @@ from django.http import HttpResponse
 
 class Observable2Admin(MPTTModelAdmin):
     list_per_page = 1000
-    list_display = ['name', 'definition']
+    list_display = ['name', 'definition', 'papers_edit_link_list']
     search_fields = ['name', ]
 
     def save_model(self, request, obj, form, change):

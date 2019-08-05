@@ -52,6 +52,10 @@ class Observable2(MPTTModel):
         return ', '.join([p.link_detail() for p in self.papers()])
     papers_link_list.allow_tags = True
 
+    def papers_edit_link_list(self):
+        return ', '.join([p.link_edit() for p in self.papers()])
+    papers_edit_link_list.allow_tags = True
+
     def conditiontypes(self):
         # Unusual specification of "not relevant" papers because, in the other way,
         # conditiontypes were being filtered out if they were associated with a "not relevant" paper at least once
