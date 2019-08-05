@@ -134,10 +134,10 @@ def download_zip(request, paper_id, paper_pmid):
     permissions_data = list(set(p.dataset_set.all().values_list('data_source__release', flat=True)))
     permissions_tested = list(set(p.dataset_set.all().values_list('tested_source__release', flat=True)))
 
-    if (sum(permissions_data) < len(permissions_data)) | (sum(permissions_tested) < len(permissions_tested)):
-        file_name = os.path.join(settings.DATA_DIR, "na.zip")
-    else:
+    if all(permissions_data) & all(permissions_tested):
         file_name = os.path.join(settings.DATA_DIR, '%d.zip' % p.pmid)
+    else:
+        file_name = os.path.join(settings.DATA_DIR, "na.zip")
 
     file_path = os.path.join(settings.STATIC_ROOT, file_name)
 
