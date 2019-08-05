@@ -85,6 +85,20 @@ class Tag(models.Model):
         return '<a href="%s">%s</a>' % (reverse("datasets:tag", args=(self.name,)), self)
     link_detail.allow_tags = True
 
+    def datasets(self):
+        return apps.get_model('datasets', 'Dataset').objects.filter(tags=self)\
+            .exclude(paper__latest_data_status__status__status_name='not relevant').all()
+
+    def datasets_number(self):
+        return self.datasets().count()
+
+    def datasets_edit_link_list(self):
+        s = '<ul>'
+        s = s + '<li>'.join([d.link_edit() for d in self.datasets()])
+        s = s + '</ul>'
+        return s
+    datasets_edit_link_list.allow_tags = True
+
 
 class Dataset(models.Model):
 

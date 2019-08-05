@@ -151,7 +151,10 @@ class CollectionAdmin(admin.ModelAdmin):
 
 class TagAdmin(admin.ModelAdmin):
     model = Tag
-    list
+    list_display = ('name', 'datasets_number', )
+
+    fields = ('name', 'description', 'datasets_edit_link_list', )
+    readonly_fields = ('datasets_edit_link_list', )
 
 
 class PaperAdmin(admin.ModelAdmin):
