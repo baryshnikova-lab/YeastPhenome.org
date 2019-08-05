@@ -87,7 +87,7 @@ class Tag(models.Model):
 
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects.filter(tags=self)\
-            .exclude(paper__latest_data_status__status__status_name='not relevant').all()
+            .exclude(paper__latest_data_status__status__status_name='not relevant').order_by('name').all()
 
     def datasets_number(self):
         return self.datasets().count()
