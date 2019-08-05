@@ -129,7 +129,16 @@ class ContributorsListView(generic.ListView):
 def download_zip(request, paper_id, paper_pmid):
 
     p = get_object_or_404(Paper, pk=paper_id)
-    file_name = os.path.join(settings.DATA_DIR, '%d.zip' % p.pmid)
+
+    # Check data & tested strains permission status
+    permissions_data = list(set(p.dataset_set.all().values_list('data_source__release', flat=True)))
+    permissions_tested = list(set(p.dataset_set.all().values_list('tested_source__release', flat=True)))
+
+    if (False in permissions_data) | (False in permissions_tested):
+        file_name = os.path.join(settings.DATA_DIR, "na.zip")
+    else:
+        file_name = os.path.join(settings.DATA_DIR, '%d.zip' % p.pmid)
+
     file_path = os.path.join(settings.STATIC_ROOT, file_name)
 
     response = HttpResponse(open(file_path, 'rb'), content_type='application/zip')
