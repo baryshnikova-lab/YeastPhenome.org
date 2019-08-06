@@ -14,9 +14,9 @@
 
         <div class="col-xs-12">
 
-            <h1>{{ class_name }}</h1>
+            <h1>Tag: {{ tag.name }}</h1>
 
-            <p>{{ class_description }}</p>
+            <p>Description: {{ tag.description }}</p>
 
             {% include "datasets/datasets_table.html" with template='datasets_class' %}
 

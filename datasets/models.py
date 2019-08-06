@@ -79,10 +79,13 @@ class Tag(models.Model):
     description = models.TextField(max_length=1000, null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        s = ''
+        if self.name:
+            s = self.name
+        return s
 
     def link_detail(self):
-        return '<a href="%s">%s</a>' % (reverse("datasets:tag", args=(self.name,)), self)
+        return '<a href="%s">%s</a>' % (reverse("datasets:tag", args=(self.id,)), self)
     link_detail.allow_tags = True
 
     def datasets(self):

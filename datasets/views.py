@@ -24,17 +24,16 @@ def index(request):
     return render(request, 'datasets/index.html', context)
 
 
-def tag(request, tag):
+def tag(request, id):
 
-    class_description = Tag.objects.filter(name=tag).values_list('description', flat=True)[0]
+    t = get_object_or_404(Tag, pk=id)
 
-    datasets = Dataset.objects.filter(tags__name=tag)\
+    datasets = Dataset.objects.filter(tags=id)\
         .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
 
     return render(request, 'datasets/tag.html', {
+        'tag': t,
         'datasets': datasets,
-        'class_name': tag,
-        'class_description': class_description,
         'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
         'USER_AUTH': request.user.is_authenticated()
     })

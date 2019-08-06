@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^class/human/$', views.datasets_human, name='human'),
     url(r'^download/all/', views.download_all, name='download_all'),
     url(r'^download/', views.download, name='download'),
-    url(r'^tag/(?P<tag>[\w-]+)/', views.tag, name='tag'),
+    url(r'^tag/(?P<id>\d+)/', views.tag, name='tag'),
 ]
