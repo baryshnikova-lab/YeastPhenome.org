@@ -171,7 +171,8 @@ class ConditionSet(models.Model):
             return ''
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__conditionset=self)\
+        return apps.get_model('papers', 'Paper').objects\
+            .filter(Q(dataset__conditionset=self) | Q(dataset__control_conditionset=self))\
             .exclude(latest_data_status__status__status_name='not relevant').distinct()
 
     def papers_link_list(self):
