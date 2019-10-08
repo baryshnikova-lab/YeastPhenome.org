@@ -235,10 +235,16 @@ class Medium(models.Model):
         else:
             return ''
 
+    def conditions_str_list(self):
+        return ", ".join([str(c) for c in self.conditions.all()])
+
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
                                                                 Q(dataset__control_medium=self))\
             .exclude(latest_data_status__status__status_name='not relevant').distinct()
+
+    def paper_str_list(self):
+        return ', '.join([str(p) for p in self.papers()])
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
