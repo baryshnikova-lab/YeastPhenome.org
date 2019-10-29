@@ -2,3 +2,4 @@ yeastphenome/settings.py
 *.pyc
 *~
 .idea/*
+.DS_Store
