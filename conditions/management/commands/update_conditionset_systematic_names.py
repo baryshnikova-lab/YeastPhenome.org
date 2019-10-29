@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from tqdm import tqdm
 
 from conditions.models import ConditionSet
 
@@ -9,7 +10,7 @@ class Command(BaseCommand):
 
         all_conditionsets = ConditionSet.objects.all()
 
-        for conditionset in all_conditionsets:
+        for conditionset in tqdm(all_conditionsets):
             conditionset.save()
 
-        self.stdout.write(self.stype.SUCCESS('Successfully updated %d conditionsets.' % all_conditionsets.count()))
+        self.stdout.write('Successfully updated %d conditionsets.' % all_conditionsets.count())

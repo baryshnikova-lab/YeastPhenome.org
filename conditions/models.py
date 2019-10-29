@@ -112,7 +112,7 @@ class Condition(models.Model):
         get_latest_by = 'modified_on'
 
     def __str__(self):
-        if self.dose == 'standard':
+        if self.dose in ['standard', 'unknown']:
             txt = u'%s' % self.type
         else:
             txt = u'%s [%s]' % (self.type, self.dose)
@@ -150,19 +150,20 @@ class ConditionSet(models.Model):
     conditions = models.ManyToManyField(Condition, blank=True)
     description = models.TextField(blank=True, null=True)
 
-    # def save(self, *args, **kwargs):
-    #
-    #     # Generate the systematic name
-    #     conditions_list = [(u'%s' % condition) for condition in
-    #                        self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-    #                                                 'type__name').all()]
-    #     self.systematic_name = u'%s' % ", ".join(conditions_list)
-    #
-    #     self.display_name = self.systematic_name
-    #     if self.common_name:
-    #         self.display_name = self.common_name
-    #
-    #     super(ConditionSet, self).save(*args, **kwargs)
+    # Necessary to run database-wide updates of conditionset names
+    def save(self, *args, **kwargs):
+
+        # Generate the systematic name
+        conditions_list = [(u'%s' % condition) for condition in
+                           self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                    'type__name').all()]
+        self.systematic_name = u'%s' % ", ".join(conditions_list)
+
+        self.display_name = self.systematic_name
+        if self.common_name:
+            self.display_name = self.common_name
+
+        super(ConditionSet, self).save(*args, **kwargs)
 
     def __str__(self):
         if self.display_name:
