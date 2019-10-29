@@ -10,7 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        # super(Command, self).handle(*args, **options)cd
+        # super(Command, self).handle(*args, **options)
         all_data_sources = Source.objects.annotate(num_papers=Count('data_source__paper', distinct=True))\
             .filter(num_papers__gt=1)
 
