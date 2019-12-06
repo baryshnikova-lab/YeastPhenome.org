@@ -8,6 +8,8 @@ class Observable2Admin(MPTTModelAdmin):
     list_per_page = 1000
     list_display = ['name', 'ancestry', 'definition', 'papers_edit_link_list']
     search_fields = ['name', 'ancestry', ]
+    fields = ('name', 'parent', 'description', 'definition', 'ancestry', 'phenotypes_edit_link_list')
+    readonly_fields = ('phenotypes_edit_link_list', )
 
     def save_model(self, request, obj, form, change):
         obj.save()
@@ -24,8 +26,9 @@ class Observable2Admin(MPTTModelAdmin):
         if 'ancestry' == to_field:
             return True
         return super(MPTTModelAdmin,self).to_field_allowed(request, to_field)
+
     class Media:
-        js={'ancestor.js'};
+        js = {'ancestor.js'}
 
 
 class MutantTypeAdmin(admin.ModelAdmin):

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.apps import apps
 from mptt.models import MPTTModel, TreeForeignKey
+from django.db.models import Q
 
 
 class Observable2(MPTTModel):
@@ -28,6 +29,12 @@ class Observable2(MPTTModel):
         num_descendants = self.get_descendants(include_self=True).exclude(phenotype__dataset__isnull=True).count()
         return num_descendants > 0
 
+    def has_annotated_relevant_descendants(self):
+        f = Q(phenotype__dataset__paper__latest_data_status__status__status_name__in=['not relevant', 'request abandoned', 'not available'])
+        g = Q(phenotype__dataset__isnull=True)
+        num_descendants = self.get_descendants(include_self=True).exclude(f).exclude(g).count()
+        return num_descendants > 0
+
     def get_ancestry(self):
         ancestors = self.get_ancestors(ascending=False, include_self=True)
         a = ''
@@ -42,24 +49,40 @@ class Observable2(MPTTModel):
             a += '%d.' % r.id
         return a
 
+    def phenotypes(self):
+        return apps.get_model('phenotypes', 'Phenotype').objects.filter(observable2=self).distinct()
+
+    def phenotypes_list(self):
+        return '; '.join([str(p) for p in self.phenotypes()[:20]])
+
+    def phenotypes_edit_link_list(self):
+        html = '<ul>'
+        html = html + '<li>'.join([p.link_edit() for p in self.phenotypes()[:20]])
+        html = html + '</ul>'
+        return html
+    phenotypes_edit_link_list.allow_tags = True
+
     def papers(self):
         return apps.get_model('papers', 'Paper').objects\
             .filter(dataset__phenotype__observable2=self)\
             .exclude(latest_data_status__status__status_name='not relevant')\
             .distinct()
 
+    def papers_list(self):
+        return '; '.join([str(p) for p in self.papers()])
+
     def papers_link_list(self):
-        return ', '.join([p.link_detail() for p in self.papers()])
+        return '; '.join([p.link_detail() for p in self.papers()])
     papers_link_list.allow_tags = True
 
     def papers_edit_link_list(self):
-        return ', '.join([p.link_edit() for p in self.papers()])
+        return '; '.join([p.link_edit() for p in self.papers()])
     papers_edit_link_list.allow_tags = True
 
     def conditiontypes(self):
         # Unusual specification of "not relevant" papers because, in the other way,
         # conditiontypes were being filtered out if they were associated with a "not relevant" paper at least once
-        return apps.get_model('conditions','ConditionType').objects\
+        return apps.get_model('conditions', 'ConditionType').objects\
             .filter(condition__conditionset__dataset__phenotype__observable2=self,
                     condition__conditionset__dataset__paper__latest_data_status__status__lt=10)\
             .distinct()
@@ -118,6 +141,11 @@ class Phenotype(models.Model):
     def papers_edit_link_list(self):
         return ', '.join([p.link_edit() for p in self.papers()])
     papers_edit_link_list.allow_tags = True
+
+    def link_edit(self):
+        html = '<a href="%s">%s</a>' % (reverse("admin:phenotypes_phenotype_change", args=(self.id,)), self)
+        return html
+    link_edit.allow_tags = True
 
 
 class MutantType(models.Model):
