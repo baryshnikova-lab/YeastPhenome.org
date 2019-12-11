@@ -153,6 +153,8 @@ class ConditionSet(models.Model):
     # Necessary to run database-wide updates of conditionset names
     def save(self, *args, **kwargs):
 
+        super(ConditionSet, self).save(*args, **kwargs)
+
         # Generate the systematic name
         conditions_list = [(u'%s' % condition) for condition in
                            self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
