@@ -18,7 +18,7 @@ def paper_list_view(request):
     queryset = Paper.objects.all()
 
     # Exclude the papers marked as "not relevant"
-    f = Q(data_statuses__status_name__exact='not relevant') | Q(tested_statuses__status_name__exact='not relevant')
+    f = Q(data_statuses__name__exact='not relevant') | Q(tested_statuses__name__exact='not relevant')
     queryset = queryset.exclude(f)
 
     if 'q' in request.GET:

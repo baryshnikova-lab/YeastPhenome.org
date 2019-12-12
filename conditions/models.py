@@ -86,7 +86,7 @@ class ConditionType(models.Model):
     def papers(self):
         return apps.get_model('papers', 'Paper').objects\
             .filter(Q(dataset__conditionset__conditions__type=self) | Q(dataset__medium__conditions__type=self))\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(latest_data_status__status__name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([(u'%s' % p.link_detail()) for p in self.papers()])
@@ -95,7 +95,7 @@ class ConditionType(models.Model):
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects.\
             filter(Q(conditionset__conditions__type=self) | Q(medium__conditions__type=self))\
-            .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.id,)), self)
@@ -176,7 +176,7 @@ class ConditionSet(models.Model):
     def papers(self):
         return apps.get_model('papers', 'Paper').objects\
             .filter(Q(dataset__conditionset=self) | Q(dataset__control_conditionset=self))\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(latest_data_status__status__name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
@@ -188,7 +188,7 @@ class ConditionSet(models.Model):
 
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self)\
-            .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
     def datasets_edit_link_list(self):
         str = '<ul>'
@@ -244,7 +244,7 @@ class Medium(models.Model):
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
                                                                 Q(dataset__control_medium=self))\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(latest_data_status__status__name='not relevant').distinct()
 
     def paper_str_list(self):
         return ', '.join([str(p) for p in self.papers()])
@@ -259,7 +259,7 @@ class Medium(models.Model):
 
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects.filter(medium=self)\
-            .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
     def datasets_edit_link_list(self):
         str = '<ul>'

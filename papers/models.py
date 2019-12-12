@@ -15,15 +15,15 @@ import os
 
 
 class Status(models.Model):
-    status_name = models.CharField(max_length=200,
-                                   default='undefined', blank=True, null=True)
+    name = models.CharField(max_length=200, default='undefined', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    is_valid = models.BooleanField()
 
     def __str__(self):
-        return u'%s' % self.status_name
+        return u'%s' % self.name
 
     class Meta:
-        ordering = ['status_name']
+        ordering = ['name']
 
 
 class Paper(models.Model):
@@ -107,7 +107,7 @@ class Paper(models.Model):
 
     def should_have_data(self):
         # Returns True if data has been loaded from data files
-        return self.latest_data_status and 'loaded' == str(self.latest_data_status.status.status_name)
+        return self.latest_data_status and 'loaded' == str(self.latest_data_status.status.name)
 
     def raw_available_data(self):
         # Returns True if it should have data, and has access to raw data
@@ -131,20 +131,20 @@ class Paper(models.Model):
             .distinct()])
 
     def acknowledge_data(self):
-        return self.dataset_set.filter(data_source__acknowledge = True).exists()
+        return self.dataset_set.filter(data_source__acknowledge=True).exists()
 
     def acknowledge_tested(self):
-        return self.dataset_set.filter(tested_source__acknowledge = True).exists()
+        return self.dataset_set.filter(tested_source__acknowledge=True).exists()
 
     def latest_data_status_name(self):
         if self.latest_data_status:
-            return self.latest_data_status.status.status_name
-    latest_data_status_name.admin_order_field = 'latest_data_status__status__status_name'
+            return self.latest_data_status.status.name
+    latest_data_status_name.admin_order_field = 'latest_data_status__status__name'
 
     def latest_tested_status_name(self):
         if self.latest_tested_status:
-            return self.latest_tested_status.status.status_name
-    latest_tested_status_name.admin_order_field = 'latest_tested_status__status__status_name'
+            return self.latest_tested_status.status.name
+    latest_tested_status_name.admin_order_field = 'latest_tested_status__status__name'
 
     def history(self):
         queryset_data = Statusdata.objects.filter(paper=self).order_by('status_date')

@@ -29,7 +29,7 @@ def tag(request, id):
     t = get_object_or_404(Tag, pk=id)
 
     datasets = Dataset.objects.filter(tags=id)\
-        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+        .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
     return render(request, 'datasets/tag.html', {
         'tag': t,
@@ -47,7 +47,7 @@ def datasets_growth(request):
 
     datasets = Dataset.objects.filter(conditionset__systematic_name='standard')\
         .filter(phenotype__observable2__name__startswith='growth')\
-        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+        .exclude(paper__latest_data_status__status__name='not relevant').distinct()
     return render(request, 'datasets/class.html', {
         'datasets': datasets,
         'class_description': class_description,
@@ -62,7 +62,7 @@ def datasets_human(request):
     class_description = 'List of datasets that involve the expression of a human protein.'
 
     datasets = Dataset.objects.filter(conditionset__conditions__type__group__name='expression of a human protein')\
-        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+        .exclude(paper__latest_data_status__status__name='not relevant').distinct()
     return render(request, 'datasets/class.html', {
         'datasets': datasets,
         'class_description': class_description,
@@ -76,7 +76,7 @@ def download_all(request):
 
     datasets = Dataset.objects.\
         select_related('paper__latest_tested_status__status').\
-        filter(paper__latest_data_status__status__status_name='loaded').all()
+        filter(paper__latest_data_status__status__name='loaded').all()
 
     datasets_list = list()
     for d in datasets:

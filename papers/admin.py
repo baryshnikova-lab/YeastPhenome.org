@@ -204,8 +204,8 @@ class PaperAdmin(admin.ModelAdmin):
 
 
 class StatusAdmin(admin.ModelAdmin):
-    list_display = ('status_name',)
-    ordering = ('status_name',)
+    list_display = ('name',)
+    ordering = ('name',)
 
 
 admin.site.register(Paper, PaperAdmin)

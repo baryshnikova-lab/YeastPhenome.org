@@ -15,8 +15,8 @@ class Command(BaseCommand):
             .filter(num_papers__gt=1)
 
         papers_queryset = Paper.objects.all()
-        f = Q(latest_data_status__status__status_name__in=['not relevant', 'request abandoned', 'not available'])
-        papers_queryset = papers_queryset.exclude(f)
+        f = Q(latest_data_status__status__is_valid=True)
+        papers_queryset = papers_queryset.filter(f)
 
         for source in all_data_sources:
             papers = papers_queryset.filter(dataset__data_source=source).distinct()

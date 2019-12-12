@@ -30,9 +30,9 @@ class Observable2(MPTTModel):
         return num_descendants > 0
 
     def has_annotated_relevant_descendants(self):
-        f = Q(phenotype__dataset__paper__latest_data_status__status__status_name__in=['not relevant', 'request abandoned', 'not available'])
-        g = Q(phenotype__dataset__isnull=True)
-        num_descendants = self.get_descendants(include_self=True).exclude(f).exclude(g).count()
+        f = Q(phenotype__dataset__paper__latest_data_status__status__is_valid=True)
+        g = Q(phenotype__dataset__isnull=False)
+        num_descendants = self.get_descendants(include_self=True).filter(f).filter(g).count()
         return num_descendants > 0
 
     def get_ancestry(self):
@@ -65,7 +65,7 @@ class Observable2(MPTTModel):
     def papers(self):
         return apps.get_model('papers', 'Paper').objects\
             .filter(dataset__phenotype__observable2=self)\
-            .exclude(latest_data_status__status__status_name='not relevant')\
+            .exclude(latest_data_status__status__name='not relevant')\
             .distinct()
 
     def papers_list(self):
@@ -94,7 +94,7 @@ class Observable2(MPTTModel):
     def datasets(self):
         return apps.get_model('datasets', 'Dataset').objects\
             .filter(phenotype__observable2=self) \
-            .exclude(paper__latest_data_status__status__status_name='not relevant')\
+            .exclude(paper__latest_data_status__status__name='not relevant')\
             .distinct()
 
     def link_detail(self):
@@ -132,7 +132,7 @@ class Phenotype(models.Model):
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)\
-            .exclude(latest_data_status__status__status_name='not relevant').distinct()
+            .exclude(latest_data_status__status__name='not relevant').distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])

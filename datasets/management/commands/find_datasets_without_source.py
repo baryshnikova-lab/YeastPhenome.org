@@ -11,7 +11,7 @@ class Command(BaseCommand):
         # super(Command, self).handle(*args, **options)cd
 
         all_datasets = Dataset.objects.filter(data_source__isnull=True).\
-            filter(paper__latest_data_status__status__status_name__in=['loaded']).distinct()
+            filter(paper__latest_data_status__status__name__in=['loaded']).distinct()
 
         for dataset in all_datasets:
             self.stdout.write('%s' % dataset.name)

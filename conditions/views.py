@@ -34,7 +34,7 @@ def index(request):
             Q(conditions__type__chebi_name__icontains=q) | \
             Q(conditions__type__pubchem_name__icontains=q)
 
-        g = Count('dataset', filter=~Q(paper__latest_data_status__status__status_name='not relevant'))
+        g = Count('dataset', filter=~Q(paper__latest_data_status__status__name='not relevant'))
 
         queryset1 = ConditionSet.objects.all()
         queryset1 = queryset1.filter(f).annotate(num_datasets=g).filter(num_datasets__gte=0).distinct()
@@ -83,7 +83,7 @@ def conditionclass(request, class_id):
 
     conditiontypes = ConditionType.objects.filter(chebi_id__in=children)
     datasets = Dataset.objects.filter(conditionset__conditions__type__in=conditiontypes)\
-        .exclude(paper__latest_data_status__status__status_name='not relevant').distinct()
+        .exclude(paper__latest_data_status__status__name='not relevant').distinct()
     return render(request, 'conditions/class.html', {
         'id': class_id,
         'class_name': class_name,
