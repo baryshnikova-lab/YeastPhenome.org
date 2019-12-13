@@ -120,22 +120,22 @@ class ConditionSetAdmin(ImprovedModelAdmin):
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(ConditionSetAdmin, self).response_change(request, obj)
 
-    # def save_model(self, request, obj, form, change):
-    #
-    #     obj.save()
-    #     form.save_m2m()
-    #
-    #     conditions_list = [(u'%s' % condition) for condition in
-    #                        obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-    #                                                'type__name').all()]
-    #     conditions_str = ", ".join(conditions_list)
-    #     obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
-    #
-    #     obj.display_name = obj.systematic_name
-    #     if obj.common_name:
-    #         obj.display_name = obj.common_name
-    #
-    #     obj.save()
+    def save_model(self, request, obj, form, change):
+
+        obj.save()
+        form.save_m2m()
+
+        conditions_list = [(u'%s' % condition) for condition in
+                           obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+                                                   'type__name').all()]
+        conditions_str = ", ".join(conditions_list)
+        obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
+
+        obj.display_name = obj.systematic_name
+        if obj.common_name:
+            obj.display_name = obj.common_name
+
+        obj.save()
 
 
 class MediumAdmin(ImprovedModelAdmin):
