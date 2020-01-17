@@ -102,11 +102,20 @@ class Observable2(MPTTModel):
     link_detail.allow_tags = True
 
 
+class Measurement(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return u'%s' % self.name
+
+
 class Phenotype(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     observable2 = TreeForeignKey(Observable2)
-    reporter = models.CharField(max_length=200, null=True, blank=True)
+    reporter = models.CharField(max_length=200, blank=True, null=True)
+    measurement = models.ForeignKey(Measurement, blank=True, null=True)
     modified_on = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
@@ -154,5 +163,3 @@ class MutantType(models.Model):
 
     def __str__(self):
         return u'%s' % self.name
-
-
