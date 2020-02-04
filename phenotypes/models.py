@@ -109,6 +109,16 @@ class Measurement(models.Model):
     def __str__(self):
         return u'%s' % self.name
 
+    def phenotypes(self):
+        return apps.get_model('phenotypes', 'Phenotype').objects.filter(measurement=self)
+
+    def phenotypes_edit_link_list(self):
+        html = '<ul>'
+        html = html + '<li>'.join([ph.link_edit() for ph in self.phenotypes()[:20]])
+        html = html + '</ul>'
+        return html
+    phenotypes_edit_link_list.allow_tags = True
+
 
 class Phenotype(models.Model):
     name = models.CharField(max_length=200)
@@ -127,6 +137,11 @@ class Phenotype(models.Model):
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.observable2.id,)), self)
     link_detail.allow_tags = True
+
+    def link_edit(self):
+        html = '<a href="%s">%s</a>' % (reverse("admin:phenotypes_phenotype_change", args=(self.id,)), self)
+        return html
+    link_edit.allow_tags = True
 
     def ancestry(self):
         ancestors = self.observable2.get_ancestors(ascending=False, include_self=True)
@@ -150,11 +165,6 @@ class Phenotype(models.Model):
     def papers_edit_link_list(self):
         return ', '.join([p.link_edit() for p in self.papers()])
     papers_edit_link_list.allow_tags = True
-
-    def link_edit(self):
-        html = '<a href="%s">%s</a>' % (reverse("admin:phenotypes_phenotype_change", args=(self.id,)), self)
-        return html
-    link_edit.allow_tags = True
 
 
 class MutantType(models.Model):

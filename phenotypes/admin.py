@@ -56,6 +56,8 @@ class PhenotypeAdmin(admin.ModelAdmin):
 class MeasurementAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'description']
     ordering = ['id']
+    fields = ('name', 'description', 'phenotypes_edit_link_list')
+    readonly_fields = ('phenotypes_edit_link_list', )
 
 
 admin.site.register(Phenotype, PhenotypeAdmin)
