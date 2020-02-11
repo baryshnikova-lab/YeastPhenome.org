@@ -38,6 +38,12 @@
                     <th scope="row">Citation</th>
                     <td>{{ citation }}</td>
                 </tr>
+                {% if object.data_abstract %}
+                <tr>
+                    <th scope="row">Data abstract</th>
+                    <td>{{ object.data_abstract }}</td>
+                </tr>
+                {% endif %}
                 {% if object.notes %}
                 <tr>
                     <th scope="row">Notes</th>
