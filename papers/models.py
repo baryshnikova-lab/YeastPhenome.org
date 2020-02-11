@@ -33,6 +33,7 @@ class Paper(models.Model):
     pmid = models.IntegerField(default=0)
     notes = models.TextField(blank=True)
     private_notes = models.TextField(blank=True)
+    data_abstract = models.TextField(blank=True, null=True)
     modified_on = models.DateField(auto_now=True)
     user = models.ForeignKey(User, blank=True, null=True)
 

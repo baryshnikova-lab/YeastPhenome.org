@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.core.urlresolvers import reverse
-from django.db.models import ForeignKey
+from django.db import models
 from django.http import HttpResponse
 from django import forms
 from django.utils.http import urlencode
@@ -96,7 +96,7 @@ class DatasetInline(ImprovedTabularInline):
         for f in flds:
             if not (f.many_to_one and f.related_model is None):
                 f_name = f.name
-                if isinstance(f, ForeignKey):
+                if isinstance(f, models.ForeignKey):
                     f_name += "_id"
                 f_value = str(getattr(obj, f_name, 'None'))
 
@@ -163,7 +163,8 @@ class PaperAdmin(admin.ModelAdmin):
                     'latest_data_status_name', 'latest_tested_status_name')
     list_filter = ['pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author',)
-    fields = [('user',), ('first_author', 'last_author', 'pub_date', 'pmid'), ('notes', 'private_notes'), ]
+    fields = [('user',), ('first_author', 'last_author', 'pub_date', 'pmid'),
+              ('data_abstract',), ('notes', 'private_notes'), ]
     inlines = (StatusdataInline, StatustestedInline, DatasetInline,)
     search_fields = ('pmid', 'first_author', 'last_author', 'private_notes')
 
