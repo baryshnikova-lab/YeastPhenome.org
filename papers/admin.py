@@ -6,6 +6,7 @@ from django import forms
 from django.utils.http import urlencode
 
 from papers.models import Paper, Status, Statusdata, Statustested
+from papers.forms import PaperModelForm
 from datasets.models import Dataset, Collection, Source, Tag
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin, LimitedInlineFormSet
 
@@ -167,6 +168,8 @@ class PaperAdmin(admin.ModelAdmin):
               ('data_abstract',), ('notes', 'private_notes'), ]
     inlines = (StatusdataInline, StatustestedInline, DatasetInline,)
     search_fields = ('pmid', 'first_author', 'last_author', 'private_notes')
+
+    form = PaperModelForm
 
     class Media:
         css = {"all": ("hide_admin_original.css",)}
