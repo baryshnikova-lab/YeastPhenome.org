@@ -144,7 +144,16 @@ class Dataset(models.Model):
         super(Dataset, self).save(*args, **kwargs)
 
     def admin_name(self):
-        data_info = [self.data_measured.shortname, self.data_published.shortname, self.data_available.shortname]
+        dm = 'na'
+        if self.data_measured_id is not None:
+            dm = self.data_measured.shortname
+        dp = 'na'
+        if self.data_published_id is not None:
+            dp = self.data_published.shortname
+        da = 'na'
+        if self.data_available_id is not None:
+            da = self.data_available.shortname
+        data_info = [dm, dp, da]
         data_all = u'%s | %s' % (self.name, ", ".join(data_info))
         return data_all
 
