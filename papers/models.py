@@ -158,7 +158,7 @@ class Paper(models.Model):
 
     def link_edit(self):
         html = '<a href="%s">%s</a>' % (reverse("admin:papers_paper_change", args=(self.id,)), self)
-        if self.latest_data_status.status_id == 10:    # not relevant
+        if self.latest_data_status and (self.latest_data_status.status_id == 10):    # not relevant
             html = '<a href="%s" style="color: gray;">%s</a>' % (reverse("admin:papers_paper_change", args=(self.id,)), self)
         return html
     link_edit.allow_tags = True
