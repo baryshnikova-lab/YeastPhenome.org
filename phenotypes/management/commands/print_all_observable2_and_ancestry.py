@@ -12,6 +12,4 @@ class Command(BaseCommand):
         observable2_qs = Observable2.objects.all()
 
         for observable2 in observable2_qs:
-            if observable2.has_annotated_relevant_descendants():
-                self.stdout.write('%s\t%s\t%s' % (observable2.ancestry, observable2,
-                                                      observable2.get_ancestry_names()))
+            self.stdout.write('%s\t%s\t%s' % (observable2.ancestry, observable2, observable2.get_ancestry_names()))
