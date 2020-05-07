@@ -49,6 +49,13 @@ class Observable2(MPTTModel):
             a += '%d.' % r.id
         return a
 
+    def get_ancestry_names(self):
+        ancestors = self.get_ancestors(ascending=False, include_self=False)
+        a = []
+        for r in ancestors:
+            a.append(r.name)
+        return '; '.join(a)
+
     def phenotypes(self):
         return apps.get_model('phenotypes', 'Phenotype').objects.filter(observable2=self).distinct()
 
