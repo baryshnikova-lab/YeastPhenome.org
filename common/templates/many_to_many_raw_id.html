@@ -11,5 +11,6 @@
     {% else %}
         {{ label }}
     {% endif %}
+    {% if not forloop.last %}; {% endif %}
     </strong>
 {% endfor %}
