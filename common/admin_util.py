@@ -7,6 +7,7 @@ from django.utils.html import escape
 from django.urls.exceptions import NoReverseMatch
 from django.utils.text import Truncator
 
+from django.http import HttpResponse
 
 from django.forms.models import BaseInlineFormSet
 
@@ -99,6 +100,7 @@ class ImprovedTabularInline(admin.TabularInline):
 
 
 class ImprovedModelAdmin(admin.ModelAdmin):
+
     def formfield_for_dbfield(self, db_field, **kwargs):
         if db_field.name in self.raw_id_fields:
             kwargs.pop("request", None)
@@ -110,8 +112,20 @@ class ImprovedModelAdmin(admin.ModelAdmin):
             return db_field.formfield(**kwargs)
         return super(ImprovedModelAdmin, self).formfield_for_dbfield(db_field, **kwargs)
 
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
+        return super(ImprovedModelAdmin, self).response_change(request, obj)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse('<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
+        return super(ImprovedModelAdmin, self).response_add(request, obj, post_url_continue)
+
 
 class LimitedInlineFormSet(BaseInlineFormSet):
+
     def get_queryset(self):
         qs = super(BaseInlineFormSet, self).get_queryset()
         return qs[:100]

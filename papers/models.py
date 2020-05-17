@@ -99,6 +99,10 @@ class Paper(models.Model):
     datasets_summary.allow_tags = True
 
     @property
+    def datasets_number(self):
+        return self.dataset_set.count()
+
+    @property
     def data_published(self):
         return list(map(str, self.dataset_set.values_list('data_published', flat=True).distinct()))
 

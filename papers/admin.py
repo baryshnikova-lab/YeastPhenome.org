@@ -71,8 +71,9 @@ class DatasetAdmin(ImprovedModelAdmin):
 class DatasetInline(ImprovedTabularInline):
     model = Dataset
     formset = LimitedInlineFormSet
-    fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
-    readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link')
+    template = 'admin/datasets_inline.html'
+    fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link', )
+    readonly_fields = ('id', 'admin_change_link', 'has_data_in_db', 'make_a_copy_link', )
     ordering = ('name', 'id', )
     extra = 0
     max_num = 5000
@@ -205,6 +206,11 @@ class PaperAdmin(admin.ModelAdmin):
             return HttpResponse(
                 '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
         return super(PaperAdmin, self).response_change(request, obj)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['total_num_datasets'] = Paper.objects.get(pk=object_id).datasets_number
+        return super(PaperAdmin, self).change_view(request, object_id, form_url, extra_context=extra_context)
 
 
 class StatusAdmin(admin.ModelAdmin):
