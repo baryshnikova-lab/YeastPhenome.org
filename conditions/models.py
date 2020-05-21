@@ -93,7 +93,7 @@ class ConditionType(models.Model):
     papers_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.\
+        return apps.get_model('papers', 'Dataset').objects.\
             filter(Q(conditionset__conditions__type=self) | Q(medium__conditions__type=self))\
             .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
@@ -155,6 +155,19 @@ class ConditionSet(models.Model):
             return self.display_name
         else:
             return ''
+
+    # # Necessary to run database-wide updates of conditionset names
+    # def save(self, *args, **kwargs):
+    #
+    #     # Generate the systematic name
+    #     conditions_list = [(u'%s' % condition) for condition in
+    #                        self.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
+    #                                                 'type__name').all()]
+    #     self.systematic_name = u'%s' % ", ".join(conditions_list)
+    #     self.display_name = self.systematic_name
+    #     if self.common_name:
+    #         self.display_name = self.common_name
+    #     super(ConditionSet, self).save(*args, **kwargs)
 
     def papers(self):
         return apps.get_model('papers', 'Paper').objects\
@@ -227,7 +240,7 @@ class Medium(models.Model):
     papers_edit_link_list.allow_tags = True
 
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(medium=self)\
+        return apps.get_model('papers', 'Dataset').objects.filter(medium=self)\
             .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
     def datasets_edit_link_list(self):

@@ -57,15 +57,15 @@ def index(request):
         })
 
 
-class ConditionDetailView(generic.DetailView):
+class ConditiontypeDetailView(generic.DetailView):
     model = ConditionType
     template_name = 'conditions/detail.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ConditionDetailView, self).get_context_data(**kwargs)
+        context = super(ConditiontypeDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
-        context['datasets'] = context['object'].datasets
+        context['papers'] = context['object'].datasets
         context['id'] = context['object'].id
         return context
 
@@ -88,7 +88,7 @@ def conditionclass(request, class_id):
         'id': class_id,
         'class_name': class_name,
         'conditiontypes': conditiontypes,
-        'datasets': datasets,
+        'papers': datasets,
         'DOWNLOAD_PREFIX': settings.DOWNLOAD_PREFIX,
         'USER_AUTH': request.user.is_authenticated()
     })
@@ -102,7 +102,7 @@ class MediumDetailView(generic.DetailView):
         context = super(MediumDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
-        context['datasets'] = context['object'].datasets
+        context['papers'] = context['object'].datasets
         context['id'] = context['object'].id
         return context
 
@@ -115,7 +115,7 @@ class ConditionSetDetailView(generic.DetailView):
         context = super(ConditionSetDetailView, self).get_context_data(**kwargs)
         context['DOWNLOAD_PREFIX'] = settings.DOWNLOAD_PREFIX
         context['USER_AUTH'] = self.request.user.is_authenticated()
-        context['datasets'] = context['object'].datasets
+        context['papers'] = context['object'].datasets
         context['id'] = context['object'].id
         return context
 
