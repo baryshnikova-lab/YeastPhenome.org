@@ -181,7 +181,7 @@ class Dataset(models.Model):
     tested_space.allow_tags = True
 
     def phenotypes(self):
-        return self.observable2.name
+        return self.observable.name
 
     def tags_link_list(self):
         return ", ".join([t.link_detail() for t in self.tags.all()])

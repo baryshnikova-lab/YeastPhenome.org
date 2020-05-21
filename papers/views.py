@@ -24,7 +24,7 @@ def paper_list_view(request):
     if 'q' in request.GET:
         q = request.GET['q'].strip()
         f = Q(first_author__icontains=q) | Q(last_author__icontains=q) | Q(pmid__contains=q)
-        f = f | Q(dataset__phenotype__observable2__name__icontains=q)
+        f = f | Q(dataset__phenotype__observable__name__icontains=q)
         f = f | Q(dataset__conditionset__conditions__type__name__icontains=q) | Q(dataset__conditionset__conditions__type__other_names__icontains=q)
         f = f | Q(dataset__conditionset__conditions__type__chebi_name__icontains=q)
         f = f | Q(dataset__conditionset__conditions__type__pubchem_name__icontains=q)
