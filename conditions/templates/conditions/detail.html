@@ -26,9 +26,7 @@
                         {% if object.chebi_id %}
                             &mdash; <a class="external" href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:{{ object.chebi_id }}">CHEBI:{{ object.chebi_id }}</a>
                             <ul>
-                            {% for key, value in object.has_roles.items %}
-                                <li><a href="/conditions/chebi/{{ value }}/">{{ key }}</a></li>
-                            {% endfor %}
+
                             </ul>
                         {% endif %}
                     </td>
