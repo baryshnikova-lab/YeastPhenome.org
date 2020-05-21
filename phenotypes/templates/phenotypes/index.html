@@ -1,4 +1,4 @@
-{% load mptt_tags %}{% load string_multiply %}{% load my_filters %}
+{% load my_filters %}
 <!DOCTYPE html>
 <html lang="en"><head>
     {% include "head.html" with JavaScript='tablesorter' %}
@@ -22,16 +22,13 @@
             <th>Papers</th>
         </tr>
         </thead><tbody>
-    {% recursetree nodes %}
-    {% if node.has_annotated_descendants %}
+    {% for observable in observables %}
     <tr>
-        <td class="col-md-4">{% filter multiply:node.level %}&nbsp; &nbsp; &nbsp; &nbsp;{% endfilter %} |&mdash; {{ node.link_detail|safe }}</td>
-        <td class="col-md-4">{{ node.conditiontypes|join_and_more:7|safe }}</td>
-        <td class="col-md-4">{{ node.papers|join_and_more:7|safe }}</td>
-        {% if not node.is_leaf_node %}{{ children }}{% endif %}
+        <td class="col-md-4">{{ observable.link_detail|safe }}</td>
+        <td class="col-md-4">{{ observable.conditiontypes|join_and_more:7|safe }}</td>
+        <td class="col-md-4">{{ observable.papers|join_and_more:7|safe }}</td>
     </tr>
-    {% endif %}
-    {% endrecursetree %}
+    {% endfor %}
     </tbody>
     </table>
 

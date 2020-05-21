@@ -85,6 +85,24 @@ class Observable(models.Model):
         return html
     datasets_edit_link_list.allow_tags = True
 
+    def link_detail(self):
+        return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.id,)), self)
+    link_detail.allow_tags = True
+
+    def conditiontypes(self):
+        # Unusual specification of "not relevant" papers because, in the other way,
+        # conditiontypes were being filtered out if they were associated with a "not relevant" paper at least once
+        return apps.get_model('conditions', 'ConditionType').objects\
+            .filter(condition__conditionset__dataset__phenotype__observable=self,
+                    condition__conditionset__dataset__paper__latest_data_status__status__lt=10)\
+            .distinct()
+
+    def papers(self):
+        return apps.get_model('papers', 'Paper').objects\
+            .filter(dataset__phenotype__observable=self)\
+            .exclude(latest_data_status__status__name='not relevant')\
+            .distinct()
+
 
 class Observable2(MPTTModel):
     """Generally the way to fetch phenotypes."""
@@ -218,12 +236,12 @@ class Phenotype(models.Model):
 
     def __str__(self):
         if self.reporter:
-            return u'%s (%s)' % (self.observable2, self.reporter)
+            return u'%s (%s)' % (self.observable, self.reporter)
         else:
-            return u'%s' % self.observable2
+            return u'%s' % self.observable
 
     def link_detail(self):
-        return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.observable2.id,)), self)
+        return '<a href="%s">%s</a>' % (reverse("phenotypes:detail", args=(self.observable.id,)), self)
     link_detail.allow_tags = True
 
     def link_edit(self):
