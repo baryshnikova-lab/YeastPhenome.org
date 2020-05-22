@@ -52,12 +52,15 @@ class Observable(models.Model):
         return html
     link_edit.allow_tags = True
 
+    def get_tags(self):
+        return self.tags.order_by('name').all()
+
     def tags_str_list(self):
-        return ", ".join([(u'%s' % t) for t in self.tags.all()])
+        return ", ".join([(u'%s' % t) for t in self.get_tags()])
 
     def tags_edit_link_list(self):
         html = '<ul>'
-        html = html + '<li>'.join([p.link_edit() for p in self.tags.all()])
+        html = html + '<li>'.join([p.link_edit() for p in self.get_tags()])
         html = html + '</ul>'
         return html
     tags_edit_link_list.allow_tags = True
@@ -102,6 +105,9 @@ class Observable(models.Model):
             .filter(dataset__phenotype__observable=self)\
             .exclude(latest_data_status__status__name='not relevant')\
             .distinct()
+
+    def papers_str_list(self):
+        return '; '.join([(u'%s' % p) for p in self.papers()])
 
 
 class Observable2(MPTTModel):
@@ -228,7 +234,7 @@ class Measurement(models.Model):
 class Phenotype(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
-    observable2 = TreeForeignKey(Observable2)
+    observable2 = TreeForeignKey(Observable2, blank=True, null=True)
     observable = models.ForeignKey(Observable, blank=False, null=False)
     reporter = models.CharField(max_length=200, blank=True, null=True)
     measurement = models.ForeignKey(Measurement, blank=True, null=True)
