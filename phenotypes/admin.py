@@ -8,7 +8,7 @@ from common.admin_util import ImprovedModelAdmin, ImprovedTabularInline
 
 class ObservableAdmin(ImprovedModelAdmin):
     list_per_page = 50
-    list_display = ['name', 'description', 'tags_str_list']
+    list_display = ['name', 'description', 'tags_str_list', 'papers_str_list']
     search_fields = ['name', 'description', 'tags__name']
     fields = ('name', 'description', 'tags', 'phenotypes_edit_link_list', 'datasets_edit_link_list', )
     readonly_fields = ('phenotypes_edit_link_list', 'datasets_edit_link_list', )
