@@ -147,8 +147,8 @@ class MediumAdmin(ImprovedModelAdmin):
     ordering = ('id', 'display_name', )
 
     fields = ('systematic_name', 'common_name', 'display_name',
-              'conditions', 'description', 'datasets_edit_link_list', )
-    readonly_fields = ('systematic_name', 'display_name', 'datasets_edit_link_list', )
+              'conditions', 'description', 'datasets_edit_link_list_top50', )
+    readonly_fields = ('systematic_name', 'display_name', 'datasets_edit_link_list_top50', )
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
