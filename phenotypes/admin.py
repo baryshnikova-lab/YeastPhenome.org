@@ -3,7 +3,7 @@ from mptt.admin import MPTTModelAdmin
 from django.http import HttpResponse
 
 from phenotypes.models import MutantType, Observable, Observable2, Phenotype, Measurement, Tag
-from common.admin_util import ImprovedModelAdmin, ImprovedTabularInline
+from common.admin_util import ImprovedModelAdmin
 
 
 class ObservableAdmin(ImprovedModelAdmin):
@@ -81,11 +81,10 @@ class MutantTypeAdmin(admin.ModelAdmin):
 
 
 class PhenotypeAdmin(admin.ModelAdmin):
-    list_per_page = 1000
+    list_per_page = 50
     list_display = ['name', 'reporter', 'papers_edit_link_list']
-    # ordering = ['observable2__ancestry']
     search_fields = ['name', ]
-    fields = ('name', 'description', 'observable2', 'observable', 'reporter', 'measurement', 'datasets_edit_link_list', )
+    fields = ('name', 'description', 'observable', 'reporter', 'measurement', 'datasets_edit_link_list', )
     raw_id_fields = ('measurement', 'observable', )
     readonly_fields = ('datasets_edit_link_list', )
 
