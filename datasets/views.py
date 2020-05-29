@@ -20,7 +20,7 @@ class DatasetDetailView(generic.DetailView):
 
 def index(request):
 
-    context = ''
+    context = {}
     return render(request, 'datasets/index.html', context)
 
 
@@ -47,7 +47,10 @@ def datasets_growth(request):
 
     datasets = Dataset.objects.filter(conditionset__systematic_name='standard')\
         .filter(phenotype__observable2__name__startswith='growth')\
-        .exclude(paper__latest_data_status__status__name='not relevant').distinct()
+        .filter(control_conditionset__isnull=True)\
+        .filter(control_medium__isnull=True)\
+        .exclude(paper__latest_data_status__status__name='not relevant')\
+        .distinct()
     return render(request, 'datasets/class.html', {
         'datasets': datasets,
         'class_description': class_description,
