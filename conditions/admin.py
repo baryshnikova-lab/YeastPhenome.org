@@ -2,14 +2,34 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django import forms
 from django.http import HttpResponse
+from django.db.models import Min
 
 import re
 
 from pubchempy import Compound
 from libchebipy import ChebiEntity
 
-from conditions.models import ConditionSet, Condition, ConditionType, ConditionTypeGroup, Medium
+from conditions.models import ConditionSet, Condition, ConditionType, Medium, Tag
 from common.admin_util import ImprovedTabularInline, ImprovedModelAdmin
+
+
+class TagAdmin(ImprovedModelAdmin):
+    list_per_page = 50
+    list_display = ['name', 'description']
+    search_fields = ['name', 'description']
+    fields = ('name', 'description')
+    ordering = ['name']
+
+    def response_change(self, request, obj):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse(
+                '<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
+        return super(TagAdmin, self).response_change(request, obj)
+
+    def response_add(self, request, obj, post_url_continue=None):
+        if request.GET.get('_popup') == '1':
+            return HttpResponse('<script type="text/javascript">window.opener.location.reload(); window.close();</script>')
+        return super(TagAdmin, self).response_add(request, obj, post_url_continue)
 
 
 class ConditionAdminForm(forms.ModelForm):
@@ -60,19 +80,13 @@ class ConditionInline(ImprovedTabularInline):
     admin_change_link.allow_tags = True
 
 
-class ConditionTypeGroupAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order')
-    search_fields = ('name',)
-
-
 class ConditionTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_edit_list')
-    list_filter = ['group']
     ordering = ('name',)
-    radio_fields = {'group': admin.VERTICAL}
     search_fields = ('name', 'other_names', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
-    fields = ('name', 'other_names', 'group', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
+    fields = ('name', 'other_names', 'tags', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     readonly_fields = ('chebi_name', 'pubchem_name',)
+    raw_id_fields = ('tags',)
     inlines = (ConditionInline,)
 
     def save_model(self, request, obj, form, change):
@@ -126,8 +140,8 @@ class ConditionSetAdmin(ImprovedModelAdmin):
         form.save_m2m()
 
         conditions_list = [(u'%s' % condition) for condition in
-                           obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-                                                   'type__name').all()]
+                           obj.conditions.annotate(tags_order=Min('type__tags__order')).\
+                               order_by('tags_order', 'type__chebi_name', 'type__pubchem_name','type__name').all()]
         conditions_str = ", ".join(conditions_list)
         obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
@@ -174,8 +188,8 @@ class MediumAdmin(ImprovedModelAdmin):
         obj.save()
 
 
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(ConditionType, ConditionTypeAdmin)
-admin.site.register(ConditionTypeGroup, ConditionTypeGroupAdmin)
 admin.site.register(ConditionSet, ConditionSetAdmin)
 admin.site.register(Medium, MediumAdmin)

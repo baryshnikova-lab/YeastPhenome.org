@@ -9,9 +9,10 @@ from phenotypes.models import Phenotype
 from libchebipy import ChebiEntity
 
 
-class ConditionTypeGroup(models.Model):
-    name = models.CharField(max_length=200)
-    order = models.PositiveIntegerField(blank=True, null=True)
+class Tag(models.Model):
+    name = models.CharField(max_length=200, null=False, blank=False)
+    description = models.TextField(max_length=1000, null=True, blank=True)
+    order = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -27,11 +28,11 @@ class ConditionType(models.Model):
     chebi_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
     chebi_name = models.CharField(max_length=200, blank=True, null=True)
 
-    group = models.ForeignKey(ConditionTypeGroup, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
-        ordering = ['group', 'chebi_name', 'pubchem_name', 'name', 'other_names']
+        ordering = ['chebi_name', 'pubchem_name', 'name', 'other_names']
 
     def __str__(self):
         if self.chebi_name:
