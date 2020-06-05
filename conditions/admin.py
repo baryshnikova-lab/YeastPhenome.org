@@ -80,7 +80,7 @@ class ConditionInline(ImprovedTabularInline):
     admin_change_link.allow_tags = True
 
 
-class ConditionTypeAdmin(admin.ModelAdmin):
+class ConditionTypeAdmin(ImprovedModelAdmin):
     list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_edit_list')
     ordering = ('name',)
     search_fields = ('name', 'other_names', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
