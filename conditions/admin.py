@@ -176,8 +176,8 @@ class MediumAdmin(ImprovedModelAdmin):
         form.save_m2m()
 
         conditions_list = [(u'%s' % condition) for condition in
-                           obj.conditions.order_by('type__group__order', 'type__chebi_name', 'type__pubchem_name',
-                                                   'type__name').all()]
+                           obj.conditions.annotate(tags_order=Min('type__tags__order')).\
+                               order_by('tags_order', 'type__chebi_name', 'type__pubchem_name', 'type__name').all()]
         conditions_str = ", ".join(conditions_list)
         obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
