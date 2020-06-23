@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from itertools import chain
 from operator import attrgetter
 
-from phenotypes.models import Observable2
+from phenotypes.models import Observable
 from conditions.models import ConditionType
 from datasets.models import Collection, Source
 
@@ -65,7 +65,7 @@ class Paper(models.Model):
         return ', '.join([(u'%s' % i) for i in self.collections()])
 
     def phenotypes(self):
-        return Observable2.objects.filter(phenotype__dataset__paper=self).distinct()
+        return Observable.objects.filter(phenotype__dataset__paper=self).distinct()
 
     def phenotypes_str_list(self):
         num = len(self.phenotypes())
