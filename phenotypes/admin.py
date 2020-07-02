@@ -83,7 +83,7 @@ class MutantTypeAdmin(admin.ModelAdmin):
 class PhenotypeAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = ['name', 'reporter', 'papers_edit_link_list']
-    search_fields = ['name', ]
+    search_fields = ['name', 'description', ]
     fields = ('name', 'description', 'observable', 'reporter', 'measurement', 'datasets_edit_link_list', )
     raw_id_fields = ('measurement', 'observable', )
     readonly_fields = ('datasets_edit_link_list', )
