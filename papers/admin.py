@@ -162,7 +162,7 @@ class TagAdmin(admin.ModelAdmin):
 class PaperAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = ('pmid', 'user', '__str__', 'datasets_summary',
-                    'latest_data_status_name', 'latest_tested_status_name')
+                    'latest_data_status_name_date', 'latest_tested_status_name')
     list_filter = ['latest_data_status__status__name', 'pub_date', 'last_author']
     ordering = ('pub_date', 'last_author', 'first_author',)
     fields = [('user',), ('first_author', 'last_author', 'pub_date', 'pmid'),
