@@ -84,9 +84,10 @@ class PhenotypeAdmin(admin.ModelAdmin):
     list_per_page = 50
     list_display = ['name', 'observable_name', 'reporter', 'papers_edit_link_list']
     search_fields = ['name', 'description', 'observable__name']
-    fields = ('name', 'description', 'observable', 'reporter', 'measurement', 'datasets_edit_link_list', )
+    fields = ('name', 'description', 'observable', 'reporter', 'measurement',
+              'datasets_edit_link_list', 'phenotype_siblings_edit_link_list')
     raw_id_fields = ('measurement', 'observable', )
-    readonly_fields = ('datasets_edit_link_list', )
+    readonly_fields = ('datasets_edit_link_list', 'phenotype_siblings_edit_link_list')
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':

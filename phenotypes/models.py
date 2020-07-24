@@ -291,6 +291,14 @@ class Phenotype(models.Model):
         return html
     datasets_edit_link_list.allow_tags = True
 
+    def phenotype_siblings_edit_link_list(self):
+        siblings = self.observable.phenotype_set.exclude(pk=self.pk).all()
+        html = '<ul>'
+        html = html + '<li>'.join([p.link_edit() for p in siblings[:50]])
+        html = html + '</ul>'
+        return html
+    phenotype_siblings_edit_link_list.allow_tags = True
+
 
 class MutantType(models.Model):
     name = models.CharField(max_length=200)
