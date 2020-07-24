@@ -266,6 +266,9 @@ class Phenotype(models.Model):
         return '<span style="white-space: nowrap;">%s %s</span>' % (self.ancestry(), self.observable2.name)
     observable2_name.allow_tags = True
 
+    def observable_name(self):
+        return self.observable.name
+
     def papers(self):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)\
             .exclude(latest_data_status__status__name='not relevant').distinct()
