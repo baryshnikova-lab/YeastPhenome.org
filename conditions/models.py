@@ -171,16 +171,22 @@ class ConditionSet(models.Model):
     #     super(ConditionSet, self).save(*args, **kwargs)
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects\
+        ps = apps.get_model('papers', 'Paper').objects\
             .filter(Q(dataset__conditionset=self) | Q(dataset__control_conditionset=self))\
             .exclude(latest_data_status__status__name='not relevant').distinct()
+        return ps
+
+    def papers_all(self):
+        ps = apps.get_model('papers', 'Paper').objects\
+            .filter(Q(dataset__conditionset=self) | Q(dataset__control_conditionset=self)).distinct()
+        return ps
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
     papers_link_list.allow_tags = True
 
     def papers_edit_link_list(self):
-        return ', '.join([p.link_edit() for p in self.papers()])
+        return ', '.join([p.link_edit() for p in self.papers_all()])
     papers_edit_link_list.allow_tags = True
 
     def datasets(self):
