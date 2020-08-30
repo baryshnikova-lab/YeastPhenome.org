@@ -7,7 +7,7 @@ from django.views import generic
 from papers.models import Paper
 from datasets.models import Dataset, Data, Tag
 from conditions.models import ConditionType
-from phenotypes.models import Observable2
+from phenotypes.models import Observable
 
 from libchebipy import ChebiEntity
 
@@ -46,7 +46,7 @@ def datasets_growth(request):
                         'and/or physical perturbations.'
 
     datasets = Dataset.objects.filter(conditionset__systematic_name='standard')\
-        .filter(phenotype__observable2__name__startswith='growth')\
+        .filter(phenotype__observable__name__startswith='growth')\
         .filter(control_conditionset__isnull=True)\
         .filter(control_medium__isnull=True)\
         .exclude(paper__latest_data_status__status__name='not relevant')\
@@ -165,7 +165,7 @@ def data(request, domain, id):
         file_header = u'# Data for conditions annotated as %s (ChEBI:%s)\n' % (chebi_entity.get_name(), id)
 
     if domain == 'phenotypes':
-        phenotype = get_object_or_404(Observable2, pk=id)
+        phenotype = get_object_or_404(Observable, pk=id)
         datasets = phenotype.datasets()
         file_header = u'# Phenotype: %s (ID %s)\n' % (phenotype, phenotype.id)
 

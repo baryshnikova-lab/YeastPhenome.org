@@ -55,7 +55,7 @@ class PaperDetailView(generic.DetailView):
         context['USER_AUTH'] = self.request.user.is_authenticated()
 
         # Define dataset_set
-        dataset_list = obj.dataset_set.select_related('phenotype__observable2').select_related('collection').select_related('conditionset').all()
+        dataset_list = obj.dataset_set.select_related('phenotype__observable').select_related('collection').select_related('conditionset').all()
         page = self.request.GET.get('page', 1)
         paginator = Paginator(dataset_list, 50)
         try:

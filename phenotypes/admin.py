@@ -1,8 +1,7 @@
 from django.contrib import admin
-from mptt.admin import MPTTModelAdmin
 from django.http import HttpResponse
 
-from phenotypes.models import MutantType, Observable, Observable2, Phenotype, Measurement, Tag
+from phenotypes.models import MutantType, Observable, Phenotype, Measurement, Tag
 from common.admin_util import ImprovedModelAdmin
 
 
@@ -47,33 +46,6 @@ class TagAdmin(ImprovedModelAdmin):
         return super(TagAdmin, self).response_add(request, obj, post_url_continue)
 
 
-class Observable2Admin(MPTTModelAdmin):
-    list_per_page = 1000
-    list_display = ['name', 'ancestry', 'definition', 'papers_edit_link_list']
-    search_fields = ['name', 'ancestry', ]
-    fields = ('name', 'parent', 'description', 'definition', 'ancestry', 'phenotypes_edit_link_list')
-    readonly_fields = ('phenotypes_edit_link_list', )
-
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        if not obj.ancestry:
-            obj.ancestry = '%s%03d.' % (obj.parent.ancestry, obj.id)
-            obj.save()
-
-    def to_field_allowed(self, request, to_field):
-        """This is a littel hacky, but setting to_field='ancestry' in
-        Observable2.parent broke MPTTModel.get_children() when
-        generating the graphics.  So until I can figure out a better
-        way..."""
-
-        if 'ancestry' == to_field:
-            return True
-        return super(MPTTModelAdmin,self).to_field_allowed(request, to_field)
-
-    class Media:
-        js = {'ancestor.js'}
-
-
 class MutantTypeAdmin(admin.ModelAdmin):
     list_filter = ['name']
     list_display = ['id', 'name', 'definition']
@@ -105,7 +77,6 @@ class MeasurementAdmin(admin.ModelAdmin):
 
 admin.site.register(Phenotype, PhenotypeAdmin)
 admin.site.register(MutantType, MutantTypeAdmin)
-admin.site.register(Observable2, Observable2Admin)
 admin.site.register(Observable, ObservableAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Measurement, MeasurementAdmin)
