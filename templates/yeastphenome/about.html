@@ -52,7 +52,9 @@
             <p>&mdash; The Yeast Phenome Database, www.yeastphenome.org, accessed on XXXX-XX-XX.</p>
 
 
-            <h2>Current stats ({{ updated_on }})</h2>
+            <h2>Current stats</h2>
+
+            <p>Updated automatically on {{ updated_on }}.</p>
 
             <ul>
                 <li>Total publications: {{ papers_nr|intcomma }} (+ {{ papers_hopeless_nr|intcomma }} for which data could not be recovered)</li>
@@ -62,9 +64,118 @@
                         <li>Publications: {{ papers_processed_nr|intcomma }} ({% widthratio papers_processed_nr papers_nr 100 %}%)</li>
                         <li>Phenotypes: {{ phenotypes_nr|intcomma }}</li>
                         <li>Environments: {{ conditions_nr|intcomma }}</li>
-                        <li>Datasets: {{ datasets_nr|intcomma }} ({{ datasets_nr_hap_hom|intcomma }} haploid/homozygous diploid + {{ datasets_nr_het|intcomma }} heterozygous diploid)</li>
+                        <li>Datasets: {{ datasets_nr|intcomma }} </li>
                     </ul>
+                <li>Recovered unpublished information for:
+                    <ul>
+                        <li>Datasets: {{ datasets_nr_recovered_all|intcomma }} ({% widthratio datasets_nr_recovered_all datasets_nr 100 %}% of all)</li>
+                        <li>More complete data: {{ datasets_nr_recovered_data|intcomma }} datasets ({% widthratio datasets_nr_recovered_data datasets_nr_need_data 100 %}% of those that needed it)</li>
+                        <li>List of tested strains: {{ datasets_nr_recovered_tested|intcomma }} datasets ({% widthratio datasets_nr_recovered_tested datasets_nr_need_tested 100 %}% of those that needed it)</li>
+                    </ul>
+                </li>
             </ul>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col" width="40%">Strain background</th>
+                        <th scope="col">Number of datasets</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Haploid Mat-a</td>
+                    <td>{{ datasets_nr_hap_a|intcomma }} ({{ datasets_prc_hap_a }}%)</td>
+                </tr>
+                <tr>
+                    <td>Haploid Mat-alpha</td>
+                    <td>{{ datasets_nr_hap_alpha|intcomma }} ({{ datasets_prc_hap_alpha }}%)</td>
+                </tr>
+                <tr>
+                    <td>Homozygous diploid</td>
+                    <td>{{ datasets_nr_hom|intcomma }} ({{ datasets_prc_hom }}%)</td>
+                </tr>
+                <tr>
+                    <td>Heterozygous diploid</td>
+                    <td>{{ datasets_nr_het|intcomma }} ({{ datasets_prc_het }}%)</td>
+                </tr>
+                <tr>
+                    <td>Mixed</td>
+                    <td>{{ datasets_nr_mix|intcomma }} ({{ datasets_prc_mix }}%)</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ datasets_nr_collections_total|intcomma }} ({% widthratio datasets_nr_collections_total datasets_nr 100 %}%)</td>
+                </tr>
+            </table>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col" width="40%">Data type</th>
+                        <th scope="col">Number of datasets</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Quantitative</td>
+                    <td>{{ datasets_nr_q|intcomma }} ({{ datasets_prc_q }}%)</td>
+                </tr>
+                <tr>
+                    <td>Quantitative only for hits</td>
+                    <td>{{ datasets_nr_qofh|intcomma }} ({{ datasets_prc_qofh }}%)</td>
+                </tr>
+                <tr>
+                    <td>Discrete</td>
+                    <td>{{ datasets_nr_d|intcomma }} ({{ datasets_prc_d }}%)</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td>{{ datasets_nr_data_available_total|intcomma }} ({% widthratio datasets_nr_data_available_total datasets_nr 100 %}%)</td>
+                </tr>
+            </table>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col" width="40%">Condition type</th>
+                        <th scope="col">Number of papers</th>
+                        <th scope="col">Number of datasets</th>
+                    </tr>
+                </thead>
+                {% for c in top_conditiontypes %}
+                <tr>
+                    <td>{{ c.link_detail|safe }}</td>
+                    <td>{{ c.nr_papers|intcomma }}</td>
+                    <td>{{ c.nr_datasets|intcomma }} ({{ c.nr_datasets_q|intcomma }} q +
+                        {{c.nr_datasets_qofh|intcomma }} qofh + {{ c.nr_datasets_d|intcomma }} d)</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col" width="40%">Phenotype class</th>
+                        <th scope="col">Number of datasets</th>
+                        <th scope="col">Number of papers</th>
+                    </tr>
+                </thead>
+                <tr>
+                    <td>Growth</td>
+                    <td>{{ datasets_nr_processed_homhap_growth|intcomma }} ({% widthratio datasets_nr_processed_homhap_growth datasets_nr_processed_homhap 100 %}%)</td>
+                    <td>{{ papers_nr_processed_homhap_growth }}</td>
+                </tr>
+                <tr>
+                    <td>Expression</td>
+                    <td>{{ datasets_nr_processed_homhap_expression|intcomma }} ({% widthratio datasets_nr_processed_homhap_expression datasets_nr_processed_homhap 100 %}%)</td>
+                    <td>{{ papers_nr_processed_homhap_expression }}</td>
+                </tr>
+                <tr>
+                    <td>Other</td>
+                    <td>{{ datasets_nr_processed_homhap_other|intcomma }} ({% widthratio datasets_nr_processed_homhap_other datasets_nr_processed_homhap 100 %}%)</td>
+                    <td>{{ papers_nr_processed_homhap_other }}</td>
+                </tr>
+            </table>
+
 
             <h2>Frequenty Asked Questions (FAQ)</h2>
 
