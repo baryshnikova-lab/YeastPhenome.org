@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
             # Re-generate the systematic name
             conditions_list = [(u'%s' % condition) for condition in
-                               conditionset.conditions.order_by('type__group__order', 'type__chebi_name',
+                               conditionset.conditions.order_by('type__tags__order', 'type__chebi_name',
                                                                 'type__pubchem_name', 'type__name').all()]
             conditionset.systematic_name = u'%s' % ", ".join(conditions_list)
 
