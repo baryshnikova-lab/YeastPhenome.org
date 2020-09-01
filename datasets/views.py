@@ -79,7 +79,8 @@ def download_all(request):
 
     datasets = Dataset.objects.\
         select_related('paper__latest_tested_status__status').\
-        filter(paper__latest_data_status__status__name='loaded').all()
+        filter(paper__latest_data_status__status__name='loaded').\
+        filter(data_source__release=True).all()
 
     datasets_list = list()
     for d in datasets:
