@@ -78,23 +78,37 @@ def get_latest_stats():
 
     # --- Phenotypes ----
     p = Q(paper__in=papers_processed_qs)
-    c = Q(collection__shortname__in=['hap a', 'hap alpha', 'hom', 'hap ?',
+    c1 = Q(collection__shortname__in=['hap a', 'hap alpha', 'hom', 'hap ?',
                                      'hap a/hap alpha/hom', 'hap a/hap alpha', 'hap a/hom'])
+    c2 = Q(collection__shortname__in=['het'])
     gr = Q(phenotype__name__contains='growth')
     exp = Q(phenotype__name__contains='gene expression')
-    datasets_processed_homhap_qs = datasets_qs.filter(p & c)
+    datasets_processed_homhap_qs = datasets_qs.filter(p & c1)
+    datasets_processed_het_qs = datasets_qs.filter(p & c2)
 
     datasets_nr_processed_homhap = datasets_processed_homhap_qs.count()
     papers_nr_processed_homhap = datasets_processed_homhap_qs.values('paper_id').distinct().count()
 
+    datasets_nr_processed_het = datasets_processed_het_qs.count()
+    papers_nr_processed_het = datasets_processed_het_qs.values('paper_id').distinct().count()
+
     datasets_nr_processed_homhap_growth = datasets_processed_homhap_qs.filter(gr).count()
     papers_nr_processed_homhap_growth = datasets_processed_homhap_qs.filter(gr).values('paper_id').distinct().count()
+
+    datasets_nr_processed_het_growth = datasets_processed_het_qs.filter(gr).count()
+    papers_nr_processed_het_growth = datasets_processed_het_qs.filter(gr).values('paper_id').distinct().count()
 
     datasets_nr_processed_homhap_expression = datasets_processed_homhap_qs.filter(exp).count()
     papers_nr_processed_homhap_expression = datasets_processed_homhap_qs.filter(exp).values('paper_id').distinct().count()
 
+    datasets_nr_processed_het_expression = datasets_processed_het_qs.filter(exp).count()
+    papers_nr_processed_het_expression = datasets_processed_het_qs.filter(exp).values('paper_id').distinct().count()
+
     datasets_nr_processed_homhap_other = datasets_processed_homhap_qs.exclude(gr).exclude(exp).count()
     papers_nr_processed_homhap_other = datasets_processed_homhap_qs.exclude(gr).exclude(exp).values('paper_id').distinct().count()
+
+    datasets_nr_processed_het_other = datasets_processed_het_qs.exclude(gr).exclude(exp).count()
+    papers_nr_processed_het_other = datasets_processed_het_qs.exclude(gr).exclude(exp).values('paper_id').distinct().count()
 
 
     # --- Collections ----
@@ -195,6 +209,14 @@ def get_latest_stats():
                'papers_nr_processed_homhap_growth': papers_nr_processed_homhap_growth,
                'papers_nr_processed_homhap_expression': papers_nr_processed_homhap_expression,
                'papers_nr_processed_homhap_other': papers_nr_processed_homhap_other,
+               'datasets_nr_processed_het': datasets_nr_processed_het,
+               'datasets_nr_processed_het_growth': datasets_nr_processed_het_growth,
+               'datasets_nr_processed_het_expression': datasets_nr_processed_het_expression,
+               'datasets_nr_processed_het_other': datasets_nr_processed_het_other,
+               'papers_nr_processed_het': papers_nr_processed_het,
+               'papers_nr_processed_het_growth': papers_nr_processed_het_growth,
+               'papers_nr_processed_het_expression': papers_nr_processed_het_expression,
+               'papers_nr_processed_het_other': papers_nr_processed_het_other,
                'updated_on': updated_on}
 
     return context

@@ -154,25 +154,33 @@
             <table class="table table-condensed">
                 <thead>
                     <tr>
-                        <th scope="col" width="40%">Phenotype class</th>
-                        <th scope="col">Number of datasets</th>
-                        <th scope="col">Number of papers</th>
+                        <th scope="col" width="20%">Phenotype class</th>
+                        <th scope="col">Number of datasets (hap/hom)</th>
+                        <th scope="col">Number of papers (hap/hom)</th>
+                        <th scope="col">Number of datasets (het)</th>
+                        <th scope="col">Number of papers (het)</th>
                     </tr>
                 </thead>
                 <tr>
                     <td>Growth</td>
                     <td>{{ datasets_nr_processed_homhap_growth|intcomma }} ({% widthratio datasets_nr_processed_homhap_growth datasets_nr_processed_homhap 100 %}%)</td>
                     <td>{{ papers_nr_processed_homhap_growth }}</td>
+                    <td>{{ datasets_nr_processed_het_growth|intcomma }} ({% widthratio datasets_nr_processed_het_growth datasets_nr_processed_het 100 %}%)</td>
+                    <td>{{ papers_nr_processed_het_growth }}</td>
                 </tr>
                 <tr>
                     <td>Expression</td>
                     <td>{{ datasets_nr_processed_homhap_expression|intcomma }} ({% widthratio datasets_nr_processed_homhap_expression datasets_nr_processed_homhap 100 %}%)</td>
                     <td>{{ papers_nr_processed_homhap_expression }}</td>
+                    <td>{{ datasets_nr_processed_het_expression|intcomma }} ({% widthratio datasets_nr_processed_het_expression datasets_nr_processed_het 100 %}%)</td>
+                    <td>{{ papers_nr_processed_het_expression }}</td>
                 </tr>
                 <tr>
                     <td>Other</td>
                     <td>{{ datasets_nr_processed_homhap_other|intcomma }} ({% widthratio datasets_nr_processed_homhap_other datasets_nr_processed_homhap 100 %}%)</td>
                     <td>{{ papers_nr_processed_homhap_other }}</td>
+                    <td>{{ datasets_nr_processed_het_other|intcomma }} ({% widthratio datasets_nr_processed_het_other datasets_nr_processed_het 100 %}%)</td>
+                    <td>{{ papers_nr_processed_het_other }}</td>
                 </tr>
             </table>
 
