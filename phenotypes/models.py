@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.apps import apps
-from mptt.models import MPTTModel, TreeForeignKey
 from django.db.models import Q
 
 
