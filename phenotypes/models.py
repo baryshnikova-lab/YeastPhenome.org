@@ -158,12 +158,15 @@ class Phenotype(models.Model):
         return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)\
             .exclude(latest_data_status__status__name='not relevant').distinct()
 
+    def papers_all(self):
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)
+
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
     papers.allow_tags = True
 
     def papers_edit_link_list(self):
-        return ', '.join([p.link_edit() for p in self.papers()])
+        return ', '.join([p.link_edit() for p in self.papers_all()])
     papers_edit_link_list.allow_tags = True
 
     def datasets(self):
