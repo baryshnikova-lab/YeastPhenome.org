@@ -17,7 +17,8 @@ class TagAdmin(ImprovedModelAdmin):
     list_per_page = 50
     list_display = ['name', 'description']
     search_fields = ['name', 'description']
-    fields = ('name', 'description')
+    fields = ('name', 'description', 'conditiontypes_edit_link_list')
+    readonly_fields = ('conditiontypes_edit_link_list', )
     ordering = ['name']
 
     def response_change(self, request, obj):
@@ -81,7 +82,7 @@ class ConditionInline(ImprovedTabularInline):
 
 
 class ConditionTypeAdmin(ImprovedModelAdmin):
-    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_edit_list')
+    list_display = ('name', 'chebi_name', 'pubchem_name', 'conditions_edit_list', 'tags_edit_list')
     ordering = ('name',)
     search_fields = ('name', 'other_names', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')
     fields = ('name', 'other_names', 'tags', 'description', 'chebi_id', 'chebi_name', 'pubchem_id', 'pubchem_name')

@@ -17,6 +17,18 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    def link_edit(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:conditions_tag_change", args=(self.id,)), self.name)
+    link_edit.allow_tags = True
+
+    def conditiontypes_edit_link_list(self):
+        conditiontypes = self.conditiontype_set.order_by('name').all()
+        html = '<ul>'
+        html = html + '<li>'.join([c.link_edit() for c in conditiontypes[:50]])
+        html = html + '</ul>'
+        return html
+    conditiontypes_edit_link_list.allow_tags = True
+
 
 class ConditionType(models.Model):
     name = models.CharField(max_length=200)
@@ -98,9 +110,17 @@ class ConditionType(models.Model):
             filter(Q(conditionset__conditions__type=self) | Q(medium__conditions__type=self))\
             .exclude(paper__latest_data_status__status__name='not relevant').distinct()
 
+    def tags_edit_list(self):
+        return ', '.join([t.link_edit() for t in self.tags.all()])
+    tags_edit_list.allow_tags = True
+
     def link_detail(self):
         return '<a href="%s">%s</a>' % (reverse("conditions:detail", args=(self.id,)), self)
     link_detail.allow_tags = True
+
+    def link_edit(self):
+        return '<a href="%s">%s</a>' % (reverse("admin:conditions_conditiontype_change", args=(self.id,)), self.name)
+    link_edit.allow_tags = True
 
 
 class Condition(models.Model):
