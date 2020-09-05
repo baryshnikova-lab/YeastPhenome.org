@@ -64,7 +64,7 @@ def datasets_human(request):
 
     class_description = 'List of datasets that involve the expression of a human protein.'
 
-    datasets = Dataset.objects.filter(conditionset__conditions__type__group__name='expression of a human protein')\
+    datasets = Dataset.objects.filter(conditionset__conditions__type__tags__name='human protein')\
         .exclude(paper__latest_data_status__status__name='not relevant').distinct()
     return render(request, 'datasets/class.html', {
         'datasets': datasets,
