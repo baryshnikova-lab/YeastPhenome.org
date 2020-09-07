@@ -158,7 +158,7 @@ class Phenotype(models.Model):
             .exclude(latest_data_status__status__name='not relevant').distinct()
 
     def papers_all(self):
-        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self)
+        return apps.get_model('papers', 'Paper').objects.filter(dataset__phenotype=self).distinct()
 
     def papers_link_list(self):
         return ', '.join([p.link_detail() for p in self.papers()])
