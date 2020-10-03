@@ -105,13 +105,15 @@ class PaperDetailView(generic.DetailView):
             else:
                 vol = ''
 
+            if 'ISOAbbreviation' in article['Journal'].keys():
+                jrn = article['Journal']['ISOAbbreviation']
+            else:
+                jrn = ''
+
             context['title'] = article['ArticleTitle']
             context['authors'] = authors_list
             context['abstract'] = article['Abstract']['AbstractText'][0]
-            context['citation'] = u'%s %s; %s:%s' % (article['Journal']['ISOAbbreviation'],
-                                                      pubdate,
-                                                      vol,
-                                                      pgn)
+            context['citation'] = u'%s %s; %s:%s' % (jrn, pubdate, vol, pgn)
 
         return context
 
