@@ -251,9 +251,15 @@ class Medium(models.Model):
         return ", ".join([str(c) for c in self.conditions.all()])
 
     def papers(self):
-        return apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
+        ps = apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
                                                                 Q(dataset__control_medium=self))\
             .exclude(latest_data_status__status__name='not relevant').distinct()
+        return ps
+
+    def papers_all(self):
+        ps = apps.get_model('papers', 'Paper').objects.filter(Q(dataset__medium=self) |
+                                                              Q(dataset__control_medium=self)).distinct()
+        return ps
 
     def paper_str_list(self):
         return ', '.join([str(p) for p in self.papers()])
@@ -263,7 +269,7 @@ class Medium(models.Model):
     papers_link_list.allow_tags = True
 
     def papers_edit_link_list(self):
-        return ', '.join([p.link_edit() for p in self.papers()])
+        return ', '.join([p.link_edit() for p in self.papers_all()])
     papers_edit_link_list.allow_tags = True
 
     def datasets(self, num=None):
@@ -273,8 +279,14 @@ class Medium(models.Model):
             qs = qs[:num]
         return qs
 
+    def datasets_all(self, num=None):
+        qs = apps.get_model('datasets', 'Dataset').objects.filter(medium=self).distinct()
+        if num:
+            qs = qs[:num]
+        return qs
+
     def datasets_edit_link_list(self, num=None):
-        qs = self.datasets(num=num)
+        qs = self.datasets_all(num=num)
         str = '<ul>'
         str = str + '<li>'.join([d.link_edit() for d in qs])
         str = str + '</ul>'
