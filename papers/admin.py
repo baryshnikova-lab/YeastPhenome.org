@@ -46,7 +46,7 @@ class DatasetAdmin(ImprovedModelAdmin):
               'notes')
     raw_id_fields = ('paper', 'conditionset', 'medium', 'control_conditionset', 'control_medium',
                      'phenotype', 'tested_source', 'data_source', 'tags')
-    search_fields = ('name',)
+    search_fields = ('name', 'tags__name')
     ordering = ('name',)
 
     save_as = True
