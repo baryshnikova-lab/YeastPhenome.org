@@ -29,6 +29,14 @@ class Tag(models.Model):
         return html
     conditiontypes_edit_link_list.allow_tags = True
 
+    def conditions_edit_link_list(self):
+        conditions = self.condition_set.order_by('name').all()
+        html = '<ul>'
+        html = html + '<li>'.join([c.link_edit() for c in conditions[:50]])
+        html = html + '</ul>'
+        return html
+    conditions_edit_link_list.allow_tags = True
+
 
 class ConditionType(models.Model):
     name = models.CharField(max_length=200)
@@ -128,6 +136,7 @@ class Condition(models.Model):
     dose = models.CharField(max_length=200, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
     modified_on = models.DateField(auto_now=True, null=True)
+    tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
         get_latest_by = 'modified_on'
@@ -160,6 +169,10 @@ class Condition(models.Model):
     def link_edit(self):
         return '<a href="%s">%s</a>' % (reverse("admin:conditions_condition_change", args=(self.id,)), self.dose)
     link_edit.allow_tags = True
+
+    def tags_edit_list(self):
+        return ', '.join([t.link_edit() for t in self.tags.all()])
+    tags_edit_list.allow_tags = True
 
 
 class ConditionSet(models.Model):

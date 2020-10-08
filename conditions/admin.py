@@ -17,8 +17,8 @@ class TagAdmin(ImprovedModelAdmin):
     list_per_page = 50
     list_display = ['name', 'description']
     search_fields = ['name', 'description']
-    fields = ('name', 'description', 'conditiontypes_edit_link_list')
-    readonly_fields = ('conditiontypes_edit_link_list', )
+    fields = ('name', 'description', 'conditiontypes_edit_link_list', 'conditions_edit_link_list')
+    readonly_fields = ('conditiontypes_edit_link_list', 'conditions_edit_link_list', )
     ordering = ['name']
 
     def response_change(self, request, obj):
@@ -44,13 +44,13 @@ class ConditionAdminForm(forms.ModelForm):
 
 class ConditionAdmin(ImprovedModelAdmin):
     form = ConditionAdminForm
-    list_display = ('id', 'type', 'dose', 'conditionsets_str_list', 'media_str_list')
+    list_display = ('id', 'type', 'dose', 'conditionsets_str_list', 'media_str_list', 'tags_edit_list')
     list_filter = ['type__name']
     ordering = ('type__name', 'dose')
-    fields = ['type', 'dose', 'description']
+    fields = ['type', 'dose', 'description', 'tags']
     search_fields = ('type__name', 'type__other_names', 'type__pubchem_name', 'type__chebi_name',
-                     'type__pubchem_id', 'type__chebi_id', 'dose')
-    raw_id_fields = ('type',)
+                     'type__pubchem_id', 'type__chebi_id', 'dose', 'tags__name')
+    raw_id_fields = ('type', 'tags', )
 
     def response_change(self, request, obj):
         if request.GET.get('_popup') == '1':
