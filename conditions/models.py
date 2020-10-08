@@ -222,13 +222,17 @@ class ConditionSet(models.Model):
         return ', '.join([p.link_edit() for p in self.papers_all()])
     papers_edit_link_list.allow_tags = True
 
+    def datasets_all(self):
+        qs = apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self).distinct()
+        return qs
+
     def datasets(self):
-        return apps.get_model('datasets', 'Dataset').objects.filter(conditionset=self)\
-            .exclude(paper__latest_data_status__status__name='not relevant').distinct()
+        qs = self.datasets_all().exclude(papers__latest_data_status__status__name='not relevant')
+        return qs
 
     def datasets_edit_link_list(self):
         str = '<ul>'
-        str = str + '<li>'.join([d.link_edit() for d in self.datasets()])
+        str = str + '<li>'.join([d.link_edit() for d in self.datasets_all()])
         str = str + '</ul>'
         return str
     datasets_edit_link_list.allow_tags = True
