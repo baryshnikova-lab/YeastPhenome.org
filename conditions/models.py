@@ -39,7 +39,7 @@ class Tag(models.Model):
 
 
 class ConditionType(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, verbose_name='common name for display')
     other_names = models.TextField(blank=True, null=True)
 
     pubchem_id = models.PositiveIntegerField(blank=True, null=True, unique=True)
@@ -52,15 +52,15 @@ class ConditionType(models.Model):
     tags = models.ManyToManyField(Tag, blank=True)
 
     class Meta:
-        ordering = ['chebi_name', 'pubchem_name', 'name', 'other_names']
+        ordering = ['name', 'chebi_name', 'pubchem_name', 'other_names']
 
     def __str__(self):
-        if self.chebi_name:
+        if self.name:
+            type_name = self.name
+        elif self.chebi_name:
             type_name = self.chebi_name
         elif self.pubchem_name:
             type_name = self.pubchem_name
-        elif self.name:
-            type_name = self.name
         else:
             type_name = self.other_names
         return u'%s' % type_name
@@ -127,7 +127,7 @@ class ConditionType(models.Model):
     link_detail.allow_tags = True
 
     def link_edit(self):
-        return '<a href="%s">%s</a>' % (reverse("admin:conditions_conditiontype_change", args=(self.id,)), self.name)
+        return '<a href="%s">%s</a>' % (reverse("admin:conditions_conditiontype_change", args=(self.id,)), self)
     link_edit.allow_tags = True
 
 
