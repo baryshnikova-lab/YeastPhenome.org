@@ -142,7 +142,7 @@ class ConditionSetAdmin(ImprovedModelAdmin):
 
         conditions_list = [(u'%s' % condition) for condition in
                            obj.conditions.annotate(tags_order=Min('type__tags__order')).\
-                               order_by('tags_order', 'type__chebi_name', 'type__pubchem_name','type__name').all()]
+                               order_by('tags_order', 'type__name', 'type__chebi_name', 'type__pubchem_name').all()]
         conditions_str = ", ".join(conditions_list)
         obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
@@ -178,7 +178,7 @@ class MediumAdmin(ImprovedModelAdmin):
 
         conditions_list = [(u'%s' % condition) for condition in
                            obj.conditions.annotate(tags_order=Min('type__tags__order')).\
-                               order_by('tags_order', 'type__chebi_name', 'type__pubchem_name', 'type__name').all()]
+                               order_by('tags_order', 'type__name', 'type__chebi_name', 'type__pubchem_name').all()]
         conditions_str = ", ".join(conditions_list)
         obj.systematic_name = conditions_str[:1000] if len(conditions_str) > 1000 else conditions_str
 
