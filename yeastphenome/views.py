@@ -78,8 +78,8 @@ def get_latest_stats():
 
     # --- Phenotypes ----
     p = Q(paper__in=papers_processed_qs)
-    c1 = Q(collection__shortname__in=['hap a', 'hap alpha', 'hom', 'hap ?',
-                                     'hap a/hap alpha/hom', 'hap a/hap alpha', 'hap a/hom'])
+    c1 = Q(collection__shortname__in=['hap a', 'hap a (post-SGA)', 'hap alpha', 'hap alpha (post-SGA)', 'hom', 'hap ?',
+                                      'hap a/hap alpha/hom', 'hap a/hap alpha', 'hap a/hom'])
     c2 = Q(collection__shortname__in=['het'])
     gr = Q(phenotype__name__contains='growth')
     exp = Q(phenotype__name__contains='gene expression')
@@ -114,11 +114,11 @@ def get_latest_stats():
     # --- Collections ----
     f = Q(paper__in=papers_processed_qs)
 
-    c = Q(collection__shortname__in=['hap a'])
+    c = Q(collection__shortname__in=['hap a', 'hap a (post-SGA)'])
     datasets_nr_hap_a = datasets_qs.filter(f & c).distinct().count()
     datasets_prc_hap_a = int(np.rint(100 * datasets_nr_hap_a / datasets_nr))
 
-    c = Q(collection__shortname__in=['hap alpha'])
+    c = Q(collection__shortname__in=['hap alpha', 'hap alpha (post-SGA)'])
     datasets_nr_hap_alpha = datasets_qs.filter(f & c).distinct().count()
     datasets_prc_hap_alpha = int(np.rint(100 * datasets_nr_hap_alpha / datasets_nr))
 
