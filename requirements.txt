@@ -2,5 +2,5 @@ libChEBIpy==1.0.8
 numpy==1.14.1
 PubChemPy==1.0.4
 tqdm==4.11.2
-Django==1.10.5
+Django==2.2.24
 Bio==0.1.0
