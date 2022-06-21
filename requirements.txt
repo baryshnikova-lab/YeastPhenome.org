@@ -1,5 +1,5 @@
 libChEBIpy==1.0.8
-numpy==1.14.1
+numpy==1.22.0
 PubChemPy==1.0.4
 tqdm==4.11.2
 Django==1.10.5
